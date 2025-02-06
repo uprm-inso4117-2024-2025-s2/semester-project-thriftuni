@@ -11,34 +11,36 @@ const firebaseConfig = {
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId:
     Platform.OS === 'ios'
-      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS
-      : process.env.EXPO_PUBLIC_FIREBASE_APP_ID_ANDROID,
+      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS // ID para iOS
+      : Platform.OS === 'android'
+      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_ANDROID // ID para Android
+      : process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB, // ID para Web (solo en web apps),
+  ...(Platform.OS === 'web' && { measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID }),
 };
 
 // Inicializa Firebase solo si no está inicializado previamente
 export const initializeFirebaseApp = () => {
-  if (!firebaseApp) {
-    if (getApps().length === 0) {
-      firebaseApp = initializeApp(firebaseConfig, "thriftuni");
-      console.log('[Success] Firebase initialized successfully:', "App name:", firebaseApp.name, "App values: ", firebaseApp.options);
-    } else {
-      firebaseApp = getApp();
-      console.log('[Success] Firebase app already initialized:', "App name:", firebaseApp.name, "App values: ", firebaseApp.options);
+  try {
+    if (!firebaseApp) {
+      if (getApps().length === 0) {
+        firebaseApp = initializeApp(firebaseConfig);
+        console.log('[Success] Firebase initialized successfully:');
+      } else {
+        firebaseApp = getApp();
+        console.log('[Success] Firebase app already initialized:');
+      }
+      console.log('Firebase options:', firebaseApp.options);
+      console.log('Firebase name:', firebaseApp.name);
     }
+  } catch (error) {
+    console.error('[Error] Failed to initialize Firebase:', error.message);
   }
-  return firebaseApp;
 };
 
-// Método para probar y verificar la configuración de Firebase
+// Método para verificar la configuración de Firebase
 export const testFirebaseConfig = () => {
-  console.log("[INFO] Firebase Initialization");
-  console.log('[INFO] Testing Firebase Config...');
-  console.log('[INFO] apiKey:', firebaseConfig.apiKey);
-  console.log('[INFO] authDomain:', firebaseConfig.authDomain);
-  console.log('[INFO] projectId:', firebaseConfig.projectId);
-  console.log('[INFO] storageBucket:', firebaseConfig.storageBucket);
-  console.log('[INFO] messagingSenderId:', firebaseConfig.messagingSenderId);
-  console.log('[INFO] appId:', firebaseConfig.appId);
+  console.log("[INFO] Testing Firebase Config...");
+  console.log('[INFO] Firebase Config:', firebaseConfig);
 
   if (
     !firebaseConfig.apiKey ||
@@ -48,12 +50,11 @@ export const testFirebaseConfig = () => {
     !firebaseConfig.messagingSenderId ||
     !firebaseConfig.appId
   ) {
-    console.error('[ERROR] One or more Firebase config values are missing!');
+    console.error('[ERROR] Missing required Firebase configuration values!');
   } else {
     console.log('[Success] All Firebase config values are loaded successfully.');
   }
 
   // Inicializa Firebase
   initializeFirebaseApp();
-  console.groupEnd();
 };
