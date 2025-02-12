@@ -1,5 +1,4 @@
 import { View, Text } from '@/components/Themed'
-import { MonoText } from '../StyledText'
 import { StyleSheet, Pressable, Image, Animated } from 'react-native'
 import React, {useEffect, useState, useRef} from 'react'
 import { FontAwesome } from '@expo/vector-icons'

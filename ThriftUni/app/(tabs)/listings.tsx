@@ -1,6 +1,8 @@
 import { StyleSheet, ScrollView } from 'react-native'
+import { View } from '@/components/Themed'
 import React from 'react'
 import ProductCard from '@/components/ListingsPage/ProductCard'
+import SearchBar from '@/components/ListingsPage/SearchBar';
 
 // FOR DEVELOPMENT PURPOSES ONLY------------------
 
@@ -25,11 +27,16 @@ for (let i = 0; i < 21; i++) {
 
 export default function ListingScreen() {
   return (
+    <View>
+    <View style={{backgroundColor: '#F6F9FF', borderBottomColor: 'black', borderBottomWidth: 1}}>
+      <SearchBar />
+    </View>
     <ScrollView contentContainerStyle={styles.container}>
       {dummyData.map((product) => (
         <ProductCard key={product.id} {...product} />
       ))}
     </ScrollView>
+    </View>
   )
 }
 
