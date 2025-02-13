@@ -1,7 +1,7 @@
 {
     "version": "2.0",
     "projectName": "semester-project-thriftuni",
-    "managers": ["evnd04, YanehRuiz"],
+    "managers": ["evnd04", "YanehRuiz"],
     "milestones": {
         "Milestone 1": {
         "startDate": "2025-01-27",
