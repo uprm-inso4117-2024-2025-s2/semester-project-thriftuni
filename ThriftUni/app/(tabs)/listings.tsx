@@ -3,6 +3,7 @@ import { View } from '@/components/Themed'
 import React from 'react'
 import ProductCard from '@/components/ListingsPage/ProductCard'
 import SearchBar from '@/components/ListingsPage/SearchBar';
+import FilterMenu from '@/components/ListingsPage/FilterMenu';
 
 // FOR DEVELOPMENT PURPOSES ONLY------------------
 
@@ -32,9 +33,12 @@ export default function ListingScreen() {
       <SearchBar />
     </View>
     <ScrollView contentContainerStyle={styles.container}>
+      <FilterMenu />
+      <View style={styles.listingGrid}>
       {dummyData.map((product) => (
         <ProductCard key={product.id} {...product} />
       ))}
+      </View>
     </ScrollView>
     </View>
   )
@@ -42,6 +46,10 @@ export default function ListingScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#F6F9FF',
+    paddingBottom: 80,
+  },
+  listingGrid: {
     alignItems: 'center',
     justifyContent: 'center',
     flexWrap: 'wrap',
