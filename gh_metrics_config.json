@@ -1,7 +1,6 @@
 {
     "version": "1.0",
     "projectName": "ThriftUni",
-    "milestoneName": "Milestone 1",
     "managers": ["evnd04", "YanehRuiz"],
     "milestones": {
         "Milestone 1": {
