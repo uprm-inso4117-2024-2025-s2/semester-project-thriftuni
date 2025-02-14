@@ -1,10 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+// import ContinueWithGoogleButton from '../../components/Buttons/ContinueWithGoogleButton';
+import ContinueWithGoogleButton2 from '../../components/Buttons/AllGoogleButtons';
 
 import { testFirebaseConfig } from '../../firebase.config';
+//<ContinueWithGoogleButton onPress={() => console.log('Google Sign-In pressed')} />
 
+const themes = ['neutral', 'light', 'dark'];
+const styleTypes = ['rd_ctn', 'rd_na', 'rd_SI', 'rd_SU', 'sq_ctn', 'sq_na', 'sq_SI', 'sq_SU'];
 
 export default function TabOneScreen() {
 
