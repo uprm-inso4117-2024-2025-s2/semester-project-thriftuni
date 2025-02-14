@@ -57,11 +57,11 @@ export default function FilterMenu({setData} : FilterMenuProps) {
           <View style={styles.filterRows}>
           <View>
             <Text>Price: ${price.toFixed(2)}</Text>
-            <Slider style={styles.distanceSlider} value={price} minimumValue={1} maximumValue={10e2} maximumTrackTintColor='gray' minimumTrackTintColor='gray' onSlidingComplete={(value) => setPrice(value)}/>
+            <Slider style={styles.distanceSlider} value={price} minimumValue={1} maximumValue={10e2} thumbTintColor='green' maximumTrackTintColor='gray' minimumTrackTintColor='green' onSlidingComplete={(value) => setPrice(value)}/>
           </View>
           <View>
             <Text>Distance: {distance.toFixed(2)} km</Text>
-            <Slider style={styles.distanceSlider} value={distance} minimumValue={1} maximumValue={500} maximumTrackTintColor='gray' minimumTrackTintColor='gray' onSlidingComplete={(value) => setDistance(value)}/>            
+            <Slider style={styles.distanceSlider} value={distance} thumbTintColor='green' minimumValue={1} maximumValue={500} maximumTrackTintColor='gray' minimumTrackTintColor='green' onSlidingComplete={(value) => setDistance(value)}/>            
           </View>
         </View>
         <View style={styles.filterRows}>
@@ -71,7 +71,7 @@ export default function FilterMenu({setData} : FilterMenuProps) {
             </View>
             <View style={{width: "50%", gap: 10}}>
               <Text>Category</Text>
-              <Dropdown style={styles.categoryDropdown} renderLeftIcon={() => <FontAwesome name='bars' size={14}/>} placeholderStyle={{marginLeft: 10}} onFocus={() => setDropdownFocus(true)} onBlur={() => setDropdownFocus(false)} placeholder={dropdownFocus ? "Select Category" : "..."} labelField={"label"} valueField={"value"} data={categories} value={category} onChange={(value) => setCategory(value)} />
+              <Dropdown style={styles.categoryDropdown} renderLeftIcon={() => <FontAwesome name='bars' style={{marginRight: 10}} size={14}/>} onFocus={() => setDropdownFocus(true)} onBlur={() => setDropdownFocus(false)} placeholder={dropdownFocus ? "Select Category" : "..."} labelField={"label"} valueField={"value"} data={categories} value={category} onChange={(value) => setCategory(value)} />
             </View>
           </View>
 
