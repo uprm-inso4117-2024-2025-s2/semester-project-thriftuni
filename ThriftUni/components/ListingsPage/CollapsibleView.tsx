@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Animated, TouchableWithoutFeedback } from 'react-native'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { transform } from '@babel/core'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -8,14 +8,15 @@ interface CollapsibleViewProps {
   title: string,
   children: React.ReactNode,
   noArrow?: boolean,
+  expandedHeight: number,
 }
 
-export default function CollapsibleView({startContent, title, children, noArrow}: CollapsibleViewProps) {
-  const [isCollapsed, setCollapsed] = useState<boolean>(true)
+export default function CollapsibleView({startContent, title, children, noArrow, expandedHeight}: CollapsibleViewProps) {
   const [animation, setAnimation] = useState<Animated.Value>(new Animated.Value(0))
-
+  const [isCollapsed, setCollapsed] = useState<boolean>(true)
+  
   const toggleCollapsed = () => {
-    if (isCollapsed) {
+    if (!isCollapsed) {
       Animated.timing(animation, {
         toValue: 1,
         duration: 300,
@@ -33,7 +34,7 @@ export default function CollapsibleView({startContent, title, children, noArrow}
 
   const heightInterpolate = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 200]
+    outputRange: [0, expandedHeight]
   })
 
   const rotateInterpolate = animation.interpolate({

@@ -1,6 +1,6 @@
-import { StyleSheet, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import { View } from '@/components/Themed'
-import React from 'react'
+import React, {useState, Suspense} from 'react'
 import ProductCard from '@/components/ListingsPage/ProductCard'
 import SearchBar from '@/components/ListingsPage/SearchBar';
 import FilterMenu from '@/components/ListingsPage/FilterMenu';
@@ -26,20 +26,32 @@ for (let i = 0; i < 21; i++) {
 }
 //---------------------------------
 
+export interface Listings {
+  id: number,
+  title: string,
+  price: number,
+  img: string,
+  latitude: string,
+  longitude: string,
+  category: string,
+}
+
+
 export default function ListingScreen() {
+  const [data, setData] = useState<Listings[]>([])
   return (
     <View>
-    <View style={{backgroundColor: '#F6F9FF', borderBottomColor: 'black', borderBottomWidth: 1}}>
-      <SearchBar />
-    </View>
-    <ScrollView contentContainerStyle={styles.container}>
-      <FilterMenu />
-      <View style={styles.listingGrid}>
-      {dummyData.map((product) => (
-        <ProductCard key={product.id} {...product} />
-      ))}
+      <View style={{backgroundColor: '#F6F9FF', borderBottomColor: 'black', borderBottomWidth: 1}}>
+        <SearchBar />
       </View>
-    </ScrollView>
+      <ScrollView contentContainerStyle={styles.container}>
+        <FilterMenu setData={setData}/>
+          <View style={styles.listingGrid}>
+          {dummyData.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+          </View>
+      </ScrollView>
     </View>
   )
 }

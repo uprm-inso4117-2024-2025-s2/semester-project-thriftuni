@@ -3,6 +3,7 @@ import { StyleSheet, Pressable, Image, Animated } from 'react-native'
 import React, {useEffect, useState, useRef} from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import { getDistance } from 'geolib'
+import { formatCurrency } from '@/utils/lib'
 import * as Location from 'expo-location'
 
 interface ProductCardProps {
@@ -14,9 +15,7 @@ interface ProductCardProps {
   longitude: string,
 }
 
-function formatPrice(price: number) {
-  return `$${price.toFixed(2)}`
-} 
+
 
 export default function ProductCard({id, title, price, img, latitude, longitude}: ProductCardProps) {
 
@@ -79,7 +78,7 @@ export default function ProductCard({id, title, price, img, latitude, longitude}
         <Text style={styles.title}>{title}</Text>
         <Text style={{fontSize : 12}}>{`${(distance/1000).toFixed(2)} km`}</Text>
         </View>
-        <Text style={styles.price}>{formatPrice(price)}</Text>
+        <Text style={styles.price}>{formatCurrency(price)}</Text>
       </View>
       <Animated.View style={[styles.wishlist_button, { transform: [{ scale: scaleValue }] }]}>
         <Pressable hitSlop={{top: 7, bottom: 7, right: 7, left: 7}} onPress={handleWishlistClick}>
