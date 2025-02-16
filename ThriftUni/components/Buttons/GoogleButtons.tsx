@@ -398,7 +398,7 @@ const getDensity = () => {
     return 'png@1x';
 };
 
-const ContinueWithGoogleButton = ({ theme = 'light', styleType = 'rd_ctn', onPress=() => console.log('Google Sign-In Pressed') }) => {
+const GoogleButton = ({ theme = 'light', styleType = 'rd_ctn', onPress=() => console.log('Google Sign-In Pressed') }) => {
     const platform = Platform.OS; // 'android', 'ios', or 'web'
     const density = getDensity();
 
@@ -426,4 +426,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ContinueWithGoogleButton;
+export default GoogleButton;

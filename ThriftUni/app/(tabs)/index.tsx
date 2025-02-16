@@ -1,24 +1,26 @@
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, Button, Platform  } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-// import ContinueWithGoogleButton from '../../components/Buttons/ContinueWithGoogleButton';
-import ContinueWithGoogleButton2 from '../../components/Buttons/AllGoogleButtons';
 
-import { testFirebaseConfig } from '../../firebase.config';
-//<ContinueWithGoogleButton onPress={() => console.log('Google Sign-In pressed')} />
+import { useGoogleSignIn } from '../../firebase/auth';
+import GoogleButton from '../../components/Buttons/GoogleButtons.tsx'
 
-const themes = ['neutral', 'light', 'dark'];
-const styleTypes = ['rd_ctn', 'rd_na', 'rd_SI', 'rd_SU', 'sq_ctn', 'sq_na', 'sq_SI', 'sq_SU'];
+
+
+
 
 export default function TabOneScreen() {
-
-  testFirebaseConfig();
-
+    const signInWithGoogle = useGoogleSignIn(); // ✅ LLAMAR EL HOOK AQUÍ
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+      {/* Renderizar el botón solo si la plataforma es web */}
+      {Platform.OS === "web" && <GoogleButton onPress={signInWithGoogle} />}
+
+
       <EditScreenInfo path="app/(tabs)/index.tsx" />
     </View>
   );
