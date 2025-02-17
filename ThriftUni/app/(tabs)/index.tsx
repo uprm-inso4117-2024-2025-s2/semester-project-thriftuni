@@ -11,14 +11,16 @@ import GoogleButton from '../../components/Buttons/GoogleButtons.tsx'
 
 
 export default function TabOneScreen() {
-    const signInWithGoogle = useGoogleSignIn(); // ✅ LLAMAR EL HOOK AQUÍ
+    const { request, promptAsync } = useGoogleSignIn(); // ✅ Obtener el request y promptAsync del hook
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
       {/* Renderizar el botón solo si la plataforma es web */}
-      {Platform.OS === "web" && <GoogleButton onPress={signInWithGoogle} />}
+      {Platform.OS === "web" && (
+          <GoogleButton onPress={() => promptAsync()} disabled={!request} />
+      )}
 
 
       <EditScreenInfo path="app/(tabs)/index.tsx" />
