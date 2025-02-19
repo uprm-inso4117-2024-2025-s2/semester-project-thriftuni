@@ -4,19 +4,23 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { ListingDetails } from '@/components/DisplayIndividualListing';
 import DisplayIndividualListing from '@/components/DisplayIndividualListing';
+import ListItem from '@/components/ListAnItem/ListItem';
 
 export default function TabTwoScreen() {
-  const exampleListing: ListingDetails = {
-      title: "Agua",
-      pictures: [],
-      description: "Guitarra para venta.",
-      sellerName: "Juan",
-      sellerBio: "Soy Juan",
-    };
-    
   return (
-    DisplayIndividualListing(exampleListing)
+    <ListItem></ListItem>
   )
+//  const exampleListing: ListingDetails = {
+//      title: "Agua",
+//      pictures: [],
+//      description: "Guitarra para venta.",
+//      sellerName: "Juan",
+//      sellerBio: "Soy Juan",
+//    };
+//    
+//  return (
+//    DisplayIndividualListing(exampleListing)
+//  )
 //  return (
 //    <View style={styles.container}>
 //      <Text style={styles.title}>Tab Two</Text>
