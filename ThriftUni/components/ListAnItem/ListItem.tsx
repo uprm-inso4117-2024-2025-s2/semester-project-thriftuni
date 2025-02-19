@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Animated, TouchableOpacity } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import React, {useState} from 'react'
 import { ScrollView, TextInput} from 'react-native'
 import ImageUploader from './ImageUploader';
 import Selector from './Selector'
