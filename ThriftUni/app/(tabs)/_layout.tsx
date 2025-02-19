@@ -22,8 +22,6 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
@@ -47,7 +45,7 @@ export default function TabLayout() {
           ),
         }}
       />
-            <Tabs.Screen
+      <Tabs.Screen
         name="two"
         options={{
           title: 'Tab Two',
@@ -59,6 +57,13 @@ export default function TabLayout() {
         options={{
           title: 'Browse',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="authentication"
+        options={{
+          title: '2FA',
+          tabBarIcon: ({ color }) => <TabBarIcon name="lock" color={color} />,
         }}
       />
     </Tabs>
