@@ -1,58 +1,20 @@
 import { StyleSheet, Text, View, Animated, TouchableOpacity } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { ScrollView, TextInput} from 'react-native'
-import ImageUploader from '../ImageUploader';
-
-function Selector({type} : {type: string}) {
-    return (
-        <TouchableOpacity style={styles.selectorContainer} onPress={() => alert(`Pressed on ${type} button.`)}>
-            <Text style={styles.selectorLabel}>{type}</Text>
-            <Text style={styles.selectorText}>Select &gt;</Text>
-        </TouchableOpacity>
-    )
-}
-
-function PriceInput() {
-    const [price, setPrice] = useState('');
-
-    return (
-        <View style={styles.priceContainer}>
-          <Text style={styles.priceLabel}>Price</Text>
-          <TextInput
-            style={styles.priceInput}
-            placeholder="$ 0.00"
-            placeholderTextColor="#888"
-            keyboardType="numeric"
-            value={price}
-            onChangeText={setPrice}
-          />
-        </View>
-    );
-}
-
-function Buttons() {
-    return (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.draftButton}
-                            onPress={() => alert(`Pressed on 'Save to drafts' button.`)}>
-            <Text style={styles.draftButtonText}>Save to drafts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.postButton}
-                            onPress={() => alert(`Pressed on 'Post listing' button.`)} >
-            <Text style={styles.postButtonText}>Post listing</Text>
-          </TouchableOpacity>
-        </View>
-    )
-}
+import ImageUploader from './ImageUploader';
+import Selector from './Selector'
+import PriceInput from './PriceInput';
+import Buttons from './Buttons';
     
 
 export default function ListItem() {
     const [text, setText] = useState('');
     return (
         <View style={styles.container}>
-            {/* Top Bar here*/}
+            {/* Top Bar */}
             <View style={styles.topBar}>
-                <TouchableOpacity style={{padding: 10}}>
+                <TouchableOpacity style={{padding: 10}}
+                                    onPress={() => alert('Pressed on Back button.')}>
                     <Text>←</Text>
                 </TouchableOpacity>
                 <Text style={{fontSize: 22}}>Sell an item</Text>
@@ -74,13 +36,14 @@ export default function ListItem() {
                 </View>
                 {/*Divider*/}
                 <View style={{marginTop: 20, marginBottom: 20, height: 5, borderWidth: 5, borderColor:'grey'}}/>
-                {/*Category*/}
+                {/* Item details */}
                 <Selector type="Category"/> 
                 <Selector type="Brand"/> 
                 <Selector type="Condition"/> 
                 <Selector type="Color"/> 
                 <PriceInput/>
             </ScrollView>
+            {/* Save to draft and post buttons */}
             <Buttons/>
         </View>
     )
@@ -114,77 +77,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 2,
         borderColor: '#E4AAAA',
-    },
-    selectorContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        padding: 10,
-        borderBottomWidth: 1, 
-        borderBottomColor: '#ccc', 
-        width: '100%',
-        marginBottom: 15,
-      },
-    selectorLabel: {
-        fontSize: 16,
-        color: '#333',
-      },
-    selectorText: {
-        fontSize: 12,
-        color: '#888', 
-      },
-    priceContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        width: '100%',
-    },
-    priceLabel: {
-        fontSize: 16,
-        color: '#333',
-    },
-    priceInput: {
-        fontSize: 12,
-        color: '#000',
-        textAlign: 'right',
-        width: 80, 
-    },
-    buttonContainer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 20,
-        backgroundColor: 'white', // Keeps the background solid when scrolling
-    },
-    draftButton: {
-       flex: 1,
-       borderWidth: 1,
-       borderColor: 'black',
-       padding: 12,
-       borderRadius: 5,
-       alignItems: 'center',
-       marginRight: 10,
-    },
-    draftButtonText: {
-       color: 'black',
-       fontSize: 16,
-    },
-    postButton: {
-       flex: 1,
-       backgroundColor: 'black',
-       padding: 12,
-       borderRadius: 5,
-       alignItems: 'center',
-    },
-    postButtonText: {
-       color: 'white',
-       fontSize: 16,
     },
 }
 )
