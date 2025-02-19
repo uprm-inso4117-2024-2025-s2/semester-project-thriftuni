@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import Slider from '@react-native-community/slider'
 import { Rating } from 'react-native-ratings'
 import { Dropdown } from 'react-native-element-dropdown'
-import { Listings } from "@/app/(tabs)/listings"
+import { Listings } from "@/app/(tabs)"
 
 
 
