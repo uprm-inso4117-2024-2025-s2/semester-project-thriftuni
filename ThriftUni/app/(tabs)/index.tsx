@@ -1,19 +1,28 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView, Button, Platform  } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
-import { testFirebaseConfig } from '../../firebase.config';
+import { useGoogleSignIn } from '../../firebase/auth';
+import GoogleButton from '../../components/Buttons/GoogleButtons.tsx'
+
+
+
 
 
 export default function TabOneScreen() {
-
-  testFirebaseConfig();
-
+    const { request, promptAsync } = useGoogleSignIn(); // ✅ Obtener el request y promptAsync del hook
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+      {/* Renderizar el botón solo si la plataforma es web */}
+      {Platform.OS === "web" && (
+          <GoogleButton onPress={() => promptAsync()} disabled={!request} />
+      )}
+
+
       <EditScreenInfo path="app/(tabs)/index.tsx" />
     </View>
   );
