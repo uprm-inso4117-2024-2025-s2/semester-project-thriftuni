@@ -4,7 +4,7 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 import { useGoogleSignIn } from '../../firebase/auth';
-import GoogleButton from '../../components/Buttons/GoogleButtons.tsx'
+import GoogleButton from '@/components/Buttons/GoogleButtons'
 
 
 
