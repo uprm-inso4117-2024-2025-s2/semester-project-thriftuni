@@ -7,13 +7,13 @@ import React from 'react';
 export default function DisplayMyListing() {
   return (
     <View style={styles.container}>
-      <View className='Header' style={styles.header}>My Listing</View>
+      <View className='Header' style={styles.header}><Text>My Listing</Text></View>
       <View className='Body' style={styles.body}>
         <View className='UpperButtons' style={styles.upper_button_container}>
           <Pressable style={styles.upper_button}>All <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 48 48">
             <path d="M 9.5 13 A 1.50015 1.50015 0 0 0 8.3066406 15.410156 L 22.806641 34.410156 A 1.50015 1.50015 0 0 0 25.193359 34.410156 L 39.693359 15.410156 A 1.50015 1.50015 0 0 0 38.5 13 L 9.5 13 z M 12.533203 16 L 35.466797 16 L 24 31.025391 L 12.533203 16 z"></path>
           </svg></Pressable>
-          <Pressable style={styles.upper_button}>Edit</Pressable>
+          <Pressable style={styles.upper_button}><Text>Edit</Text></Pressable>
         </View>
         <View className='Listings' style={styles.listings}>
           <View className='Listing1' style={styles.card}>
