@@ -3,12 +3,12 @@ import { StyleSheet } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
-import { testFirebaseConfig } from '../../firebase.config';
+// import { testFirebaseConfig } from '../../firebase.config';
 
 
 export default function TabOneScreen() {
-
-  testFirebaseConfig();
+  // THIS IS NOT WORKNG
+  // testFirebaseConfig();
 
   return (
     <View style={styles.container}>
