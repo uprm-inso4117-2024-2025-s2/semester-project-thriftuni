@@ -1,5 +1,5 @@
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth } from '../firebase/firebase.config';
 
 /**
  * Logs out the currently authenticated user using Firebase Authentication.
