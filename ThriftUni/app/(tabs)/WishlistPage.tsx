@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
-import WishlistHeader from "./WishlistHeader";
-import WishlistItem from "./WishlistItem";
-import WishlistFilter from "./WishlistFilter";
+import WishlistHeader from "../../components/Wishlist/WishlistHeader";
+import WishlistItem from "../../components/Wishlist/WishlistItem";
+import WishlistFilter from "../../components/Wishlist/WishlistFilter";
 
 const initialWishlistData = [
   { id: "1", title: "Tiffany Lamp", price: 50.45, available: true, image: require("../../assets/images/lamp.png") },
