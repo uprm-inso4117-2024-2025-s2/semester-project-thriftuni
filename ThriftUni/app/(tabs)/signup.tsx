@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp, getApps } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD7EBLPezmrBujRy58eLzmAV1jeKTUrPoQ",
@@ -16,7 +16,9 @@ const firebaseConfig = {
   measurementId: "G-MCWKZZQPTP"
 };
 
-const app = initializeApp(firebaseConfig);
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -63,7 +65,7 @@ export default function Signup() {
         </TouchableOpacity>
       </View>
       <Text style={styles.loginText}>
-        Already have an account? <Text style={styles.link} onPress={() => {}}>Login</Text>
+        Already have an account? <Text style={styles.link} onPress={() => { }}>Login</Text>
       </Text>
     </View>
   );
