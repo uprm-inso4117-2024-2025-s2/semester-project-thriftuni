@@ -1,46 +1,73 @@
-import { StyleSheet, ScrollView, Button, Platform  } from 'react-native';
+import { StyleSheet, ScrollView, ActivityIndicator, Button, Platform } from 'react-native'
+import { View } from '@/components/Themed'
+import React, {useState, Suspense} from 'react'
+import ProductCard from '@/components/ListingsPage/ProductCard'
+import SearchBar from '@/components/ListingsPage/SearchBar';
+import FilterMenu from '@/components/ListingsPage/FilterMenu';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+// FOR DEVELOPMENT PURPOSES ONLY------------------
 
-import { useGoogleSignIn } from '../../firebase/auth';
-import GoogleButton from '@/components/Buttons/GoogleButtons'
+function getRandomInRange(from: number, to: number, fixed:number) : number {
+  return parseFloat((Math.random() * (to - from) + from).toFixed(fixed));
+  // .toFixed() returns string, so 'parseFloat' is used to convert to number
+}
+
+const dummyData : any[] = [];
+
+for (let i = 0; i < 21; i++) {
+  dummyData.push({
+    id: i,
+    title: "Product Title",
+    price: Math.random() * 100,
+    img: `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
+    latitude: getRandomInRange(17.9, 18.5, 6), // Latitude range for Puerto Rico
+    longitude: getRandomInRange(-67.3, -65.2, 6), // Longitude range for Puerto Rico
+  });
+}
+//---------------------------------
+
+export interface Listings {
+  id: number,
+  title: string,
+  price: number,
+  img: string,
+  latitude: string,
+  longitude: string,
+  category: string,
+}
 
 
-
-
-
-export default function TabOneScreen() {
-    const { request, promptAsync } = useGoogleSignIn(); // ✅ Obtener el request y promptAsync del hook
+export default function ListingScreen() {
+  const [data, setData] = useState<Listings[]>([])
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-      {/* Renderizar el botón solo si la plataforma es web */}
-      {Platform.OS === "web" && (
-          <GoogleButton onPress={() => promptAsync()} disabled={!request} />
-      )}
-
-
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View>
+      <View style={{backgroundColor: '#F6F9FF', borderBottomColor: 'black', borderBottomWidth: 1}}>
+        <SearchBar />
+      </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <FilterMenu setData={setData}/>
+          <View style={styles.listingGrid}>
+          {dummyData.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+          </View>
+      </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: '#F6F9FF',
+    paddingBottom: 80,
+  },
+  listingGrid: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    gap: 10,
+    paddingVertical: 10,
+    backgroundColor: '#F6F9FF',
+  }
+})
