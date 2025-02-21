@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator, StyleSheet } from 'react-native';
-import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
+import { logout } from '@/utils/logout';
 
 const LogoutButton = () => {
-  const router = useRouter(); // Usa expo-router para redirigir
-  const auth = getAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     Alert.alert(
       "Logout",
       "Are you sure you want to log out?",
@@ -19,7 +18,7 @@ const LogoutButton = () => {
           onPress: async () => {
             setLoading(true);
             try {
-              await signOut(auth);
+              await logout();
               setLoading(false);
               router.replace('/login'); // Redirigir al login después del logout
             } catch (error) {

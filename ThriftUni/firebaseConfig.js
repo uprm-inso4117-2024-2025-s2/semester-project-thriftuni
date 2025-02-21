@@ -1,38 +1,27 @@
 import { initializeApp } from "firebase/app";
-import {
- initializeAuth,
- getReactNativePersistence
-} from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 
 const firebaseConfig = {
- apiKey: "AIzaSyBliTLyyqHam9ei-900BYyt-y4ZGoowrEk",
- authDomain: "thriftuni-b345a.firebase.com",
- projectId: "thriftuni-b345a",
- storageBucket: "thriftuni-b345a.firebasestorage.app",
- messagingSenderId: "501062585933",
- appId: "1:501062585933:android:11ca96ded2177956a3d604",
- appID: "1:501062585933:ios:22353406f954b406a3d604",
+  apiKey: "AIzaSyD7EBLPezmrBujRy58eLzmAV1jeKTUrPoQ",
+  authDomain: "thriftuni-b345a.firebaseapp.com",
+  databaseURL: "https://thriftuni-b345a-default-rtdb.firebaseio.com",
+  projectId: "thriftuni-b345a",
+  storageBucket: "thriftuni-b345a.appspot.com",
+  messagingSenderId: "501062585933",
+  appId: "1:501062585933:web:7bb28a9b3f4f2f61a3d604",
+  measurementId: "G-MCWKZZQPTP"
 };
 
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 
-// Initialize Firebase Auth with AsyncStorage for persistence
-const auth = initializeAuth(app, {
- persistence: getReactNativePersistence(AsyncStorage)
-});
-
-
-// Initialize Firestore & Storage if needed
+const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
 
 export { app, auth, db, storage };
-
