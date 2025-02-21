@@ -40,6 +40,7 @@ export interface Listings {
 export default function ListingScreen() {
   const [data, setData] = useState<Listings[]>([])
   return (
+
     <View>
       <View style={{backgroundColor: '#F6F9FF', borderBottomColor: 'black', borderBottomWidth: 1}}>
         <SearchBar />
