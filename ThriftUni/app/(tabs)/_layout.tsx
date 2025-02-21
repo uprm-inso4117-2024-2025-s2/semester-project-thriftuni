@@ -47,7 +47,7 @@ export default function TabLayout() {
           ),
         }}
       />
-            <Tabs.Screen
+      <Tabs.Screen
         name="two"
         options={{
           title: 'Tab Two',
@@ -58,6 +58,13 @@ export default function TabLayout() {
         name="listings"
         options={{
           title: 'Browse',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="my_listings"
+        options={{
+          title: 'My Listing',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
