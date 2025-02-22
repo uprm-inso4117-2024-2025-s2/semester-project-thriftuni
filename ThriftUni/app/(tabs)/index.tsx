@@ -1,74 +1,71 @@
-import { StyleSheet, ScrollView, ActivityIndicator, Button, Platform } from 'react-native'
-import { View } from '@/components/Themed'
-import React, {useState, Suspense} from 'react'
-import ProductCard from '@/components/ListingsPage/ProductCard'
-import SearchBar from '@/components/ListingsPage/SearchBar';
-import FilterMenu from '@/components/ListingsPage/FilterMenu';
+import React from 'react';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Tabs } from 'expo-router';
 
-// FOR DEVELOPMENT PURPOSES ONLY------------------
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
+import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
-function getRandomInRange(from: number, to: number, fixed:number) : number {
-  return parseFloat((Math.random() * (to - from) + from).toFixed(fixed));
-  // .toFixed() returns string, so 'parseFloat' is used to convert to number
+// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof FontAwesome>['name'];
+  color: string;
+}) {
+  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-const dummyData : any[] = [];
+export default function TabLayout() {
+  const colorScheme = useColorScheme();
 
-for (let i = 0; i < 21; i++) {
-  dummyData.push({
-    id: i,
-    title: "Product Title",
-    price: Math.random() * 100,
-    img: `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
-    latitude: getRandomInRange(17.9, 18.5, 6), // Latitude range for Puerto Rico
-    longitude: getRandomInRange(-67.3, -65.2, 6), // Longitude range for Puerto Rico
-  });
-}
-//---------------------------------
-
-export interface Listings {
-  id: number,
-  title: string,
-  price: number,
-  img: string,
-  latitude: string,
-  longitude: string,
-  category: string,
-}
-
-
-export default function ListingScreen() {
-  const [data, setData] = useState<Listings[]>([])
   return (
-
-    <View>
-      <View style={{backgroundColor: '#F6F9FF', borderBottomColor: 'black', borderBottomWidth: 1}}>
-        <SearchBar />
-      </View>
-      <ScrollView contentContainerStyle={styles.container}>
-        <FilterMenu setData={setData}/>
-          <View style={styles.listingGrid}>
-          {dummyData.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-          </View>
-      </ScrollView>
-    </View>
-  )
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerShown: useClientOnlyValue(false, true),
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Browse',
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="ListItem"
+        options={{
+          title: 'List an item',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="my_listings"
+        options={{
+          title: 'My Listing',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="authentication"
+        options={{
+          title: '2FA',
+          tabBarIcon: ({ color }) => <TabBarIcon name="lock" color={color} />,
+        }}
+      />
+    </Tabs>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F6F9FF',
-    paddingBottom: 80,
-  },
-  listingGrid: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    gap: 10,
-    paddingVertical: 10,
-    backgroundColor: '#F6F9FF',
-  }
-})
