@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="create logoutbutton and profile fix errors">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,7 +81,7 @@
       <updated>1739993021426</updated>
       <workItem from="1739993022824" duration="2437000" />
       <workItem from="1739995640952" duration="5731000" />
-      <workItem from="1740024010293" duration="7922000" />
+      <workItem from="1740024010293" duration="8253000" />
     </task>
     <task id="LOCAL-00001" summary="create logoutbutton and profile">
       <option name="closed" value="true" />
@@ -109,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740157877103</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix merge conflict">
+      <option name="closed" value="true" />
+      <created>1740183753590</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1740183753590</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +124,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="create logoutbutton and profile" />
     <MESSAGE value="create logoutbutton and profile fix errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="create logoutbutton and profile fix errors" />
+    <MESSAGE value="fix merge conflict" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix merge conflict" />
   </component>
 </project>
