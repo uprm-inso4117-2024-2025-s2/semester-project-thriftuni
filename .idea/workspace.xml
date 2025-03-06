@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict 1" />
+    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict 1">
+      <change afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/WishlistPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/main_page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/blanket.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/bowl.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/jewelry.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/lamp.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/components/Wishlist/WishlistFilter.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/components/Wishlist/WishlistHeader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/components/Wishlist/WishlistItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/documentation/main_page.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ThriftUni/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ThriftUni/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ThriftUni/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ThriftUni/app/(tabs)/two.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/two.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ThriftUni/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ThriftUni/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,20 +67,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;#107 on 60-design-the-logout-feature&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Brandell\\PycharmProjects\\semester-project-thriftuni\\ThriftUni\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "#107 on Merging 60-design-the-logout-feature",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Users\\Brandell\\PycharmProjects\\semester-project-thriftuni\\ThriftUni\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -82,7 +100,7 @@
       <workItem from="1739993022824" duration="2437000" />
       <workItem from="1739995640952" duration="5731000" />
       <workItem from="1740024010293" duration="8896000" />
-      <workItem from="1741292348560" duration="3655000" />
+      <workItem from="1741292348560" duration="6468000" />
     </task>
     <task id="LOCAL-00001" summary="create logoutbutton and profile">
       <option name="closed" value="true" />
@@ -148,11 +166,42 @@
       <option name="project" value="LOCAL" />
       <updated>1741295787114</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="fix merge conflict 1">
+      <option name="closed" value="true" />
+      <created>1741296265750</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1741296265750</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/60-design-the-logout-feature" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="create logoutbutton and profile" />
