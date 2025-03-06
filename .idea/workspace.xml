@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict" />
+    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict 1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,7 +82,7 @@
       <workItem from="1739993022824" duration="2437000" />
       <workItem from="1739995640952" duration="5731000" />
       <workItem from="1740024010293" duration="8896000" />
-      <workItem from="1741292348560" duration="3306000" />
+      <workItem from="1741292348560" duration="3655000" />
     </task>
     <task id="LOCAL-00001" summary="create logoutbutton and profile">
       <option name="closed" value="true" />
@@ -140,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741295489865</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="fix merge conflict 1">
+      <option name="closed" value="true" />
+      <created>1741295787114</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1741295787114</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +158,7 @@
     <MESSAGE value="create logoutbutton and profile" />
     <MESSAGE value="create logoutbutton and profile fix errors" />
     <MESSAGE value="fix merge conflict" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix merge conflict" />
+    <MESSAGE value="fix merge conflict 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix merge conflict 1" />
   </component>
 </project>
