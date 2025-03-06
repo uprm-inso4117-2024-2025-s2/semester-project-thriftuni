@@ -4,24 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict 1">
-      <change afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/WishlistPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/main_page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/blanket.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/bowl.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/jewelry.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/assets/images/lamp.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/components/Wishlist/WishlistFilter.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/components/Wishlist/WishlistHeader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/components/Wishlist/WishlistItem.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/documentation/main_page.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ThriftUni/package-lock.json" afterDir="false" />
+    <list default="true" id="6f29ca1e-a534-47ee-a80a-2c6684af9fda" name="Changes" comment="fix merge conflict 1.1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ThriftUni/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ThriftUni/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ThriftUni/app/(tabs)/two.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/app/(tabs)/two.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ThriftUni/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ThriftUni/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/ThriftUni/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +54,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "#107 on Merging 60-design-the-logout-feature",
+    "git-widget-placeholder": "#107 on 60-design-the-logout-feature",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -100,7 +84,7 @@
       <workItem from="1739993022824" duration="2437000" />
       <workItem from="1739995640952" duration="5731000" />
       <workItem from="1740024010293" duration="8896000" />
-      <workItem from="1741292348560" duration="6468000" />
+      <workItem from="1741292348560" duration="7062000" />
     </task>
     <task id="LOCAL-00001" summary="create logoutbutton and profile">
       <option name="closed" value="true" />
@@ -174,7 +158,23 @@
       <option name="project" value="LOCAL" />
       <updated>1741296265750</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="fix merge conflict 1.1">
+      <option name="closed" value="true" />
+      <created>1741301482191</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1741301482191</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix merge conflict 1.1">
+      <option name="closed" value="true" />
+      <created>1741301588663</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1741301588663</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +208,7 @@
     <MESSAGE value="create logoutbutton and profile fix errors" />
     <MESSAGE value="fix merge conflict" />
     <MESSAGE value="fix merge conflict 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix merge conflict 1" />
+    <MESSAGE value="fix merge conflict 1.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix merge conflict 1.1" />
   </component>
 </project>
