@@ -1,30 +1,21 @@
 import { StyleSheet } from 'react-native';
 
-// FOR DEVELOPMENT PURPOSES ONLY------------------
+import EditScreenInfo from '@/components/EditScreenInfo';
+import { Text, View } from '@/components/Themed';
 
-import { testFirebaseConfig } from '../../firebase.config';
-
-const dummyData : any[] = [];
-
-export default function TabOneScreen() {
-
-  testFirebaseConfig();
-
+export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      <Text style={styles.title}>Tab Two</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <EditScreenInfo path="app/(tabs)/two.tsx" />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F6F9FF',
-    paddingBottom: 80,
-  },
-  listingGrid: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
