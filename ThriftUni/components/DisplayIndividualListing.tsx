@@ -4,36 +4,31 @@ import React from "react";
 import ListingDescription from "./ListingDescription";
 import ProductCard from "./ListingsPage/ProductCard";
 import ProductImages from "./ProductImages";
+import { Seller } from "./SellerCard";
 
 export interface ListingDetails {
   title: string;
   pictures: string[];
   description: string;
-  sellerName: string;
-  sellerBio: string;
+  sellerDetails: Seller;
 }
 
 export default function DisplayIndividualListing({
   title,
   pictures,
   description,
-  sellerName,
-  sellerBio,
+  sellerDetails,
 }: ListingDetails) {
-  const img: string[] = [
-    `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
-    `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
-    `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
-    `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
-    `https://picsum.photos/200?random=${Math.floor(Math.random() * 100)}`,
-  ];
   return (
     <View style={styles.container}>
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.listingTitle}>{title}</Text>
-        <ProductImages images={img} />
-        <ListingDescription description={description} />
+        <ProductImages images={pictures} />
+        <ListingDescription
+          description={description}
+          sellerDetails={sellerDetails}
+        />
       </ScrollView>
     </View>
   );
