@@ -23,6 +23,8 @@ export default function IndividualListing() {
     pictures: product.pictures,
     description: product.description,
     sellerDetails: product.sellerInfo,
+    longitude: product.longitude,
+    latitude: product.latitude,
   };
 
   return <DisplayIndividualListing {...listingDetails} />;
