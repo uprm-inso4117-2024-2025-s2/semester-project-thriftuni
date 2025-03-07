@@ -8,19 +8,17 @@ import LocationMap, { Location } from "./LocationMap";
 export default function ListingDescription({
   description,
   sellerDetails,
+  location,  
 }: {
   description: string;
   sellerDetails: Seller;
+  location: Location;
 }) {
   const handleContactSellerButton = () => {
     alert("Pressed contact seller button!");
   };
   const handleWishlistItemButton = () => {
     alert("Pressed wishlist item button!");
-  };
-  const locationInfo: Location = {
-    latitude: 18.3402,
-    longitude: 43.3089,
   };
   return (
     <View style={styles.container}>
@@ -54,7 +52,7 @@ export default function ListingDescription({
         Location
       </Text>
       <View style={styles.infoBox}>
-        <LocationMap {...locationInfo} />
+        <LocationMap {...location} />
       </View>
       <Text
         style={{

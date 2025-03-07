@@ -11,6 +11,8 @@ export interface ListingDetails {
   pictures: string[];
   description: string;
   sellerDetails: Seller;
+  longitude: number;
+  latitude: number;
 }
 
 export default function DisplayIndividualListing({
@@ -18,6 +20,8 @@ export default function DisplayIndividualListing({
   pictures,
   description,
   sellerDetails,
+  longitude,
+  latitude,
 }: ListingDetails) {
   return (
     <View style={styles.container}>
@@ -28,6 +32,7 @@ export default function DisplayIndividualListing({
         <ListingDescription
           description={description}
           sellerDetails={sellerDetails}
+          location={{ latitude: latitude, longitude: longitude }}
         />
       </ScrollView>
     </View>
