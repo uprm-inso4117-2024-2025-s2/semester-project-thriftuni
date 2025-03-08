@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 
 const Profile: React.FC = () => {
@@ -27,7 +28,7 @@ const Profile: React.FC = () => {
          <TouchableOpacity>
            <Ionicons name="add-circle-outline" size={24} color="black" />
          </TouchableOpacity>
-         <TouchableOpacity>
+         <TouchableOpacity onPress={() => router.push('/settings')}>
            <Ionicons name="menu" size={24} color="black" />
          </TouchableOpacity>
        </View>
