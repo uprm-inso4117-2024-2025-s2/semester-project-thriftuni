@@ -1,66 +1,339 @@
-import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const categories: { title: string; options: string[] }[] = [
-  { title: "Outfit Styles", options: ["Casual", "Business Casual", "Formal", "Vintage", "Streetwear", "Minimalist", "Old Money", "Classic"] },
-  { title: "Tops", options: ["T-shirts", "Blouses", "Sweaters", "Tank tops", "Button-up", "Hoodies"] },
-  { title: "Bottoms", options: ["Jeans", "Leggings", "Joggers", "Cargo", "Shorts", "Skirts"] },
-  { title: "Dresses & One-Pieces", options: ["Casual", "Jumpsuits", "Formal gowns", "Rompers"] },
-  { title: "Footwear", options: ["Sneakers", "Sandals", "Loafers", "Boots", "Heels"] }
-];
+function Chip({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.chip, selected && styles.chipSelected]}
+    >
+      <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+}
 
-export default function InterestsSizes() {
-  const [selectedTab, setSelectedTab] = useState<"Interests" | "Sizes">("Interests");
-  const [selectedInterests, setSelectedInterests] = useState<Set<string>>(new Set());
+export default function InterestsAndSizesScreen() {
+  const navigation = useNavigation();
+  const [selectedTab, setSelectedTab] = useState<'Interests' | 'Sizes'>(
+    'Interests'
+  );
 
-  const toggleSelection = (item: string) => {
-    setSelectedInterests((prev) => {
-      const newSet = new Set(prev);
-      newSet.has(item) ? newSet.delete(item) : newSet.add(item);
-      return newSet;
-    });
+  const outfitStyles = [
+    'Casual',
+    'Business Casual',
+    'Formal',
+    'Vintage',
+    'Streetwear',
+    'Minimalist',
+    'Old Money',
+    'Classic',
+  ];
+  const tops = ['T-shirts', 'Blouses', 'Sweaters', 'Hoodies'];
+  const bottoms = ['Jeans', 'Leggings', 'Joggers', 'Skirts'];
+  const dresses = ['Casual', 'Jumpsuit', 'Evening', 'Summer'];
+
+  const topSizes = ['X-Small', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large'];
+  const bottomSizes = ['X-Small', 'Small', 'Medium', 'Large', 'XX-Large'];
+  const dressSizes = ['X-Small', 'Small', 'Medium', 'Large', 'XX-Large'];
+  const footwearSizes = [
+    '8',
+    '9',
+    '9.5',
+    '10',
+    '10.5',
+    '11',
+    '11.5',
+    '12',
+    '13',
+  ];
+
+  const [selectedOutfitStyles, setSelectedOutfitStyles] = useState<string[]>([]);
+  const [selectedTops, setSelectedTops] = useState<string[]>([]);
+  const [selectedBottoms, setSelectedBottoms] = useState<string[]>([]);
+  const [selectedDresses, setSelectedDresses] = useState<string[]>([]);
+
+  const [selectedTopSizes, setSelectedTopSizes] = useState<string[]>([]);
+  const [selectedBottomSizes, setSelectedBottomSizes] = useState<string[]>([]);
+  const [selectedDressSizes, setSelectedDressSizes] = useState<string[]>([]);
+  const [selectedFootwearSizes, setSelectedFootwearSizes] = useState<string[]>(
+    []
+  );
+
+  const toggleSelection = (
+    item: string,
+    selectedArray: string[],
+    setSelectedArray: React.Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    if (selectedArray.includes(item)) {
+      setSelectedArray(selectedArray.filter((val) => val !== item));
+    } else {
+      setSelectedArray([...selectedArray, item]);
+    }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <div className="flex items-center mb-4">
-        <ArrowLeft className="w-6 h-6 cursor-pointer" />
-        <h1 className="text-xl font-semibold flex-1 text-center">Interests and sizes</h1>
-      </div>
-      <div className="flex gap-2 mb-4">
-        <button
-          className={`flex-1 px-4 py-2 rounded ${selectedTab === "Interests" ? "bg-black text-white" : "bg-gray-300"}`}
-          onClick={() => setSelectedTab("Interests")}
+    <View style={styles.container}>
+      <View style={styles.tabHeader}>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('Interests')}
+          style={[
+            styles.tabButton,
+            selectedTab === 'Interests' && styles.tabButtonActive,
+          ]}
         >
-          Interests
-        </button>
-        <button
-          className={`flex-1 px-4 py-2 rounded ${selectedTab === "Sizes" ? "bg-black text-white" : "bg-gray-300"}`}
-          onClick={() => setSelectedTab("Sizes")}
+          <Text
+            style={[
+              styles.tabButtonText,
+              selectedTab === 'Interests' && styles.tabButtonTextActive,
+            ]}
+          >
+            Interests
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('Sizes')}
+          style={[
+            styles.tabButton,
+            selectedTab === 'Sizes' && styles.tabButtonActive,
+          ]}
         >
-          Sizes
-        </button>
-      </div>
-      {selectedTab === "Interests" && (
-        <div className="space-y-4">
-          {categories.map(({ title, options }) => (
-            <div key={title}>
-              <h2 className="text-lg font-semibold mb-2">{title}</h2>
-              <div className="flex flex-wrap gap-2">
-                {options.map((item) => (
-                  <button
-                    key={item}
-                    className={`px-4 py-2 rounded-full ${selectedInterests.has(item) ? "bg-black text-white" : "bg-gray-300"}`}
-                    onClick={() => toggleSelection(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+          <Text
+            style={[
+              styles.tabButtonText,
+              selectedTab === 'Sizes' && styles.tabButtonTextActive,
+            ]}
+          >
+            Sizes
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={{paddingBottom: 100}}>
+        {selectedTab === 'Interests' ? (
+          <View>
+            <Text style={styles.sectionHeader}>Outfit Styles</Text>
+            <View style={styles.chipContainer}>
+              {outfitStyles.map((style) => (
+                <Chip
+                  key={style}
+                  label={style}
+                  selected={selectedOutfitStyles.includes(style)}
+                  onPress={() =>
+                    toggleSelection(style, selectedOutfitStyles, setSelectedOutfitStyles)
+                  }
+                />
+              ))}
+            </View>
+
+            <Text style={styles.sectionHeader}>Tops</Text>
+            <View style={styles.chipContainer}>
+              {tops.map((style) => (
+                <Chip
+                  key={style}
+                  label={style}
+                  selected={selectedTops.includes(style)}
+                  onPress={() => toggleSelection(style, selectedTops, setSelectedTops)}
+                />
+              ))}
+            </View>
+
+            <Text style={styles.sectionHeader}>Bottoms</Text>
+            <View style={styles.chipContainer}>
+              {bottoms.map((style) => (
+                <Chip
+                  key={style}
+                  label={style}
+                  selected={selectedBottoms.includes(style)}
+                  onPress={() =>
+                    toggleSelection(style, selectedBottoms, setSelectedBottoms)
+                  }
+                />
+              ))}
+            </View>
+
+            <Text style={styles.sectionHeader}>Dresses & One-Pieces</Text>
+            <View style={styles.chipContainer}>
+              {dresses.map((style) => (
+                <Chip
+                  key={style}
+                  label={style}
+                  selected={selectedDresses.includes(style)}
+                  onPress={() =>
+                    toggleSelection(style, selectedDresses, setSelectedDresses)
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.sectionHeader}>Tops</Text>
+            <View style={styles.chipContainer}>
+              {topSizes.map((size) => (
+                <Chip
+                  key={size}
+                  label={size}
+                  selected={selectedTopSizes.includes(size)}
+                  onPress={() =>
+                    toggleSelection(size, selectedTopSizes, setSelectedTopSizes)
+                  }
+                />
+              ))}
+            </View>
+
+            <Text style={styles.sectionHeader}>Bottoms</Text>
+            <View style={styles.chipContainer}>
+              {bottomSizes.map((size) => (
+                <Chip
+                  key={size}
+                  label={size}
+                  selected={selectedBottomSizes.includes(size)}
+                  onPress={() =>
+                    toggleSelection(size, selectedBottomSizes, setSelectedBottomSizes)
+                  }
+                />
+              ))}
+            </View>
+
+            <Text style={styles.sectionHeader}>Dresses & One-Pieces</Text>
+            <View style={styles.chipContainer}>
+              {dressSizes.map((size) => (
+                <Chip
+                  key={size}
+                  label={size}
+                  selected={selectedDressSizes.includes(size)}
+                  onPress={() =>
+                    toggleSelection(size, selectedDressSizes, setSelectedDressSizes)
+                  }
+                />
+              ))}
+            </View>
+
+            <Text style={styles.sectionHeader}>Footwear</Text>
+            <View style={styles.chipContainer}>
+              {footwearSizes.map((size) => (
+                <Chip
+                  key={size}
+                  label={size}
+                  selected={selectedFootwearSizes.includes(size)}
+                  onPress={() =>
+                    toggleSelection(size, selectedFootwearSizes, setSelectedFootwearSizes)
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        )}
+      </ScrollView>
+
+      <View style={styles.saveButtonContainer}>
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F6F9FF',
+  },
+  scrollContainer: {
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
+  tabHeader: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    backgroundColor: '#F6F9FF',
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  tabButtonActive: {
+    borderBottomWidth: 3,
+    borderBottomColor: '#000',
+  },
+  tabButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#999',
+  },
+  tabButtonTextActive: {
+    color: '#000',
+  },
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 8,
+    color: '#000',
+  },
+  chipContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 10,
+  },
+  chip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: '#EFEFEF',
+    borderRadius: 16,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  chipSelected: {
+    backgroundColor: '#000',
+  },
+  chipText: {
+    color: '#000',
+    fontSize: 14,
+  },
+  chipTextSelected: {
+    color: '#FFF',
+  },
+  saveButtonContainer: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    backgroundColor: '#F6F9FF',
+  },
+  saveButton: {
+    backgroundColor: '#000',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
