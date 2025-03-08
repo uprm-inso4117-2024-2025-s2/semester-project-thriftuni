@@ -13,21 +13,21 @@ export default function LocationMap({latitude, longitude} : Location) {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 18.2014, // Replace with actual latitude
-          longitude: -67.1396, // Replace with actual longitude
+          latitude: latitude, // Replace with actual latitude
+          longitude: longitude, // Replace with actual longitude
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         }}
       >
         {/* Marker for the location */}
         <Marker
-          coordinate={{ latitude: 18.2014, longitude: -67.1396 }}
+          coordinate={{ latitude: latitude, longitude: longitude }}
           title="Plaza Cristóbal Colón"
         />
 
         {/* Circular overlay */}
         <Circle
-          center={{ latitude: 18.2014, longitude: -67.1396 }}
+          center={{ latitude: latitude, longitude: longitude }}
           radius={500} // Adjust as needed
           strokeColor="rgba(0, 128, 0, 0.5)" // Green border
           fillColor="rgba(66, 219, 43, 0.2)" // Light green fill
