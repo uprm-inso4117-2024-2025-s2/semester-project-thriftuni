@@ -1,8 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import { FontAwesome, Feather } from "@expo/vector-icons";
+import DisplayMyListing from "./my_listings";
+import Profile from "./Profile";
+import ListItem from "./ListItem";
+import WishlistPage from "./WishlistPage";
 
 const ThriftUniApp = () => {
+  const [showListings, setShowListings] = useState(false);
+
+  if (showListings) {
+    return <DisplayMyListing />;
+  }
+
+  const [showProfile, setShowProfile] = useState(false);
+
+  if (showProfile) {
+    return <Profile />;
+  }
+
+  const [showListItem, setShowListItem] = useState(false);
+
+  if (showListItem) {
+    return <ListItem />;
+  }
+
+  const [showWishlistPage, setShowWishlistPage] = useState(false);
+
+  if (showWishlistPage) {
+    return <WishlistPage />;
+  }
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -20,12 +48,12 @@ const ThriftUniApp = () => {
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         <View style={styles.row}>
-          <Button icon="upload" text="Post Listing" />
-          <Button icon="edit" text="View Drafts" />
+          <Button icon="upload" text="Post Listing" onPress={() => setShowListItem(true)}/>
+          <Button icon="edit" text="View Drafts" onPress={() => setShowListings(true)}/>
         </View>
         <View style={styles.row}>
-          <Button icon="star" text="Read Your Reviews" />
-          <Button icon="heart" text="View Saved Posts" />
+          <Button icon="star" text="Read Your Reviews" onPress={() => setShowProfile(true)}/>
+          <Button icon="heart" text="View Saved Posts" onPress={() => setShowWishlistPage(true)}/>
         </View>
       </View>
     </ScrollView>
@@ -33,9 +61,9 @@ const ThriftUniApp = () => {
 };
 
 // Button Component
-const Button = ({ icon, text }: { icon: string; text: string }) => {
+const Button = ({ icon, text, onPress }: { icon: string; text: string; onPress?: () => void }) => {
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <FontAwesome name={icon as any} size={28} color="black" />
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
