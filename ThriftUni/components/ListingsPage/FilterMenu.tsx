@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { Rating } from "react-native-ratings";
-import { Listings } from "@/app/(tabs)/listings";
+import { Listings } from "@/app/(tabs)";
 import CategoryDropdown from "./CategoryDropdown";
 
 // DUMMY CATEGORY DATA FOR DEVELOPMENT PURPOSES
