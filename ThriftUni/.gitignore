@@ -37,9 +37,3 @@ yarn-error.*
 
 google-services.json
 GoogleService-Info.plist
-
-# yarn
-yarn.lock
-
-# npm 
-package-lock.json

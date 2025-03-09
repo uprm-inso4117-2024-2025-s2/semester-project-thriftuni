@@ -1,24 +1,31 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
 import { View, Text } from "@/components/Themed";
-import ContactSeller from "./buttons/ContactSeller";
-import WishlistItem from "./buttons/WishlistItem";
+import ContactSeller from "./Buttons/ContactSeller";
+import WishlistItem from "./Buttons/WishlistItem";
 import SellerCard, { Seller } from "./SellerCard";
 import LocationMap, { Location } from "./LocationMap";
 
 export default function ListingDescription({
   description,
-  sellerDetails,
-  location,  
 }: {
   description: string;
-  sellerDetails: Seller;
-  location: Location;
 }) {
   const handleContactSellerButton = () => {
     alert("Pressed contact seller button!");
   };
   const handleWishlistItemButton = () => {
     alert("Pressed wishlist item button!");
+  };
+  const sellerInfo: Seller = {
+    name: "Pepe",
+    location: "Mayaguez, Puerto Rico",
+    rating: 3,
+    about: "Soy Pepe",
+    onProfilePress: () => alert("Profile Clicked"),
+  };
+  const locationInfo: Location = {
+    latitude: 18.3402,
+    longitude: 43.3089,
   };
   return (
     <View style={styles.container}>
@@ -52,7 +59,7 @@ export default function ListingDescription({
         Location
       </Text>
       <View style={styles.infoBox}>
-        <LocationMap {...location} />
+        <LocationMap {...locationInfo} />
       </View>
       <Text
         style={{
@@ -65,7 +72,7 @@ export default function ListingDescription({
         About the seller
       </Text>
       <View style={styles.infoBox}>
-        <SellerCard {...sellerDetails} />
+        <SellerCard {...sellerInfo} />
       </View>
     </View>
   );
