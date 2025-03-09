@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -27,9 +28,10 @@ export default function SettingsScreen() {
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => router.push('/settings')}></TouchableOpacity>
           <TouchableOpacity
             style={styles.settingItem}
-            onPress={() => navigation.navigate('InterestsAndSizes' as never)} // cast to 'never' if TS complains
+            onPress={() => router.push('/(tabs)/interestsandsizes')} // cast to 'never' if TS complains
           >
             <Text style={styles.settingText}>Interest and Sizes</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
