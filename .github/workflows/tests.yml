@@ -36,7 +36,7 @@ jobs:
         run: cat test-results/firestore-results.log test-results/jest-results.xml > test-results/full-test-report.log
 
       - name: Upload Test Results (Always)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: full-test-results
           path: test-results/
