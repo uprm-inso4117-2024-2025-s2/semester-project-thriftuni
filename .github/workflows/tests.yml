@@ -16,27 +16,31 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
 
       - name: Install dependencies
         run: npm install
+        working-directory: ThriftUni
 
       - name: Create test-results directory
         run: mkdir -p test-results
+        working-directory: ThriftUni
 
       - name: Run Firestore Rules Tests with Emulator
         run: |
           npm install -g firebase-tools
           firebase emulators:exec --only firestore "node firestore-test.js" | tee test-results/firestore-results.log
+        working-directory: ThriftUni
 
       - name: Run Jest Tests
         run: npm test | tee test-results/jest-results.xml
+        working-directory: ThriftUni
 
       - name: Merge all test results into one file
         run: cat test-results/firestore-results.log test-results/jest-results.xml > test-results/full-test-report.log
+        working-directory: ThriftUni
 
       - name: Upload Test Results (Always)
         uses: actions/upload-artifact@v4
         with:
           name: full-test-results
-          path: test-results/
+          path: ThriftUni/test-results/
