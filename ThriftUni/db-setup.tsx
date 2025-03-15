@@ -9,6 +9,7 @@ const CreateFirestoreCollections = () => {
                 const listingCollection = collection(db, 'listing');
                 const categoriesCollection = collection(db, 'categories');
                 const listingCategoriesCollection = collection(db, 'listing_categories');
+                const listingImagesCollection = collection(db, 'listing_images');
 
                 // "listing" collection
                 const listingDocRef = doc(listingCollection);
@@ -43,6 +44,18 @@ const CreateFirestoreCollections = () => {
                 };
                 await setDoc(listingCategoriesDocRef, dummyListingCatDoc);
                 console.log("'listing_categories' collection created and dummy document added.");
+
+                // "listing_images" collection
+                const listingImagesDocRef = doc(listingImagesCollection);
+                // Firestore creates a random string ID for the document
+                const dummyListingImagesDoc = {
+                    listing_id: listingDocRef,
+                    image_url: "TEMPORARY_URL", // Placeholder for image URL TODO: CREATE BUCKET AND ADD LINK
+                    position: 1,
+                    uploaded_at: serverTimestamp(), // Firestore handles timestamp creation
+                };
+                await setDoc(listingImagesDocRef, dummyListingImagesDoc);
+                console.log("'listing_images' collection created and dummy document added.");
 
 
             } catch (error) {
