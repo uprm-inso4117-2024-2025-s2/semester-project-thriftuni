@@ -21,17 +21,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create test-results directory
+        run: mkdir -p test-results
+
       - name: Run Firestore Rules Tests with Emulator
         run: |
           npm install -g firebase-tools
-          firebase emulators:exec --only firestore "node firestore-test.js"
+          firebase emulators:exec --only firestore "node firestore-test.js" | tee test-results/firestore-results.log
 
       - name: Run Jest Tests
-        run: npm test
+        run: npm test | tee test-results/jest-results.xml
 
-      - name: Upload Jest Test Results (if failed)
-        if: failure()
+      - name: Merge all test results into one file
+        run: cat test-results/firestore-results.log test-results/jest-results.xml > test-results/full-test-report.log
+
+      - name: Upload Test Results (Always)
         uses: actions/upload-artifact@v3
         with:
-          name: jest-test-results
+          name: full-test-results
           path: test-results/
