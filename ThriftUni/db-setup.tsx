@@ -15,7 +15,7 @@ const CreateFirestoreCollections = () => {
                 const listingDocRef = doc(listingCollection);
                 // Firestore creates a random string ID for the document
                 const dummyListDoc = {
-                    title: "Dummy Listing",
+                    title: "Dummy Listing for listing_images",
                     description: "Dummy document for testing and temporary structure",
                     price: 0.99,
                     currency: "USD",
@@ -50,8 +50,8 @@ const CreateFirestoreCollections = () => {
                 // Firestore creates a random string ID for the document
                 const dummyListingImagesDoc = {
                     listing_id: listingDocRef,
-                    image_url: "TEMPORARY_URL", // Placeholder for image URL TODO: CREATE BUCKET AND ADD LINK
-                    position: 1,
+                    image_url: "STORAGE_DOWNLOAD_URL", // Placeholder for download URL TODO: CREATE BUCKET AND GET DOWNLOAD LINKS WHEN CLOUD STORAGE IS SET UP
+                    position: 1, // Optional field for image order
                     uploaded_at: serverTimestamp(), // Firestore handles timestamp creation
                 };
                 await setDoc(listingImagesDocRef, dummyListingImagesDoc);
