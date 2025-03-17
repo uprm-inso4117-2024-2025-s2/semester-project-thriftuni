@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { router } from "expo-router";
 import {
   View,
@@ -8,31 +8,47 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { sendPasswordReset } from "../../firebase/firebase.config";
+import { sendPasswordReset, logResetAttempt, checkRateLimit } from "../../firebase/firebase.config";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig } from "../../firebase/firebase.config";
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const recaptchaVerifier = useRef(null);
 
   const handleResetPassword = async () => {
     setLoading(true);
     setMessage("");
     setError("");
 
-    const response = await sendPasswordReset(email);
-    setLoading(false);
-
-    if (response.error) {
-      setError(response.error);
-    } else {
-      setMessage("Password reset link sent. Check your email.");
+    const rateLimited = await checkRateLimit(email);
+    if (rateLimited) {
+      setLoading(false);
+      setError("Too many reset attempts. Please try again later.");
+      return;
     }
+
+    try {
+      await sendPasswordReset(email);
+      await logResetAttempt(email, "success");
+      setMessage("Password reset link sent. Check your email.");
+    } catch (err) {
+      await logResetAttempt(email, "failed");
+      setError((err as Error).message);
+    }
+
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
+      <FirebaseRecaptchaVerifierModal
+        ref={recaptchaVerifier}
+        firebaseConfig={firebaseConfig}
+      />
       <Text style={styles.title}>Reset Password</Text>
       <View style={styles.form}>
         <TextInput
@@ -55,7 +71,9 @@ const ForgotPasswordScreen = () => {
         )}
       </View>
       <Text style={styles.backText}>
-        <Text style={styles.link} onPress={() => router.push("/login/login")}>Back to Login</Text>
+        <Text style={styles.link} onPress={() => router.push("/login/login")}>
+          Back to Login
+        </Text>
       </Text>
     </View>
   );
