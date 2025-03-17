@@ -1,6 +1,16 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, sendPasswordResetEmail} from 'firebase/auth';
 import { Platform } from 'react-native';
+
+export const sendPasswordReset = async (email: string) => {
+  const auth = getAuth();
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { success: true };
+  } catch (error) {
+    return { error: (error as any).message };
+  }
+};
 
 
 const firebaseConfig = {

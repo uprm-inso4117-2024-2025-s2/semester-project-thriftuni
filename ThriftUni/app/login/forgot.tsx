@@ -1,68 +1,61 @@
 import React, { useState } from "react";
+import { router } from "expo-router";
 import {
   View,
   TextInput,
-  Button,
   Text,
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { login } from "../../firebase/login";
+import { sendPasswordReset } from "../../firebase/firebase.config";
 
-const LoginScreen = () => {
+const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleResetPassword = async () => {
     setLoading(true);
-    console.log("email:", email);
-    console.log("password:", password);
-    const response = await login(email, password);
+    setMessage("");
+    setError("");
+
+    const response = await sendPasswordReset(email);
     setLoading(false);
 
     if (response.error) {
       setError(response.error);
     } else {
-      console.log("User logged in:", response.user);
+      setMessage("Password reset link sent. Check your email.");
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Reset Password</Text>
       <View style={styles.form}>
         <TextInput
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
-          autoCapitalize="none" // Prevents first-letter capitalization
-          keyboardType="email-address" // Opens email keyboard
+          autoCapitalize="none"
+          keyboardType="email-address"
           style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
+          placeholderTextColor="#999"
         />
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
+        {message ? <Text style={{ color: "green" }}>{message}</Text> : null}
         {loading ? (
           <ActivityIndicator size="small" />
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
+          <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
+            <Text style={styles.buttonText}>Send Reset Link</Text>
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.signupText}>
-        Don't have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
-          Sign Up
-        </Text>
+      <Text style={styles.backText}>
+        <Text style={styles.link} onPress={() => router.push("/login/login")}>Back to Login</Text>
       </Text>
     </View>
   );
@@ -92,14 +85,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -108,13 +101,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  signupText: {
-    marginTop: 20,
-  },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
+  },
+  backText: {
+    marginTop: 15,
   },
 });
 
-export default LoginScreen;
+export default ForgotPasswordScreen;
