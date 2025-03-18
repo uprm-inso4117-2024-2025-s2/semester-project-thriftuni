@@ -6,16 +6,22 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { Platform } from "react-native";
 
 
 const firebaseConfig = {
- apiKey: "AIzaSyBliTLyyqHam9ei-900BYyt-y4ZGoowrEk",
- authDomain: "thriftuni-b345a.firebase.com",
- projectId: "thriftuni-b345a",
- storageBucket: "thriftuni-b345a.firebasestorage.app",
- messagingSenderId: "501062585933",
- appId: "1:501062585933:android:11ca96ded2177956a3d604",
- appID: "1:501062585933:ios:22353406f954b406a3d604",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId:
+    Platform.OS === 'ios'
+      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS // ID para iOS
+      : Platform.OS === 'android'
+      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_ANDROID // ID para Android
+      : process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB, // ID para Web (solo en web apps),
+  ...(Platform.OS === 'web' && { measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID }),
 };
 
 
