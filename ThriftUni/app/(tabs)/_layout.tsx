@@ -25,7 +25,7 @@ export default function TabLayout() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Commented as we don't need this anymore */}
+      {/* Commented as we don't need this anymore Example code for Document creation*/}
       {/* <CreateFirestoreCollections /> */}
       <Tabs
         screenOptions={{
