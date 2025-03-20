@@ -11,11 +11,7 @@
     "test": "jest --ci --runInBand"
   },
   "jest": {
-    "preset": "jest-expo",
-    "reporters": [
-      "default",
-      ["jest-junit", { "outputDirectory": "test-results", "outputName": "jest-results.xml" }]
-    ]
+    "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
