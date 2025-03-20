@@ -72,7 +72,7 @@ const adminDb = admin.firestore(); // Administrator-level Firestore connection
 
     // 🔹 Run tests
     await runTest("Authenticated users can read profiles",
-        assertFails(userADb.collection("users").doc("userA").get())); //Fail this test on purpose to test how the GitHub action reacts. (assertSucceeds expected)
+        assertSucceeds(userADb.collection("users").doc("userA").get()));
 
     await runTest("A user CANNOT modify another user's profile",
         assertFails(userBDb.collection("users").doc("userA").set({ name: "New Name" })));

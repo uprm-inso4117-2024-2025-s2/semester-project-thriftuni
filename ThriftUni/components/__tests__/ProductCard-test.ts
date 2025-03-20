@@ -4,7 +4,7 @@ import {describe, expect, it} from "@jest/globals";
 // Test formatPrice function
 describe('formatPrice helper function', () => {
   it('should return formatted price', () => {
-    expect(formatCurrency(1000)).toBe('$99,999.99'); // Incorrect value to force failure
+    expect(formatCurrency(1000)).toBe('$1,000.00');
   }),
   it('should return formatted price', () => {
     expect(formatCurrency(0)).toBe('$0.00');
