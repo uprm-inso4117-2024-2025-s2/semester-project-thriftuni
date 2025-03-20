@@ -56,7 +56,7 @@ for (let i = 0; i < 21; i++) {
 //---------------------------------
 
 export interface Listings {
-  id: number;
+  listing_id: string;
   title: string;
   price: number;
   img: string;
@@ -69,28 +69,36 @@ export interface Listings {
 }
 
 export default function ListingScreen() {
-  const [data, setData] = useState<Listings[]>([]);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    try {
+    const fetchListings = async () => {
+      try {
+        const listingsCollection = collection(db, "listings");
+        const querySnapshot = await getDocs(listingsCollection);
+        const ImagesCollection = collection(db, "listing_images");
+        if (querySnapshot.empty) {
+          console.log("No documents found in listings collection");
+          return;
+        }
 
-      const listingCollection = collection(db, "listing");
-      const listingSnapshot = getDocs(listingCollection);
-      listingSnapshot.then((querySnapshot) => {
+
+
+        
+        const listings: any[] = [];
         querySnapshot.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
-          setData((prev) => [...prev, doc.data() as Listings]);
+          listings.push({ listing_id: doc.id, ...doc.data(), sellerInfo: sellerDetails, img: getRandomImage() });
         });
-      });
-      
-      
-    }
-    catch (error) {
-      console.error(error);
-    }
-  }, []);
-
-
+        
+        setData(listings);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      }
+    };
+    
+    fetchListings();
+  }, [db]); // Only re-run if db changes
 
   return (
     <View>
@@ -106,8 +114,8 @@ export default function ListingScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <FilterMenu data={data} setData={setData} />
         <View style={styles.listingGrid}>
-          {dummyData.map((product) => (
-            <ProductCard key={product.id} {...product} />
+          {data.map((product) => (
+            <ProductCard key={product.listing_id} {...product} />
           ))}
         </View>
       </ScrollView>
@@ -119,6 +127,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#F6F9FF",
     paddingBottom: 80,
+    minHeight: "100%",
   },
   listingGrid: {
     alignItems: "center",
