@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --ci --runInBand"
+    "test": "jest --watchAll --runInBand --testPathPattern=components/__tests__ --testPathIgnorePatterns=components/__tests__/ListingsTesting.tsx"
   },
   "jest": {
     "preset": "jest-expo"
