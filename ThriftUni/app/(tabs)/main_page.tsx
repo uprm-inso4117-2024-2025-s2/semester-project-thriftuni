@@ -1,15 +1,19 @@
+// Updated main_page.tsx with search functionality leading to Browse
+
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 
-// Import your screens
+// Import all your screens
 import DisplayMyListing from "./my_listings";
 import ListItem from "./ListItem";
 import WishlistPage from "./WishlistPage";
 import Profile from "./Profile";
+import ListingScreen from "./index"; // Browse screen
 
 const ThriftUniApp = () => {
-  const [activeScreen, setActiveScreen] = useState<"home" | "listings" | "post" | "wishlist" | "profile">("home");
+  const [activeScreen, setActiveScreen] = useState<"home" | "listings" | "post" | "wishlist" | "profile" | "browse">("home");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const renderScreen = () => {
     switch (activeScreen) {
@@ -49,15 +53,24 @@ const ThriftUniApp = () => {
             <Profile />
           </>
         );
+      case "browse":
+        return (
+          <>
+            <TouchableOpacity onPress={() => setActiveScreen("home")} style={styles.backButton}>
+              <Text style={styles.backButtonText}>← Back to Home</Text>
+            </TouchableOpacity>
+            <ListingScreen />
+          </>
+        );
       default:
-        return <MainPage navigate={setActiveScreen} />;
+        return <MainPage navigate={setActiveScreen} setSearchQuery={setSearchQuery} onSearch={() => setActiveScreen("browse")} />;
     }
   };
 
   return <View style={{ flex: 1 }}>{renderScreen()}</View>;
 };
 
-const MainPage = ({ navigate }: { navigate: (screen: any) => void }) => {
+const MainPage = ({ navigate, setSearchQuery, onSearch }: { navigate: (screen: any) => void; setSearchQuery: (query: string) => void; onSearch: () => void }) => {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -68,7 +81,13 @@ const MainPage = ({ navigate }: { navigate: (screen: any) => void }) => {
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Feather name="menu" size={24} color="gray" style={styles.icon} />
-        <TextInput placeholder="Search Listings..." style={styles.input} />
+        <TextInput
+          placeholder="Search Listings..."
+          style={styles.input}
+          onChangeText={setSearchQuery}
+          onSubmitEditing={onSearch} // Navigates to Browse
+          returnKeyType="search"
+        />
         <Feather name="search" size={24} color="gray" />
       </View>
 
@@ -125,8 +144,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: { marginTop: 5, fontSize: 16, fontWeight: "500", color: "black" },
-
-  // Back Button Styling
   backButton: {
     alignSelf: 'flex-start',
     backgroundColor: '#f0f0f0',
