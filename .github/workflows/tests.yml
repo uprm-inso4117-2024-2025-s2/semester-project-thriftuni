@@ -25,20 +25,17 @@ jobs:
         run: |
           npm install -g firebase-tools
           set -o pipefail
-          firebase emulators:exec --only firestore "node firestore-test.js"
+          firebase emulators:exec --only firestore "node firestore-test.js" || echo 'Firestore tests failed' > firestore-failed
         working-directory: ThriftUni
-        continue-on-error: true
 
       - name: Run Jest Tests
         run: |
           set -o pipefail
-          npm test
+          npm test || echo 'Jest tests failed' > jest-failed
         working-directory: ThriftUni
-        continue-on-error: true
 
-      - name: Final Validation (Fail if any test failed)
+      - name: Fail workflow if any test failed
         run: |
-           if [ $? -ne 0 ]; then
-             echo "❌ Some tests failed. Marking the job as failed."
-             exit 1
-           fi
+          if [ -f ThriftUni/firestore-failed ] || [ -f ThriftUni/jest-failed ]; then
+            exit 1
+          fi
