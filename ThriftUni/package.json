@@ -24,6 +24,7 @@
     "dependencies": "^0.0.1",
     "expo": "^52.0.37",
     "expo-auth-session": "^6.0.3",
+    "expo-firebase-recaptcha": "^2.3.1",
     "expo-font": "~13.0.3",
     "expo-image-picker": "^16.0.6",
     "expo-linking": "~7.0.5",
@@ -49,7 +50,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "15.8.0",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "react-native-webview": "^13.13.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
