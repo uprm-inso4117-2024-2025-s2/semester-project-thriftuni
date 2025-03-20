@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 import { initializeApp, getApp, getApps } from "firebase/app";
@@ -46,6 +46,8 @@ export default function Signup() {
         password
       );
       const user = userCredential.user;
+
+      await sendEmailVerification(user);
 
       await setDoc(doc(db, "users", user.uid), {
         name,
