@@ -1,8 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 
+// Import your screens
+import DisplayMyListing from "./my_listings";
+import ListItem from "./ListItem";
+import WishlistPage from "./WishlistPage";
+import Profile from "./Profile";
+
 const ThriftUniApp = () => {
+  const [activeScreen, setActiveScreen] = useState<"home" | "listings" | "post" | "wishlist" | "profile">("home");
+
+  const renderScreen = () => {
+    switch (activeScreen) {
+      case "listings":
+        return (
+          <>
+            <TouchableOpacity onPress={() => setActiveScreen("home")} style={styles.backButton}>
+              <Text style={styles.backButtonText}>← Back to Home</Text>
+            </TouchableOpacity>
+            <DisplayMyListing />
+          </>
+        );
+      case "post":
+        return (
+          <>
+            <TouchableOpacity onPress={() => setActiveScreen("home")} style={styles.backButton}>
+              <Text style={styles.backButtonText}>← Back to Home</Text>
+            </TouchableOpacity>
+            <ListItem />
+          </>
+        );
+      case "wishlist":
+        return (
+          <>
+            <TouchableOpacity onPress={() => setActiveScreen("home")} style={styles.backButton}>
+              <Text style={styles.backButtonText}>← Back to Home</Text>
+            </TouchableOpacity>
+            <WishlistPage />
+          </>
+        );
+      case "profile":
+        return (
+          <>
+            <TouchableOpacity onPress={() => setActiveScreen("home")} style={styles.backButton}>
+              <Text style={styles.backButtonText}>← Back to Home</Text>
+            </TouchableOpacity>
+            <Profile />
+          </>
+        );
+      default:
+        return <MainPage navigate={setActiveScreen} />;
+    }
+  };
+
+  return <View style={{ flex: 1 }}>{renderScreen()}</View>;
+};
+
+const MainPage = ({ navigate }: { navigate: (screen: any) => void }) => {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -17,49 +72,32 @@ const ThriftUniApp = () => {
         <Feather name="search" size={24} color="gray" />
       </View>
 
-      {/* Buttons */}
+      {/* Action Buttons */}
       <View style={styles.buttonContainer}>
         <View style={styles.row}>
-          <Button icon="upload" text="Post Listing" />
-          <Button icon="edit" text="View Drafts" />
+          <Button icon="list" text="My Listings" onPress={() => navigate("listings")} />
+          <Button icon="plus" text="Post Listing" onPress={() => navigate("post")} />
         </View>
         <View style={styles.row}>
-          <Button icon="star" text="Read Your Reviews" />
-          <Button icon="heart" text="View Saved Posts" />
+          <Button icon="heart" text="View Wishlist" onPress={() => navigate("wishlist")} />
+          <Button icon="user" text="View My Profile" onPress={() => navigate("profile")} />
         </View>
       </View>
     </ScrollView>
   );
 };
 
-// Button Component
-const Button = ({ icon, text }: { icon: string; text: string }) => {
-  return (
-    <TouchableOpacity style={styles.button}>
-      <FontAwesome name={icon as any} size={28} color="black" />
-      <Text style={styles.buttonText}>{text}</Text>
-    </TouchableOpacity>
-  );
-};
+const Button = ({ icon, text, onPress }: { icon: string; text: string; onPress?: () => void }) => (
+  <TouchableOpacity style={styles.button} onPress={onPress}>
+    <FontAwesome name={icon as any} size={28} color="black" />
+    <Text style={styles.buttonText}>{text}</Text>
+  </TouchableOpacity>
+);
 
-// Styles
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#E5E5E5", // Bright green background
-    paddingVertical: 20,
-  },
-  header: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "black",
-    textAlign: "center",
-  },
+  container: { flex: 1, backgroundColor: "#E5E5E5", paddingVertical: 20 },
+  header: { justifyContent: "center", alignItems: "center", marginVertical: 20 },
+  title: { fontSize: 28, fontWeight: "bold", color: "black", textAlign: "center" },
   searchContainer: {
     backgroundColor: "white",
     flexDirection: "row",
@@ -73,25 +111,12 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
-  icon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    color: "black",
-    fontSize: 16,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
-  },
+  icon: { marginRight: 10 },
+  input: { flex: 1, color: "black", fontSize: 16 },
+  buttonContainer: { marginTop: 20, paddingHorizontal: 20 },
+  row: { flexDirection: "row", justifyContent: "space-between", marginBottom: 15 },
   button: {
-    backgroundColor: "#FFFF",
+    backgroundColor: "#FFF",
     flex: 1,
     marginHorizontal: 10,
     paddingVertical: 20,
@@ -99,11 +124,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonText: {
-    marginTop: 5,
+  buttonText: { marginTop: 5, fontSize: 16, fontWeight: "500", color: "black" },
+
+  // Back Button Styling
+  backButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    margin: 15,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  backButtonText: {
+    color: '#333',
     fontSize: 16,
-    fontWeight: "500",
-    color: "black",
+    fontWeight: '600',
   },
 });
 
