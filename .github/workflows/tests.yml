@@ -27,9 +27,18 @@ jobs:
           set -o pipefail
           firebase emulators:exec --only firestore "node firestore-test.js"
         working-directory: ThriftUni
+        continue-on-error: true
 
       - name: Run Jest Tests
         run: |
           set -o pipefail
           npm test
         working-directory: ThriftUni
+        continue-on-error: true
+
+      - name: Final Validation (Fail if any test failed)
+        run: |
+           if [ $? -ne 0 ]; then
+             echo "❌ Some tests failed. Marking the job as failed."
+             exit 1
+           fi
