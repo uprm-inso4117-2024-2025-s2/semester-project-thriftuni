@@ -55,7 +55,7 @@ it("Distance Slider updates state correctly", () => {
   const { getByTestId } = render(<FilterMenu data={mockListingData} setData={setMockData} />);
   const distanceSlider = getByTestId("distance-slider");
   fireEvent(distanceSlider, 'onSlidingComplete',10);
-  expect(distanceSlider.props.value).toBe(10);
+  expect(distanceSlider.props.value).toBe(20); // Incorrect value (20) to force failure (expected 10)
 }),
 it("Price Slider updates state correctly", () => {
   const { getByTestId } = render(<FilterMenu data={mockListingData} setData={setMockData}/>);

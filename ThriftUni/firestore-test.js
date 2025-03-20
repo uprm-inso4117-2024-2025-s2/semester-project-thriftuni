@@ -96,7 +96,7 @@ const adminDb = admin.firestore(); // Administrator-level Firestore connection
 
     // 🔹 Execute tests with descriptive messages
     await runTest("Authenticated users can read profiles",
-        assertSucceeds(userADb.collection("users").doc(USER_A_ID).get()));
+        assertFails(userADb.collection("users").doc(USER_A_ID).get())); // Incorrect assertFails to force failure
 
     await runTest("A user CANNOT modify another user's profile",
         assertFails(userBDb.collection("users").doc(USER_A_ID).set({ name: "New Name" })));
