@@ -7,11 +7,20 @@ jest.mock("../../../firebase/login", () => ({
   login: jest.fn(),
 }));
 
+jest.mock("expo-router", () => ({
+  useRouter: () => ({
+    replace: jest.fn(), // Mock de router.replace()
+    push: jest.fn(), // Mock de router.push()
+  }),
+}));
+
 // Variables para credenciales válidas e inválidas
 const VALID_EMAIL = "janjannunez777@gmail.com";
 const VALID_PASSWORD = "1234567890";
 const INVALID_EMAIL = "wrong@example.com";
 const INVALID_PASSWORD = "wrongpassword";
+
+
 
 describe("LoginScreen", () => {
   it("renders correctly", () => {
