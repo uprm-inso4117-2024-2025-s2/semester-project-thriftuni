@@ -8,7 +8,7 @@ import LocationMap, { Location } from "./LocationMap";
 export default function ListingDescription({
   description,
 }: {
-  description: string;
+  description: string,
 }) {
   const handleContactSellerButton = () => {
     alert("Pressed contact seller button!");
