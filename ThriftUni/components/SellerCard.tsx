@@ -4,6 +4,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 export interface Seller {
   name: string;
   location: string;
+  rating: number;
   about: string;
   onProfilePress: () => void;
 }
