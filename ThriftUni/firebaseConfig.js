@@ -26,8 +26,6 @@ const firebaseConfig = {
 };
 
 
-//// Initialize Firebase
-//const app = initializeApp(firebaseConfig);
 
 
 let app;
@@ -40,7 +38,7 @@ if (getApps().length === 0) {
   });
 } else {
   app = getApps()[0];
-  auth = getAuth(); // ya está inicializado
+  auth = getAuth();
 }
 
 

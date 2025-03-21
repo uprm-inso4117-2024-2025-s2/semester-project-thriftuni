@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/firebase.config"; // usa la ruta que ya se usa en el proyecto
+import { auth } from "../firebase/firebase.config";
 import { router } from "expo-router";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
-        router.replace("/login/login"); // redirige si no está autenticado
+        router.replace("/login/login");
       }
       setCheckingAuth(false);
     });
