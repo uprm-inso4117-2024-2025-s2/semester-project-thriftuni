@@ -48,7 +48,9 @@ export default function Signup() {
       );
       const user = userCredential.user;
 
-      await sendEmailVerification(user);
+      await auth.currentUser?.reload();
+
+      await sendEmailVerification(auth.currentUser);
       setVerificationSent(true);
 
       await setDoc(doc(db, "users", user.uid), {
