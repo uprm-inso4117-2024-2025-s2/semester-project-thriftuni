@@ -22,10 +22,11 @@ export default function SettingsScreen() {
         {/* Settings list */}
         <View style={styles.settingsList}>
           {/* My account */}
-          <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to Profile screen */}}>
+          <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/user_system')}>
             <Text style={styles.settingText}>Profile</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
+
 
           <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to 2FA screen */}}>
             <Text style={styles.settingText}>Two-factor authentication</Text>
