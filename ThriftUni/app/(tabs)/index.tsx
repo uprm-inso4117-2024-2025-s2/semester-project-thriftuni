@@ -11,13 +11,14 @@ import ProductCard from "@/components/ListingsPage/ProductCard";
 import SearchBar from "@/components/ListingsPage/SearchBar";
 import FilterMenu from "@/components/ListingsPage/FilterMenu";
 import { Seller } from "@/components/SellerCard";
+import Colors from "@/constants/Colors";
+import { useColorScheme } from '@/components/useColorScheme';
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-// FOR DEVELOPMENT PURPOSES ONLY------------------
 
+// FOR DEVELOPMENT PURPOSES ONLY------------------
 function getRandomInRange(from: number, to: number, fixed: number): number {
   return parseFloat((Math.random() * (to - from) + from).toFixed(fixed));
-  // .toFixed() returns string, so 'parseFloat' is used to convert to number
 }
 
 function getRandomImage() {
@@ -69,6 +70,7 @@ export interface Listings {
 }
 
 export default function ListingScreen() {
+  const theme = useColorScheme(); // 'light' or 'dark' (or 'blue' if your hook supports it)
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function ListingScreen() {
     
     fetchListings();
   }, [db]); // Only re-run if db changes
-
+  
   return (
     <View>
       <View
@@ -125,7 +127,7 @@ export default function ListingScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F6F9FF",
+    backgroundColor: Colors[useColorScheme() || 'light'].background,
     paddingBottom: 80,
     minHeight: "100%",
   },

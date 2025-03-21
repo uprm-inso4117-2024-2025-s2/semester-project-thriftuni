@@ -32,7 +32,9 @@ const LoginScreen = () => {
       setError(response.error);
     } else {
       console.log("User logged in:", response.user);
-      router.replace("/(tabs)/main_page"); // ✅ Redirige a main_page después del login
+      if (router?.replace) {
+          router.replace("/(tabs)/main_page"); // ✅ Redirige solo si `router` está disponible
+      }
     }
   };
 
@@ -65,9 +67,9 @@ const LoginScreen = () => {
         />
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         {loading ? (
-          <ActivityIndicator size="small" />
+          <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <TouchableOpacity testID="login-button" style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         )}

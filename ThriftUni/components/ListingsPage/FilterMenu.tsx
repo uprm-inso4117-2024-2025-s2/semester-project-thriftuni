@@ -7,21 +7,14 @@ import { Rating } from "react-native-ratings";
 import { Listings } from "@/app/(tabs)";
 import { getDistance } from "geolib";
 import CategoryDropdown from "./CategoryDropdown";
+import { useColorScheme } from "@/components/useColorScheme";
+import Colors from "@/constants/Colors";
 
 // DUMMY CATEGORY DATA FOR DEVELOPMENT PURPOSES
 const categories = [
-  {
-    label: "Electronics",
-    value: "electronics",
-  },
-  {
-    label: "Clothing",
-    value: "clothing",
-  },
-  {
-    label: "Furniture",
-    value: "furniture",
-  },
+  { label: "Electronics", value: "electronics" },
+  { label: "Clothing", value: "clothing" },
+  { label: "Furniture", value: "furniture" },
 ];
 
 export interface FilterMenuProps {
@@ -38,8 +31,13 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
   const [filterApplied, setFilterApplied] = React.useState<boolean>(false);
   const [dropdownFocus, setDropdownFocus] = React.useState<boolean>(false);
 
+  // Use the current theme from Colors.ts
+  const theme = useColorScheme() || 'light'; // returns 'light', 'dark', or 'blue'
+
   useEffect(() => {
     if (filterApplied) {
+      // Refetch Filter Data from API (for now, setData to current data)
+      setData(data);
       let filteredData = data.filter(
         (item) =>
           item.price <= price &&
@@ -71,7 +69,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
   };
 
   return (
-    <View>
+    <View style={{ backgroundColor: Colors[theme].background }}>
       <CollapsibleView
         expandedHeight={250}
         startContent={<FontAwesome name="filter" size={24} />}
@@ -80,37 +78,43 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
         <View style={styles.filtersContainer}>
           <View style={styles.filterRows}>
             <View>
-              <Text>Price: ${price.toFixed(2)}</Text>
+              <Text style={[styles.label, { color: Colors[theme].text }]}>
+                Price: ${price.toFixed(2)}
+              </Text>
               <Slider
                 testID="price-slider"
                 style={styles.distanceSlider}
                 value={price}
                 minimumValue={1}
                 maximumValue={10e2}
-                thumbTintColor="green"
+                thumbTintColor={Colors[theme].tint}
                 maximumTrackTintColor="gray"
-                minimumTrackTintColor="green"
+                minimumTrackTintColor={Colors[theme].tint}
                 onSlidingComplete={(value) => setPrice(value)}
               />
             </View>
             <View>
-              <Text>Distance: {distance.toFixed(2)} km</Text>
+              <Text style={[styles.label, { color: Colors[theme].text }]}>
+                Distance: {distance.toFixed(2)} km
+              </Text>
               <Slider
                 testID="distance-slider"
                 style={styles.distanceSlider}
                 value={distance}
-                thumbTintColor="green"
+                thumbTintColor={Colors[theme].tint}
                 minimumValue={1}
                 maximumValue={500}
                 maximumTrackTintColor="gray"
-                minimumTrackTintColor="green"
+                minimumTrackTintColor={Colors[theme].tint}
                 onSlidingComplete={(value) => setDistance(value)}
               />
             </View>
           </View>
           <View style={styles.filterRows}>
             <View>
-              <Text>Seller Reputation</Text>
+              <Text style={[styles.label, { color: Colors[theme].text }]}>
+                Seller Reputation
+              </Text>
               <Rating
                 type="custom"
                 startingValue={1}
@@ -118,7 +122,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
                 ratingCount={5}
                 imageSize={25}
                 onFinishRating={setSellerRep}
-                tintColor="#F6F9FF"
+                tintColor={Colors[theme].background}
                 ratingBackgroundColor="#999999"
                 style={{ padding: 10 }}
               />
@@ -145,17 +149,23 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
         >
           <Pressable
             testID="apply-filters-button"
-            style={styles.applyFilters}
+            style={[styles.applyFilters, { backgroundColor: Colors[theme].tint }]}
             onPress={() => setFilterApplied(true)}
           >
-            <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+            <Text style={{ color: Colors[theme].background, fontSize: 18, fontWeight: "bold" }}>
               Apply Filters
             </Text>
           </Pressable>
           <Pressable
             testID="clear-filters-button"
-            style={styles.clearFilters}
-            onPress={handleClearFilters}
+            style={[styles.clearFilters, { backgroundColor: Colors[theme].background }]}
+            onPress={() => {
+              setDistance(1);
+              setPrice(1);
+              setCategory("");
+              setFilterApplied(true);
+              handleClearFilters;
+            }}
           >
             <Text style={{ color: "red", fontSize: 18, fontWeight: "bold" }}>
               Clear Filters
@@ -184,18 +194,19 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
   },
+  label: {
+    fontSize: 16,
+    marginBottom: 4,
+  },
   applyFilters: {
     padding: 10,
-    backgroundColor: "#000000",
     borderRadius: 10,
     borderColor: "black",
   },
   clearFilters: {
     padding: 10,
-    backgroundColor: "#F6F9FF",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "red",
   },
-
 });
