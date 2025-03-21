@@ -2,26 +2,21 @@ import { StyleSheet, Pressable, Image, FlatList, Modal, TextInput, ScrollView } 
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import { getListings, updateListing, deleteListing } from '../../mock_backend/mockApi'; // <-- Updated import
+import { useEffect } from 'react';
 
 export default function DisplayMyListing() {
-  const [listings, setListings] = useState([
-    {
-      id: '1',
-      name: 'Lorem Ipsum',
-      details: 'Details about product',
-      price: '$10.05',
-      status: 'Pending',
-      photos: ['https://archive.org/download/placeholder-image/placeholder-image.jpg'],
-    },
-    {
-      id: '2',
-      name: 'Lorem Ipsum',
-      details: 'Details about product',
-      price: '$5.05',
-      status: 'Sold',
-      photos: ['https://archive.org/download/placeholder-image/placeholder-image.jpg'],
-    }
-  ]);
+  type Listing = {
+    id: string;
+    name: string;
+    details: string;
+    price: string;
+    status: string;
+    photos: string[];
+  };
+
+  const [listings, setListings] = useState<Listing[]>([]);
+
 
   const [filter, setFilter] = useState('All');
   const [isEditing, setIsEditing] = useState(false);
@@ -34,13 +29,29 @@ export default function DisplayMyListing() {
   const [editPhotos, setEditPhotos] = useState<string[]>([]);
   const [editStatus, setEditStatus] = useState('');
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getListings();
+      setListings(data);
+    };
+    fetchData();
+  }, []);
+
+
+
+
   const handleFilter = (status: React.SetStateAction<string>) => {
     setFilter(status);
   };
 
-  const handleDelete = (id: string) => {
-    setListings(prevListings => prevListings.filter(listing => listing.id !== id));
+  const handleDelete = async (id: string) => {
+    const success = await deleteListing(id);
+    if (success) {
+      setListings(prevListings => prevListings.filter(listing => listing.id !== id));
+    }
   };
+
 
   const handleEdit = (listing: any) => {
     setCurrentListing(listing);
@@ -52,19 +63,27 @@ export default function DisplayMyListing() {
     setEditStatus(listing.status);
   };
 
-  const handleSaveChanges = () => {
-    const updatedListings = listings.map(listing =>
-      listing.id === currentListing.id
-        ? { ...listing, name: editTitle, price: editPrice, details: editDetails, photos: editPhotos, status: editStatus }
-        : listing
-    );
+  const handleSaveChanges = async () => {
+    const updatedItem = {
+      ...currentListing,
+      name: editTitle,
+      price: editPrice,
+      details: editDetails,
+      photos: editPhotos,
+      status: editStatus,
+    };
 
+    const updated = await updateListing(currentListing.id, updatedItem);
 
-
-    setListings(updatedListings);
+    if (updated) {
+      setListings(prev => prev.map(item => item.id === updated.id ? updated : item));
+    }
     setModalVisible(false);
     setCurrentListing(null);
   };
+
+
+
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
