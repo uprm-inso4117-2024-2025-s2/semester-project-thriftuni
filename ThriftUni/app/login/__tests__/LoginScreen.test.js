@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import LoginScreen from "../../(tabs)/login";
+import LoginScreen from "../login";
 import { login } from "../../../firebase/login"; // Asegúrate de que la ruta sea correcta
 
 jest.mock("../../../firebase/login", () => ({
