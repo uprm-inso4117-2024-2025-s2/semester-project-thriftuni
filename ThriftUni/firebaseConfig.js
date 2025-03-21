@@ -1,51 +1,35 @@
-import { getApps, initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import {
- initializeAuth,
- getReactNativePersistence,
- getAuth
+  initializeAuth,
+  getReactNativePersistence,
+  getAuth,
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { Platform } from "react-native";
 
-
+// 🔹 Firebase Configuration
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId:
-    Platform.OS === 'ios'
-      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS // ID para iOS
-      : Platform.OS === 'android'
-      ? process.env.EXPO_PUBLIC_FIREBASE_APP_ID_ANDROID // ID para Android
-      : process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB, // ID para Web (solo en web apps),
-  ...(Platform.OS === 'web' && { measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID }),
+  apiKey: "AIzaSyBliTLyyqHam9ei-900BYyt-y4ZGoowrEk",
+  authDomain: "thriftuni-b345a.firebase.com",
+  projectId: "thriftuni-b345a",
+  storageBucket: "thriftuni-b345a.firebasestorage.app",
+  messagingSenderId: "501062585933",
+  appId: "1:501062585933:android:11ca96ded2177956a3d604",
+  measurementId: "G-MCWKZZQPTP",
 };
 
+// ✅ Ensure Firebase App is initialized only once
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
+// ✅ Initialize Firebase Auth with AsyncStorage (if not already initialized)
+const auth =
+  getApps().length === 0
+    ? initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })
+    : getAuth(app);
 
-
-let app;
-let auth;
-
-if (getApps().length === 0) {
-  app = initializeApp(firebaseConfig);
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage),
-  });
-} else {
-  app = getApps()[0];
-  auth = getAuth();
-}
-
-
-// Initialize Firestore & Storage if needed
+// ✅ Initialize Firestore and Storage
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-
 export { app, auth, db, storage };
-
