@@ -1,9 +1,12 @@
 import { StyleSheet, Pressable, Image, FlatList, Modal, TextInput, ScrollView } from 'react-native';
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
+
 import * as ImagePicker from 'expo-image-picker';
 import { getListings, updateListing, deleteListing } from '../../mock_backend/mockApi'; // <-- Updated import
 import { useEffect } from 'react';
+import ProtectedRoute from "../../components/ProtectedRoute";
+
 
 export default function DisplayMyListing() {
   type Listing = {
@@ -105,6 +108,7 @@ export default function DisplayMyListing() {
   const filteredListings = filter === 'All' ? listings : listings.filter(listing => listing.status === filter);
 
   return (
+  <ProtectedRoute>
     <View style={styles.container}>
       <View style={styles.header}><Text style={styles.header_text}>My Listing</Text></View>
       <View style={styles.body}>
@@ -229,6 +233,7 @@ export default function DisplayMyListing() {
         </Modal>
       </View>
     </View>
+  </ProtectedRoute>
   );
 }
 
