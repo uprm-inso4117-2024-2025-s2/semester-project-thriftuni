@@ -9,12 +9,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { login } from "../../firebase/login";
+import { useRouter } from "expo-router";
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const router = useRouter();
+
 
   const handleLogin = async () => {
     setLoading(true);
@@ -28,7 +33,7 @@ const LoginScreen = () => {
     } else {
       console.log("User logged in:", response.user);
       if (router?.replace) {
-          router.replace("/(tabs)/main_page"); // ✅ Redirige solo si `router` está disponible
+          router.replace("/(tabs)/main_page");
       }
     }
   };
