@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -12,6 +13,7 @@ export default function SettingsScreen() {
   };
 
   return (
+  <ProtectedRoute>
     <View style={{ flex: 1, backgroundColor: '#F6F9FF' }}>
       {/* Settings list */}
       <View style={styles.container}>
@@ -78,6 +80,7 @@ export default function SettingsScreen() {
         </View>
       </View>
     </View>
+  </ProtectedRoute>
   );
 }
 
