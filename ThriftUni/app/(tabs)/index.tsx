@@ -71,7 +71,6 @@ export interface Listings {
 
 export default function ListingScreen() {
   const theme = useColorScheme(); // 'light' or 'dark' (or 'blue' if your hook supports it)
-  const [data, setData] = useState<Listings[]>([]);
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
