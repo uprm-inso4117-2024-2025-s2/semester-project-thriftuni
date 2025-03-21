@@ -1,47 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { Platform } from 'react-native';
 
-const resetAttempts: Record<string, { count: number; timestamp: number }> = {};
-const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
-const MAX_ATTEMPTS = 3;
-
-export const sendPasswordReset = async (email: string) => {
-  const auth = getAuth();
-  try {
-    await sendPasswordResetEmail(auth, email);
-    logResetAttempt(email, 'success');
-    return { success: true };
-  } catch (error) {
-    logResetAttempt(email, 'failed');
-    return { error: (error as any).message };
-  }
-};
-
-export const logResetAttempt = (email: string, status: 'success' | 'failed') => {
-  console.log(`Password reset attempt for ${email}: ${status} at ${new Date().toISOString()}`);
-};
-
-export const checkRateLimit = (email: string) => {
-  const now = Date.now();
-  if (!resetAttempts[email]) {
-    resetAttempts[email] = { count: 1, timestamp: now };
-    return false;
-  }
-
-  const elapsedTime = now - resetAttempts[email].timestamp;
-  if (elapsedTime > RATE_LIMIT_WINDOW) {
-    resetAttempts[email] = { count: 1, timestamp: now };
-    return false;
-  }
-
-  if (resetAttempts[email].count >= MAX_ATTEMPTS) {
-    return true;
-  }
-
-  resetAttempts[email].count += 1;
-  return false;
-};
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -63,4 +23,4 @@ const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : get
 const auth = getAuth(firebaseApp);
 
 // Exportaciones
-export { firebaseConfig, firebaseApp, auth };
+export { firebaseApp, auth };
