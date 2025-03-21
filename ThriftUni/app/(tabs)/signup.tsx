@@ -32,6 +32,7 @@ export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleSignup = async () => {
     if (!email || !password || !name || !username) {
@@ -48,6 +49,7 @@ export default function Signup() {
       const user = userCredential.user;
 
       await sendEmailVerification(user);
+      setVerificationSent(true);
 
       await setDoc(doc(db, "users", user.uid), {
         name,
@@ -56,9 +58,20 @@ export default function Signup() {
         createdAt: new Date(),
       });
 
-      Alert.alert("Success", "Account created successfully!");
+      Alert.alert("Success", "Sign-up successful! Please check your email for verification.");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
+    }
+  };
+
+  const resendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      try {
+        await sendEmailVerification(auth.currentUser);
+        Alert.alert("Success", "Verification email sent. Please check your inbox.");
+      } catch (error: any) {
+        Alert.alert("Error", "Failed to send verification email.");
+      }
     }
   };
 
@@ -97,6 +110,18 @@ export default function Signup() {
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
+
+      {verificationSent && (
+        <View style={styles.resendContainer}>
+          <Text style={styles.resendText}>
+            A verification email has been sent. If you didn’t receive it, you can request another one.
+          </Text>
+          <TouchableOpacity style={styles.resendButton} onPress={resendVerificationEmail}>
+            <Text style={styles.resendButtonText}>Resend Verification Email</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      
       <Text style={styles.loginText}>
         Already have an account?{" "}
         <Text style={styles.link} onPress={() => {}}>
