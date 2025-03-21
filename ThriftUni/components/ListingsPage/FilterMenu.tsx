@@ -5,6 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { Rating } from "react-native-ratings";
 import { Listings } from "@/app/(tabs)";
+import { getDistance } from "geolib";
 import CategoryDropdown from "./CategoryDropdown";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
@@ -22,6 +23,7 @@ export interface FilterMenuProps {
 }
 
 export default function FilterMenu({ setData, data }: FilterMenuProps) {
+  const originalData = data;
   const [distance, setDistance] = React.useState<number>(1);
   const [price, setPrice] = React.useState<number>(1);
   const [category, setCategory] = React.useState<string>("");
@@ -36,10 +38,35 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
     if (filterApplied) {
       // Refetch Filter Data from API (for now, setData to current data)
       setData(data);
+      let filteredData = data.filter(
+        (item) =>
+          item.price <= price &&
+          item.sellerInfo.rating >= sellerRep &&
+          item.category === category
+      );
+      filteredData = filteredData.filter(
+        (item) =>
+          getDistance(
+            {
+              latitude: 18.2,
+              longitude: -66.5,
+            },
+            {
+              latitude: item.latitude,
+              longitude: item.longitude,
+            }
+          ) <= distance
+      );
+      setData(filteredData);
       console.log("Filters Applied:", distance, price, category, sellerRep);
       setFilterApplied(false);
     }
   }, [filterApplied]);
+
+
+  const handleClearFilters = () => {
+    setData(originalData);
+  };
 
   return (
     <View style={{ backgroundColor: Colors[theme].background }}>
@@ -137,6 +164,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
               setPrice(1);
               setCategory("");
               setFilterApplied(true);
+              handleClearFilters;
             }}
           >
             <Text style={{ color: "red", fontSize: 18, fontWeight: "bold" }}>

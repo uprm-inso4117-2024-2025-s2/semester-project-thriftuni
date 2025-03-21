@@ -8,7 +8,7 @@ import LocationMap, { Location } from "./LocationMap";
 export default function ListingDescription({
   description,
 }: {
-  description: string;
+  description: string,
 }) {
   const handleContactSellerButton = () => {
     alert("Pressed contact seller button!");
@@ -19,7 +19,6 @@ export default function ListingDescription({
   const sellerInfo: Seller = {
     name: "Pepe",
     location: "Mayaguez, Puerto Rico",
-    rating: 3,
     about: "Soy Pepe",
     onProfilePress: () => alert("Profile Clicked"),
   };
@@ -77,7 +76,6 @@ export default function ListingDescription({
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     padding: 5,
@@ -102,7 +100,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderWidth: 1,
     marginBottom: 20,
-
     // Bottom shadow
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },

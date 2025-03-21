@@ -6,13 +6,15 @@ import {
   Platform,
 } from "react-native";
 import { View } from "@/components/Themed";
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import ProductCard from "@/components/ListingsPage/ProductCard";
 import SearchBar from "@/components/ListingsPage/SearchBar";
 import FilterMenu from "@/components/ListingsPage/FilterMenu";
 import { Seller } from "@/components/SellerCard";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from '@/components/useColorScheme';
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
 
 // FOR DEVELOPMENT PURPOSES ONLY------------------
 function getRandomInRange(from: number, to: number, fixed: number): number {
@@ -28,6 +30,7 @@ export const dummyData: any[] = [];
 const sellerDetails: Seller = {
   name: "Pepe",
   about: "I'm Pepe",
+  rating: 4.5,
   location: "Mayaguez, Puerto Rico",
   onProfilePress: () => alert("Profile Clicked"),
 };
@@ -54,7 +57,7 @@ for (let i = 0; i < 21; i++) {
 //---------------------------------
 
 export interface Listings {
-  id: number;
+  listing_id: string;
   title: string;
   price: number;
   img: string;
@@ -69,6 +72,37 @@ export interface Listings {
 export default function ListingScreen() {
   const theme = useColorScheme(); // 'light' or 'dark' (or 'blue' if your hook supports it)
   const [data, setData] = useState<Listings[]>([]);
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const listingsCollection = collection(db, "listings");
+        const querySnapshot = await getDocs(listingsCollection);
+        const ImagesCollection = collection(db, "listing_images");
+        if (querySnapshot.empty) {
+          console.log("No documents found in listings collection");
+          return;
+        }
+
+
+
+        
+        const listings: any[] = [];
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          listings.push({ listing_id: doc.id, ...doc.data(), sellerInfo: sellerDetails, img: getRandomImage() });
+        });
+        
+        setData(listings);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      }
+    };
+    
+    fetchListings();
+  }, [db]); // Only re-run if db changes
+  
   return (
     <View>
       <View
@@ -81,10 +115,10 @@ export default function ListingScreen() {
         <SearchBar />
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <FilterMenu setData={setData} />
+        <FilterMenu data={data} setData={setData} />
         <View style={styles.listingGrid}>
-          {dummyData.map((product) => (
-            <ProductCard key={product.id} {...product} />
+          {data.map((product) => (
+            <ProductCard key={product.listing_id} {...product} />
           ))}
         </View>
       </ScrollView>
@@ -96,6 +130,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors[useColorScheme() || 'light'].background,
     paddingBottom: 80,
+    minHeight: "100%",
   },
   listingGrid: {
     alignItems: "center",
