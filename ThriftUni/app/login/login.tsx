@@ -64,9 +64,9 @@ const LoginScreen = () => {
         />
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         {loading ? (
-          <ActivityIndicator size="small" />
+          <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <TouchableOpacity testID="login-button" style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         )}
