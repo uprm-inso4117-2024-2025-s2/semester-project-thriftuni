@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 type TabKey = 'favorites' | 'selling';
 
@@ -17,6 +18,7 @@ interface ProfileStatsItem {
 }
 
 const ProfileHeader: React.FC<{ username: string }> = ({ username }) => (
+<ProtectedRoute>
   <View style={styles.header}>
     <Text style={styles.username}>{username}</Text>
     <View style={styles.headerButtons}>
@@ -28,6 +30,7 @@ const ProfileHeader: React.FC<{ username: string }> = ({ username }) => (
       </TouchableOpacity>
     </View>
   </View>
+</ProtectedRoute>
 );
 
 const ProfileStats: React.FC<{ stats: ProfileStatsItem[] }> = ({ stats }) => (
