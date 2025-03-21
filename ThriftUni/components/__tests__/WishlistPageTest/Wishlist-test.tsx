@@ -11,20 +11,22 @@ const mockItem = {
 };
 
 // Mock function to track remove action
-const mockOnRemove = (id: string) => {
-  console.log(`Item removed: ${id}`);
-};
+const mockOnRemove = jest.fn();
 
-// **Basic Test: Render and Remove Button**
-export function testWishlistItem() {
-  const { getByText } = render(<WishlistItem item={mockItem} onRemove={mockOnRemove} />);
+describe("WishlistItem Component", () => {
+  it("renders correctly", () => {
+    const { getByText } = render(<WishlistItem item={mockItem} onRemove={mockOnRemove} />);
 
-  console.log("Rendered item:", getByText("Test Item").props.children);
-  console.log("Rendered price:", getByText("$20.99").props.children);
+    expect(getByText("Test Item")).toBeTruthy();
+    expect(getByText("$20.99")).toBeTruthy();
+  });
 
-  fireEvent.press(getByText("Remove"));
-  console.log("Remove button clicked.");
-}
+  it("calls onRemove when remove button is pressed", () => {
+    const { getByText } = render(<WishlistItem item={mockItem} onRemove={mockOnRemove} />);
 
-// Run the test
-testWishlistItem();
+    fireEvent.press(getByText("Remove"));
+
+    expect(mockOnRemove).toHaveBeenCalledTimes(1);
+    expect(mockOnRemove).toHaveBeenCalledWith("1");
+  });
+});
