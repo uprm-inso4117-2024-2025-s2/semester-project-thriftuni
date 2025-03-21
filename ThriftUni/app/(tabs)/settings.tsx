@@ -8,10 +8,6 @@ import ProtectedRoute from "../../components/ProtectedRoute";
 export default function SettingsScreen() {
   const navigation = useNavigation();
 
-  const handlelogin = () => {
-    router.push('/login/login');
-  };
-
   return (
   <ProtectedRoute>
     <View style={{ flex: 1, backgroundColor: '#F6F9FF' }}>
@@ -62,13 +58,6 @@ export default function SettingsScreen() {
             <Text style={styles.settingText}>Sell an item on ThriftUni</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
-
-          <View style={styles.logoutContainer}>
-            <TouchableOpacity style={styles.logoutButton} onPress={() => {handlelogin()}}>
-            <FontAwesome name="sign-in" size={18} color="white" style={{position: 'absolute', left: 22, bottom: 12}} />
-              <Text style={styles.logoutText}>Login</Text>
-            </TouchableOpacity>
-          </View>
           {/* Logout button */}
           <View style={styles.logoutContainer}>
             <TouchableOpacity style={styles.logoutButton} onPress={() => {/* handle logout */}}>
