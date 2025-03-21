@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {router} from "expo-router";
 import {
   View,
   TextInput,
@@ -16,6 +17,10 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleSignup = () => {
+    router.push("/login/signup");
+    };
+
   const handleLogin = async () => {
     setLoading(true);
     console.log("email:", email);
@@ -30,6 +35,12 @@ const LoginScreen = () => {
     }
   };
 
+  const handleForget = () => {
+    router.push("/login/forgot");
+  }
+
+  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
@@ -41,6 +52,7 @@ const LoginScreen = () => {
           autoCapitalize="none" // Prevents first-letter capitalization
           keyboardType="email-address" // Opens email keyboard
           style={styles.input}
+          placeholderTextColor="#999"
         />
         <TextInput
           placeholder="Password"
@@ -48,6 +60,7 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
+          placeholderTextColor="#999"
         />
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         {loading ? (
@@ -58,9 +71,14 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
       </View>
+      <Text style={styles.forgotText}>
+        <Text style={styles.link} onPress={handleForget}>
+          Forgot Password?
+        </Text>
+      </Text>
       <Text style={styles.signupText}>
         Don't have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
+        <Text style={styles.link} onPress={handleSignup}>
           Sign Up
         </Text>
       </Text>
@@ -92,14 +110,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -109,12 +127,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signupText: {
-    marginTop: 20,
+    marginTop: 5,
   },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
   },
+  forgotText: {
+    marginTop: 15,
+    },
 });
 
 export default LoginScreen;

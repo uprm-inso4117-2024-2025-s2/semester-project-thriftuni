@@ -8,7 +8,7 @@ import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 
 interface ProductCardProps {
-  id: number;
+  listing_id: number;
   title: string;
   price: number;
   img: string;
@@ -17,7 +17,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
-  id,
+  listing_id,
   title,
   price,
   img,
@@ -79,8 +79,8 @@ export default function ProductCard({
   };
 
   const handleProductClick = () => {
-    router.push(`/listings/${id}`);
-    console.log(`Product ${id} clicked`);
+    router.push(`/listings/${listing_id}`);
+    console.log(`Product ${listing_id} clicked`);
   };
 
   return (
@@ -90,7 +90,7 @@ export default function ProductCard({
       </View>
       <View style={styles.info}>
         <View>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{(title.length > 20) ? title.slice(0,17): title}</Text>
           <Text style={{ fontSize: 12 }}>{`${(distance / 1000).toFixed(
             2
           )} km`}</Text>
