@@ -5,6 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { Rating } from "react-native-ratings";
 import { Listings } from "@/app/(tabs)";
+import { getDistance } from "geolib";
 import CategoryDropdown from "./CategoryDropdown";
 
 // DUMMY CATEGORY DATA FOR DEVELOPMENT PURPOSES
@@ -29,6 +30,7 @@ export interface FilterMenuProps {
 }
 
 export default function FilterMenu({ setData, data }: FilterMenuProps) {
+  const originalData = data;
   const [distance, setDistance] = React.useState<number>(1);
   const [price, setPrice] = React.useState<number>(1);
   const [category, setCategory] = React.useState<string>("");
@@ -38,13 +40,35 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
 
   useEffect(() => {
     if (filterApplied) {
-      // Refetch Filter Data from API
-      // Setting data to the same for development purposes
-      setData(data);
+      let filteredData = data.filter(
+        (item) =>
+          item.price <= price &&
+          item.sellerInfo.rating >= sellerRep &&
+          item.category === category
+      );
+      filteredData = filteredData.filter(
+        (item) =>
+          getDistance(
+            {
+              latitude: 18.2,
+              longitude: -66.5,
+            },
+            {
+              latitude: item.latitude,
+              longitude: item.longitude,
+            }
+          ) <= distance
+      );
+      setData(filteredData);
       console.log("Filters Applied:", distance, price, category, sellerRep);
       setFilterApplied(false);
     }
   }, [filterApplied]);
+
+
+  const handleClearFilters = () => {
+    setData(originalData);
+  };
 
   return (
     <View>
@@ -131,12 +155,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
           <Pressable
             testID="clear-filters-button"
             style={styles.clearFilters}
-            onPress={() => {
-              setDistance(1);
-              setPrice(1);
-              setCategory("");
-              setFilterApplied(true);
-            }}
+            onPress={handleClearFilters}
           >
             <Text style={{ color: "red", fontSize: 18, fontWeight: "bold" }}>
               Clear Filters
