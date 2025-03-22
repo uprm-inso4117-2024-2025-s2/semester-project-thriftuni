@@ -66,6 +66,10 @@ export default function Signup() {
     }
   };
 
+  const handleLogin = () => {
+    router.push("/login/login");
+  };
+
   const resendVerificationEmail = async () => {
     if (auth.currentUser) {
       try {
