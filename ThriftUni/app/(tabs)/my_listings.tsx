@@ -1,6 +1,9 @@
 import { StyleSheet, Pressable, Image, FlatList, Modal, TextInput, ScrollView } from 'react-native';
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import { getListings, updateListing, deleteListing } from '../../mock_backend/mockApi'; // <-- Updated import
+import { useEffect } from 'react';
 import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function DisplayMyListing() {
