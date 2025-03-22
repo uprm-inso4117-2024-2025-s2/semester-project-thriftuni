@@ -65,7 +65,6 @@ export default function Signup() {
     router.push("/login/login");
   };
 
-<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
   const resendVerificationEmail = async () => {
     if (auth.currentUser) {
       try {
@@ -77,8 +76,6 @@ export default function Signup() {
     }
   };
 
-=======
->>>>>>> main:ThriftUni/app/login/signup.tsx
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
