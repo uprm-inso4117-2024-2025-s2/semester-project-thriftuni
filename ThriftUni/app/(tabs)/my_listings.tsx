@@ -2,7 +2,6 @@ import { StyleSheet, Pressable, Image, FlatList } from 'react-native';
 import Svg, { Path } from "react-native-svg";
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
-import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function DisplayMyListing() {
   const [listings, setListings] = useState([
@@ -23,7 +22,6 @@ export default function DisplayMyListing() {
   const filteredListings = filter === 'All' ? listings : listings.filter(listing => listing.status === filter);
 
   return (
-  <ProtectedRoute>
     <View style={styles.container}>
       <View style={styles.header}><Text style={styles.header_text}>My Listing</Text></View>
       <View style={styles.body}>
@@ -57,7 +55,6 @@ export default function DisplayMyListing() {
         />
       </View>
     </View>
-  </ProtectedRoute>
   );
 }
 

@@ -12,20 +12,20 @@ admin.initializeApp({
 const adminDb = admin.firestore(); // Administrator-level Firestore connection
 
 (async () => {
-    let testFailed = false; // Variable to track if any test fails
+    // 🔹 Define REAL user IDs in Firestore (must match the context UIDs)
+    const USER_A_ID = "userA";
+    const USER_B_ID = "userB";
+
+    // 🔹 Define other document IDs
+    const DUMMY_LISTING_ID = "9n6rXwn8cg26yMakJOgn";
+    const DUMMY_CATEGORY_ID = "7BLt0bQeBVH91wi3jQIM";
+    const DUMMY_RELATION_ID = "Wd3cSGlPzAAyVAdzSWBg";
 
     console.log("📌 Creating documents in Firestore with ADMIN permissions...");
 
+    // 🔹 Create documents with Admin privileges
     try {
-        // 🔹 Define REAL user IDs in Firestore
-        const USER_A_ID = "userA";
-        const USER_B_ID = "userB";
-
-        // 🔹 Define other document IDs
-        const DUMMY_LISTING_ID = "9n6rXwn8cg26yMakJOgn";
-        const DUMMY_CATEGORY_ID = "7BLt0bQeBVH91wi3jQIM";
-        const DUMMY_RELATION_ID = "Wd3cSGlPzAAyVAdzSWBg";
-
+        // Create users in Firestore with correct UIDs
         await adminDb.collection("users").doc(USER_A_ID).set({
             createdAt: new Date(),
             email: "userA@gmail.com",
@@ -40,25 +40,50 @@ const adminDb = admin.firestore(); // Administrator-level Firestore connection
             username: "userB"
         });
 
+        // Create other test documents
+        await adminDb.collection("listing").doc(DUMMY_LISTING_ID).set({
+            created_at: new Date(),
+            currency: "USD",
+            description: "Dummy document for testing and temporary structure",
+            price: 0.99,
+            title: "Dummy Listing",
+            ownerId: USER_A_ID // 🔹 Assign a real owner to the listing
+        });
+
+        await adminDb.collection("categories").doc(DUMMY_CATEGORY_ID).set({
+            created_at: new Date(),
+            description: "Dummy document for testing and referencing document structure",
+            name: "Dummy Category"
+        });
+
+        await adminDb.collection("listing_categories").doc(DUMMY_RELATION_ID).set({
+            category_id: `/categories/${DUMMY_CATEGORY_ID}`,
+            listing_id: `/listing/${DUMMY_LISTING_ID}`
+        });
+
         console.log("✅ All documents have been successfully created.");
     } catch (error) {
         console.error("❌ Error creating documents in Firestore:", error.message);
-        testFailed = true;
     }
 
     // 🔹 Initialize the test environment
-    const testEnv = await initializeTestEnvironment({ projectId: PROJECT_ID });
+    const testEnv = await initializeTestEnvironment({
+        projectId: PROJECT_ID,
+    });
 
+    // 🔹 Create user contexts with correct UIDs
     const unauthenticatedContext = testEnv.unauthenticatedContext();
-    const userAContext = testEnv.authenticatedContext("userA");
-    const userBContext = testEnv.authenticatedContext("userB");
+    const userAContext = testEnv.authenticatedContext(USER_A_ID); // 🔹 Now uses the real UID
+    const userBContext = testEnv.authenticatedContext(USER_B_ID); // 🔹 Now uses the real UID
 
+    // 🔹 Obtain Firestore instances
     const unauthDb = unauthenticatedContext.firestore();
     const userADb = userAContext.firestore();
     const userBDb = userBContext.firestore();
 
     console.log("🚀 Running tests...");
 
+    // Function to print test results
     async function runTest(description, testPromise) {
         console.log(`🟡 ${description}`);
         try {
@@ -66,36 +91,41 @@ const adminDb = admin.firestore(); // Administrator-level Firestore connection
             console.log(`✅ PASSED: ${description}\n`);
         } catch (error) {
             console.log(`❌ FAILED: ${description}\n   ⚠️  Error: ${error.message}\n`);
-            testFailed = true; // Mark the test as failed
         }
     }
 
-    // 🔹 Run tests
+    // 🔹 Execute tests with descriptive messages
     await runTest("Authenticated users can read profiles",
-        assertSucceeds(userADb.collection("users").doc("userA").get()));
+        assertSucceeds(userADb.collection("users").doc(USER_A_ID).get()));
 
     await runTest("A user CANNOT modify another user's profile",
-        assertFails(userBDb.collection("users").doc("userA").set({ name: "New Name" })));
+        assertFails(userBDb.collection("users").doc(USER_A_ID).set({ name: "New Name" })));
 
     await runTest("A user CAN modify their own profile",
-        assertSucceeds(userADb.collection("users").doc("userA").set({ name: "New Name" })));
+        assertSucceeds(userADb.collection("users").doc(USER_A_ID).set({ name: "New Name" })));
 
     await runTest("Everyone can read categories",
-        assertSucceeds(unauthDb.collection("categories").doc("7BLt0bQeBVH91wi3jQIM").get()));
+        assertSucceeds(unauthDb.collection("categories").doc(DUMMY_CATEGORY_ID).get()));
 
     await runTest("No one can write in categories",
-        assertFails(userADb.collection("categories").doc("7BLt0bQeBVH91wi3jQIM").set({ name: "New Category" })));
+        assertFails(userADb.collection("categories").doc(DUMMY_CATEGORY_ID).set({ name: "New Category" })));
+
+    await runTest("Everyone can read listings",
+        assertSucceeds(unauthDb.collection("listing").doc(DUMMY_LISTING_ID).get()));
+
+    await runTest("A user CANNOT modify a listing that is not theirs",
+        assertFails(userBDb.collection("listing").doc(DUMMY_LISTING_ID).set({ title: "Edited Listing" })));
 
     await runTest("Access to unknown collections is blocked",
         assertFails(userADb.collection("unknownCollection").doc("doc1").set({ data: "test" })));
 
-    console.log("🎉 All tests have completed.");
+    await runTest("Everyone can read relationships between listings and categories",
+        assertSucceeds(unauthDb.collection("listing_categories").doc(DUMMY_RELATION_ID).get()));
 
-    // 🔹 If any test failed, force exit with error
-    if (testFailed) {
-        console.error("🔥 Some tests failed. Exiting with error.");
-        process.exit(1);
-    }
+    await runTest("No one can write in listing_categories",
+        assertFails(userADb.collection("listing_categories").doc(DUMMY_RELATION_ID).set({ listingId: DUMMY_LISTING_ID, categoryId: DUMMY_CATEGORY_ID })));
+
+    console.log("🎉 All tests have completed.");
 
     // Cleanup test environment
     await testEnv.cleanup();

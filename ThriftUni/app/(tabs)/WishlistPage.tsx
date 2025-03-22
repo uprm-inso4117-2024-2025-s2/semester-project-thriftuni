@@ -3,7 +3,6 @@ import { View, FlatList, StyleSheet, ActivityIndicator, Text } from "react-nativ
 import WishlistHeader from "../../components/Wishlist/WishlistHeader";
 import WishlistItem from "../../components/Wishlist/WishlistItem";
 import WishlistFilter from "../../components/Wishlist/WishlistFilter";
-import ProtectedRoute from "../../components/ProtectedRoute";
 
 // Define Wishlist Item Type
 interface WishlistItemType {
@@ -86,7 +85,6 @@ const WishlistPage = () => {
   };
 
   return (
-      <ProtectedRoute>
     <View style={styles.container}>
       <WishlistHeader />
       <WishlistFilter onFilterChange={applyFilter} />
@@ -103,7 +101,6 @@ const WishlistPage = () => {
         />
       )}
     </View>
-    </ProtectedRoute>
   );
 };
 

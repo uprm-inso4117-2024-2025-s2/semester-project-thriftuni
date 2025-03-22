@@ -1,48 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
-// Imports for setting up Firestore collections (currently commented out)
-// import CreateFirestoreCollections from '../../db-setup';
+// Imports for setting up Firestore collections
+import CreateFirestoreCollections from '../../db-setup'; // To create Firestore collections for listing, categories, and listing_categories
 import { Slot } from 'expo-router';
+import { View } from 'react-native';
+// End of Firestore collections setup imports
 
-function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string; }) {
+// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof FontAwesome>['name'];
+  color: string;
+}) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
-  const systemScheme = useColorScheme();
-  // Use a state hook to override the theme: 'light', 'dark', or 'blue'
-  const [theme, setTheme] = useState<'light' | 'dark' | 'blue'>(systemScheme || 'light');
-
-  // Function to cycle through the themes in order: light -> dark -> blue -> light
-  const cycleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : prev === 'dark' ? 'blue' : 'light'));
-  };
+  const colorScheme = useColorScheme();
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Theme Switcher Button */}
-      <View style={{ height: 50 }} />
-      <View style={styles.themeSwitcher}>
-        <TouchableOpacity onPress={cycleTheme} style={styles.switcherButton}>
-          <Text style={styles.switcherText}>Theme: {theme.toUpperCase()}</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Commented as we don't need this anymore Example code for Document creation*/}
+      {/* <CreateFirestoreCollections /> */}
       <Tabs
         screenOptions={{
-          tabBarActiveBackgroundColor: Colors[theme].background,
-          tabBarInactiveBackgroundColor: Colors[theme].background,
-          tabBarInactiveTintColor: Colors[theme].tabIconDefault,
-          tabBarActiveTintColor: Colors[theme].tint,
-          headerShown: useClientOnlyValue(false, false),
-        }}
-      >
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          // Disable the static render of the header on web
+          // to prevent a hydration error in React Navigation v6.
+          headerShown: useClientOnlyValue(false, true),
+        }}>
         <Tabs.Screen
           name="index"
           options={{
@@ -89,21 +80,3 @@ export default function TabLayout() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  themeSwitcher: {
-    padding: 10,
-    alignItems: 'flex-start',
-    backgroundColor: '#F6F9FF',
-  },
-  switcherButton: {
-    backgroundColor: '#000',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-  },
-  switcherText: {
-    color: '#FFF',
-    fontSize: 14,
-  },
-});

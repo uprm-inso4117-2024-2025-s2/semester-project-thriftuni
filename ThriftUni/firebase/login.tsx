@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.config";
 
 export const login = async (email: string, password: string) => {
@@ -8,6 +8,11 @@ export const login = async (email: string, password: string) => {
       email,
       password
     );
+
+    if (!userCredential.user.emailVerified) {
+      return { error: "Please verify your email before logging in." };
+    }
+    
     return { user: userCredential.user };
   } catch (error: any) {
     let errorMessage = "An error occurred during login.";
