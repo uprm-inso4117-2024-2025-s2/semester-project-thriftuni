@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import ProtectedRoute from "../../components/ProtectedRoute";
+
 
 type TabKey = 'favorites' | 'selling';
 
@@ -85,35 +89,59 @@ const ListingsSection: React.FC<{
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('selling');
+  const [username, setUsername] = useState('');
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0);
+  const [reviews, setReviews] = useState(0);
+  const [favorites, setFavorites] = useState(0);
+  const [listings, setListings] = useState(0);
 
-  const profile = {
-    username: 'HolaAdios123',
-    followers: 0,
-    following: 0,
-    reviews: 0,
-    website: 'thriftuni.com/@HolaAdios123',
-    listings: 0,
-    favorites: 0,
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadProfile = async () => {
+        try {
+          const storedUsername = await AsyncStorage.getItem('username');
+          const storedFavorites = await AsyncStorage.getItem('favorites');
+          const storedListings = await AsyncStorage.getItem('listings');
+
+          if (storedUsername) setUsername(storedUsername);
+          if (storedFavorites) setFavorites(Number(storedFavorites));
+          if (storedListings) setListings(Number(storedListings));
+        } catch (error) {
+          console.error('Failed to load profile data:', error);
+        }
+      };
+
+      loadProfile();
+    }, [])
+  );
 
   // All tab-related configuration is defined here. Adding a new tab would only require extending this array.
   const tabs: TabConfig[] = [
-    { key: 'favorites', label: 'Favorites', count: profile.favorites },
-    { key: 'selling', label: 'Selling', count: profile.listings },
+    { key: 'favorites', label: 'Favorites', count: favorites },
+    { key: 'selling', label: 'Selling', count: listings },
   ];
 
   const stats: ProfileStatsItem[] = [
-    { label: 'Followers', value: profile.followers },
-    { label: 'Following', value: profile.following },
-    { label: 'Reviews', value: profile.reviews },
+    { label: 'Followers', value: followers },
+    { label: 'Following', value: following },
+    { label: 'Reviews', value: reviews },
   ];
 
   return (
     <View style={styles.container}>
-      <ProfileHeader username={profile.username} />
+      <ProfileHeader username={username || 'Username'} />
       <TabToggle tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
       <ProfileStats stats={stats} />
-      <Text style={styles.website}>{profile.website}</Text>
+      <Text style={styles.website}>
+        {profile?.website || `thriftuni.com/@${username || 'user'}`}
+      </Text>
+
+      {/* Earnings Button */}
+      <TouchableOpacity style={styles.earningsButton} onPress={() => router.push('/earnings')}>
+        <Text style={styles.earningsButtonText}>Earnings</Text>
+      </TouchableOpacity>
+
       <ListingsSection activeTab={activeTab} tabs={tabs} />
     </View>
   );
