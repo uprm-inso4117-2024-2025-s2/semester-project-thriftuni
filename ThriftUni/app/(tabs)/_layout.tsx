@@ -24,15 +24,15 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <View style={{ flex: 1, paddingTop: 70 }}>
-      {/* Commented as we don't need this anymore */}
+    <View style={{ flex: 1 }}>
+      {/* Commented as we don't need this anymore Example code for Document creation*/}
       {/* <CreateFirestoreCollections /> */}
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           // Disable the static render of the header on web
           // to prevent a hydration error in React Navigation v6.
-          headerShown: false,
+          headerShown: useClientOnlyValue(false, true),
         }}>
         <Tabs.Screen
           name="index"

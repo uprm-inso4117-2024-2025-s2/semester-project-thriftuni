@@ -7,7 +7,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ProtectedRoute from "../../components/ProtectedRoute";
 
 function Chip({
   label,
@@ -19,7 +18,6 @@ function Chip({
   onPress: () => void;
 }) {
   return (
-  <ProtectedRoute>
     <TouchableOpacity
       onPress={onPress}
       style={[styles.chip, selected && styles.chipSelected]}
@@ -28,7 +26,6 @@ function Chip({
         {label}
       </Text>
     </TouchableOpacity>
-  </ProtectedRoute>
   );
 }
 

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import {router} from "expo-router";
 import {
   View,
   TextInput,
@@ -17,10 +16,6 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSignup = () => {
-    router.push("/login/signup");
-    };
-
   const handleLogin = async () => {
     setLoading(true);
     console.log("email:", email);
@@ -32,17 +27,8 @@ const LoginScreen = () => {
       setError(response.error);
     } else {
       console.log("User logged in:", response.user);
-      if (router?.replace) {
-          router.replace("/(tabs)/main_page"); // ✅ Redirige solo si `router` está disponible
-      }
     }
   };
-
-  const handleForget = () => {
-    router.push("/login/forgot");
-  }
-
-  
 
   return (
     <View style={styles.container}>
@@ -55,7 +41,6 @@ const LoginScreen = () => {
           autoCapitalize="none" // Prevents first-letter capitalization
           keyboardType="email-address" // Opens email keyboard
           style={styles.input}
-          placeholderTextColor="#999"
         />
         <TextInput
           placeholder="Password"
@@ -63,25 +48,19 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
-          placeholderTextColor="#999"
         />
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         {loading ? (
-          <ActivityIndicator testID="loading-indicator" size="small" />
+          <ActivityIndicator size="small" />
         ) : (
-          <TouchableOpacity testID="login-button" style={styles.button} onPress={handleLogin}>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.forgotText}>
-        <Text style={styles.link} onPress={handleForget}>
-          Forgot Password?
-        </Text>
-      </Text>
       <Text style={styles.signupText}>
         Don't have an account?{" "}
-        <Text style={styles.link} onPress={handleSignup}>
+        <Text style={styles.link} onPress={() => {}}>
           Sign Up
         </Text>
       </Text>
@@ -113,14 +92,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 5,
+    borderRadius: 15,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
   button: {
-    backgroundColor: "black",
+    backgroundColor: "#F45D5D",
     padding: 12,
-    borderRadius: 5,
+    borderRadius: 15,
     alignItems: "center",
     marginTop: 10,
   },
@@ -130,15 +109,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signupText: {
-    marginTop: 5,
+    marginTop: 20,
   },
   link: {
-    color: "black",
-    fontWeight: "bold",
+    color: "blue",
+    textDecorationLine: "underline",
   },
-  forgotText: {
-    marginTop: 15,
-    },
 });
 
 export default LoginScreen;
