@@ -77,10 +77,10 @@ export default function ListingScreen() {
           borderBottomWidth: 1,
         }}
       >
-        <SearchBar />
+        <SearchBar setListings={setData} listings={data}/>
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <FilterMenu setData={setData} />
+        <FilterMenu setData={setData} data={data}/>
         <View style={styles.listingGrid}>
           {dummyData.map((product) => (
             <ProductCard key={product.id} {...product} />

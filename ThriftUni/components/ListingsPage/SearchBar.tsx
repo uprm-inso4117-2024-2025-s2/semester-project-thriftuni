@@ -3,11 +3,21 @@ import { View } from '@/components/Themed'
 import React, {useState} from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 
-export default function SearchBar() {
+interface SearchBarProps {
+  setListings: React.Dispatch<React.SetStateAction<any>>;
+  listings: any;
+}
+
+
+const SearchBar = ({setListings, listings} : SearchBarProps) => {
   const [searchText, setSearchText] = useState<string>('')
 
   const handleChanges = (text: string) => {
-    setSearchText(text);
+    setSearchText(text)
+    const filteredListings = listings.filter((listing: any) => {
+      return listing.title.toLowerCase().includes(text.toLowerCase())
+    })
+    setListings(filteredListings)
   }
 
   return (
@@ -49,3 +59,5 @@ const styles = StyleSheet.create({
 
   }
 })
+
+export default SearchBar;

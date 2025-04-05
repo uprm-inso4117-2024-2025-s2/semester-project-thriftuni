@@ -4,7 +4,7 @@ import FilterMenu from "@/components/ListingsPage/FilterMenu";
 import CategoryDropdown  from "@/components/ListingsPage/CategoryDropdown";
 import { expect, test, jest, describe, it } from "@jest/globals";
 import { View } from 'react-native'
-import { Listings } from "@/app/(tabs)/listings";
+import { Listings } from "@/app/(tabs)/index";
 
 // Mock Implementation for FontAwesome
 jest.mock('@expo/vector-icons', () => {
@@ -34,11 +34,43 @@ let mockListingData : Listings[] = [
     id: 1,
     title: "Product Title",
     price: 10,
+    description: "This is a description for a product.",
+    pictures: [
+      "https://picsum.photos/200?random=1",
+      "https://picsum.photos/200?random=2",
+      "https://picsum.photos/200?random=3",
+    ],
     img: "",
-    latitude: "18.2",
-    longitude: "-67.2",
+    latitude: 18.2,
+    longitude: -67.2,
     category: "electronics",
-    sellerRep: 5,
+    sellerInfo: {
+      name: "Pepe",
+      location: "Mayaguez, Puerto Rico",
+      about: "I'm Pepe",
+      onProfilePress: () => alert("Profile Clicked"),
+    },
+  },
+  {
+    id: 2,
+    title: "Product Title 2",
+    price: 20,
+    description: "This is a description for a product.",
+    pictures: [
+      "https://picsum.photos/200?random=1",
+      "https://picsum.photos/200?random=2",
+      "https://picsum.photos/200?random=3",
+    ],
+    img: "",
+    latitude: 18.2,
+    longitude: -67.2,
+    category: "clothing",
+    sellerInfo: {
+      name: "Pepe",
+      location: "Mayaguez, Puerto Rico",
+      about: "I'm Pepe",
+      onProfilePress: () => alert("Profile Clicked"),
+    },
   },
 ] // Mock data for testing
 
