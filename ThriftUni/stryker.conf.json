@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutator": {},
+  "testRunner": "jest",
+  "jest": {
+    "projectType": "custom"
+  },
+  "reporters": ["html", "clear-text", "progress"],
+  "coverageAnalysis": "off",
+  "tsconfigFile": "tsconfig.json",
+  "mutate": [
+    "app/**/*.{ts,tsx}",
+    "components/**/*.{ts,tsx}",
+    "utils/**/*.{ts,tsx}",
+    "firebase/**/*.{ts,tsx}",
+    "!**/__tests__/**",
+    "!**/*.test.*"
+  ]
+}
