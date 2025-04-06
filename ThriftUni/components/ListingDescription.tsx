@@ -1,7 +1,7 @@
 import { StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
 import { View, Text } from "@/components/Themed";
-import ContactSeller from "./Buttons/ContactSeller";
-import WishlistItem from "./Buttons/WishlistItem";
+import ContactSeller from "./buttons/ContactSeller";
+import WishlistItem from "./buttons/WishlistItem";
 import SellerCard, { Seller } from "./SellerCard";
 import LocationMap, { Location } from "./LocationMap";
 
