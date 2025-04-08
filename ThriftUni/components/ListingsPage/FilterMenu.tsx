@@ -35,14 +35,17 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
   const [sellerRep, setSellerRep] = React.useState<number>(5);
   const [filterApplied, setFilterApplied] = React.useState<boolean>(false);
   const [dropdownFocus, setDropdownFocus] = React.useState<boolean>(false);
-  const [originalData, setOriginalData] = React.useState<Listings[]>(data);
+  const [originalData, setOriginalData] = React.useState<Listings[]>([]);
+
+  // Store original data when component mounts
+  useEffect(() => {
+    setOriginalData(data);
+  }, []);
 
   useEffect(() => {
     if (filterApplied) {
-      // 
-
       // Apply the filtering logic
-      let filteredData = [...data];
+      let filteredData = originalData; // Use originalData instead of data
       
       // Filter by price
       if (price > 1) {
@@ -54,10 +57,10 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
         filteredData = filteredData.filter(item => item.category === category);
       }
       
-      // Filter by seller reputation (if applicable in your data model)
-      if (sellerRep < 5) {
+      // Filter by seller reputation
+      if (sellerRep > 1) {
         filteredData = filteredData.filter(item => 
-          item.sellerInfo?.rating && item.sellerInfo.rating >= sellerRep
+          item.sellerInfo.rating >= sellerRep
         );
       }
       
@@ -66,10 +69,20 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
       
       // Update the filtered data
       setData(filteredData);
-      console.log("Filters Applied:", distance, price, category, sellerRep);
       setFilterApplied(false);
     }
-  }, [filterApplied, data, price, category, sellerRep, distance]);
+  }, [filterApplied]);
+
+  // Function to handle clearing filters
+  const handleClearFilters = () => {
+    setDistance(1);
+    setPrice(1);
+    setCategory("");
+    setSellerRep(5);
+    
+    // Important: directly set the data back to original instead of triggering filterApplied
+    setData(originalData);
+  };
 
   return (
     <View>
@@ -119,6 +132,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
                 ratingCount={5}
                 imageSize={25}
                 onFinishRating={setSellerRep}
+                
                 tintColor="#F6F9FF"
                 ratingBackgroundColor="#999999"
                 style={{ padding: 10 }}
@@ -156,14 +170,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
           <Pressable
             testID="clear-filters-button"
             style={styles.clearFilters}
-            onPress={() => {
-              setDistance(1);
-              setPrice(1);
-              setCategory("");
-              setFilterApplied(true);
-              setSellerRep(5);
-              setData(originalData);
-            }}
+            onPress={handleClearFilters}
           >
             <Text style={{ color: "red", fontSize: 18, fontWeight: "bold" }}>
               Clear Filters
@@ -205,5 +212,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "red",
   },
-
 });

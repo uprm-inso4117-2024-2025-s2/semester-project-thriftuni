@@ -29,6 +29,7 @@ const sellerDetails: Seller = {
   name: "Pepe",
   about: "I'm Pepe",
   location: "Mayaguez, Puerto Rico",
+  rating: 4.5,
   onProfilePress: () => alert("Profile Clicked"),
 };
 

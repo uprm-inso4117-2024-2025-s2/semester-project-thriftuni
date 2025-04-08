@@ -14,7 +14,6 @@ const SearchBar = ({setListings, listings} : SearchBarProps) => {
   const [originalListings, setOriginalListings] = useState<any>(listings)
 
   const handleSubmit = () => {
-    console.log('Search Text:', searchText)
     if (searchText === '') {
       setListings(originalListings)
       return

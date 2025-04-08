@@ -5,7 +5,7 @@ export interface Seller {
   name: string;
   location: string;
   about: string;
-  rating?: number;
+  rating: number;
   onProfilePress: () => void;
 }
 
