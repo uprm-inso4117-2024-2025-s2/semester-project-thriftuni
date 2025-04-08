@@ -1,6 +1,8 @@
 {
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
   "mutator": {},
+  "timeoutMS": 20000,
+  "timeoutFactor": 1.5,
   "testRunner": "jest",
   "jest": {
     "projectType": "custom"
@@ -17,3 +19,8 @@
     "!**/*.test.*"
   ]
 }
+
+
+
+
+
