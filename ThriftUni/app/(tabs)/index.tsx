@@ -67,7 +67,7 @@ export interface Listings {
 }
 
 export default function ListingScreen() {
-  const [data, setData] = useState<Listings[]>([]);
+  const [data, setData] = useState<any[]>(dummyData);
   return (
     <View>
       <View
@@ -82,7 +82,7 @@ export default function ListingScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <FilterMenu setData={setData} data={data}/>
         <View style={styles.listingGrid}>
-          {dummyData.map((product) => (
+          {data.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </View>

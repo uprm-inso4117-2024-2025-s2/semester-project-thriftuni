@@ -11,11 +11,16 @@ interface SearchBarProps {
 
 const SearchBar = ({setListings, listings} : SearchBarProps) => {
   const [searchText, setSearchText] = useState<string>('')
+  const [originalListings, setOriginalListings] = useState<any>(listings)
 
-  const handleChanges = (text: string) => {
-    setSearchText(text)
-    const filteredListings = listings.filter((listing: any) => {
-      return listing.title.toLowerCase().includes(text.toLowerCase())
+  const handleSubmit = () => {
+    console.log('Search Text:', searchText)
+    if (searchText === '') {
+      setListings(originalListings)
+      return
+    }
+    const filteredListings = originalListings.filter((listing: any) => {
+      return listing.title.toLowerCase().includes(searchText.toLowerCase())
     })
     setListings(filteredListings)
   }
@@ -23,7 +28,7 @@ const SearchBar = ({setListings, listings} : SearchBarProps) => {
   return (
     <View style={styles.container}>
       <FontAwesome style={styles.searchBarIcon} name="search" size={24} color="black" />
-      <TextInput onEndEditing={() => {console.log(`Input Finished ${searchText}`)}} style={styles.searchBarInput} onChangeText={handleChanges} placeholder='Search...'/>
+      <TextInput onEndEditing={handleSubmit} style={styles.searchBarInput} onChangeText={setSearchText} placeholder='Search...'/>
     </View>
   )
 }
