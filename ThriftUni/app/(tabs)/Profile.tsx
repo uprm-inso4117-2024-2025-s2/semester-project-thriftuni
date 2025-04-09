@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import ProtectedRoute from "../../components/ProtectedRoute";
 
 type TabKey = 'favorites' | 'selling';
 
@@ -18,7 +17,6 @@ interface ProfileStatsItem {
 }
 
 const ProfileHeader: React.FC<{ username: string }> = ({ username }) => (
-<ProtectedRoute>
   <View style={styles.header}>
     <Text style={styles.username}>{username}</Text>
     <View style={styles.headerButtons}>
@@ -30,7 +28,6 @@ const ProfileHeader: React.FC<{ username: string }> = ({ username }) => (
       </TouchableOpacity>
     </View>
   </View>
-</ProtectedRoute>
 );
 
 const ProfileStats: React.FC<{ stats: ProfileStatsItem[] }> = ({ stats }) => (
@@ -58,10 +55,7 @@ const TabToggle: React.FC<{
     {tabs.map((tab) => (
       <TouchableOpacity
         key={tab.key}
-        style={[
-          styles.toggleButton,
-          activeTab === tab.key && styles.activeButton
-        ]}
+        style={[styles.toggleButton, activeTab === tab.key && styles.activeButton]}
         onPress={() => onTabChange(tab.key)}
       >
         <Text style={activeTab === tab.key ? styles.activeText : undefined}>
@@ -83,7 +77,7 @@ const ListingsSection: React.FC<{
         {activeTabData?.label} ({activeTabData?.count})
       </Text>
       <TouchableOpacity>
-        <Ionicons name="filter" size={24} color="#000000" />
+        <Ionicons name="filter" size={24} color="#007bff" />
       </TouchableOpacity>
     </View>
   );
@@ -102,6 +96,7 @@ const Profile: React.FC = () => {
     favorites: 0,
   };
 
+  // All tab-related configuration is defined here. Adding a new tab would only require extending this array.
   const tabs: TabConfig[] = [
     { key: 'favorites', label: 'Favorites', count: profile.favorites },
     { key: 'selling', label: 'Selling', count: profile.listings },
@@ -119,18 +114,10 @@ const Profile: React.FC = () => {
       <TabToggle tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
       <ProfileStats stats={stats} />
       <Text style={styles.website}>{profile.website}</Text>
-
-      {/* New Earnings Button */}
-      <TouchableOpacity style={styles.earningsButton} onPress={() => router.push('/earnings')}>
-        <Text style={styles.earningsButtonText}>Earnings</Text>
-      </TouchableOpacity>
-
       <ListingsSection activeTab={activeTab} tabs={tabs} />
     </View>
   );
 };
-
-export default Profile;
 
 const styles = StyleSheet.create({
   container: {
@@ -165,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   activeButton: {
-    backgroundColor: '#000000',
+    backgroundColor: '#007bff',
   },
   activeText: {
     color: '#fff',
@@ -208,18 +195,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  earningsButton: {
-    backgroundColor: '#000000',
-    paddingVertical: 12,
-    borderRadius: 20,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  earningsButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
   listingsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -230,3 +205,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default Profile;
