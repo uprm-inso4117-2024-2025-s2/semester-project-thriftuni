@@ -2,21 +2,32 @@ import { StyleSheet, Pressable, Image, FlatList, Modal, TextInput, ScrollView } 
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { getListings, updateListing, deleteListing } from '../../mock_backend/mockApi'; // <-- Updated import
+import { getCurrentUserListings, updateListing, deleteListing } from '../../mock_backend/mockApi'; // <-- Updated import
 import { useEffect } from 'react';
 
 export default function DisplayMyListing() {
-  type Listing = {
+  type Listing = { //TODO follow listings collection structure
     id: string;
-    name: string;
-    details: string;
-    price: string;
+    title: string;
+    description: string;
+    price: number;
     status: string;
-    photos: string[];
+    photos: string[];       // TODO Integrate with listing_images collection
+    category_id?: string;   // categories document id
+    condition?: string[];
+    created_at?: any;       // Firestore timestamp
+    deleted_at?: any;       // Firestore timestamp
+    updated_at?: any;       // Firestore timestamp
+    latitude?: number;
+    longitude?: number;
+    location?: string;
+    listing_id?: string;
+    user?: any;
   };
 
   const [listings, setListings] = useState<Listing[]>([]);
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [filter, setFilter] = useState('All');
   const [isEditing, setIsEditing] = useState(false);
@@ -29,13 +40,59 @@ export default function DisplayMyListing() {
   const [editPhotos, setEditPhotos] = useState<string[]>([]);
   const [editStatus, setEditStatus] = useState('');
 
+  // Function to fetch listings that can be reused
+  const fetchListings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getCurrentUserListings();
+
+      // Map Firestore data to component structure
+      const typedListings = data.map(item => ({
+        id: item.id,
+        title: (item as any).title || '',
+        description: (item as any).description || '',
+        price: (item as any).price || 0,
+        status: (item as any).status || 'Pending',
+        photos: Array.isArray((item as any).photos) ? (item as any).photos : [],
+        category_id: (item as any).category_id,
+        condition: (item as any).condition,
+        created_at: (item as any).created_at,
+        deleted_at: (item as any).deleted_at,
+        updated_at: (item as any).updated_at,
+        latitude: (item as any).latitude,
+        longitude: (item as any).longitude,
+        location: (item as any).location,
+        listing_id: (item as any).listing_id,
+        user: (item as any).user
+      })) as Listing[];
+
+      // Ensure compatibility with your existing UI
+      const compatibleListings = typedListings.map(item => ({
+        ...item,
+        name: item.title,              // Map to what your UI expects
+        details: item.description      // Map to what your UI expects
+      })) as unknown as Listing[];
+
+      setListings(compatibleListings);
+    } catch (error) {
+      console.error('Error fetching listings:', error);
+      setError('Failed to load listings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = await getCurrentUserListings();
+  //     setListings(data);
+  //   };
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getListings();
-      setListings(data);
-    };
-    fetchData();
+    fetchListings();
   }, []);
 
 
@@ -46,40 +103,48 @@ export default function DisplayMyListing() {
   };
 
   const handleDelete = async (id: string) => {
-    const success = await deleteListing(id);
-    if (success) {
-      setListings(prevListings => prevListings.filter(listing => listing.id !== id));
+    try {
+      const success = await deleteListing(id);
+      if (success) {
+        setListings(prevListings => prevListings.filter(listing => listing.id !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting listing:', error);
     }
   };
 
 
   const handleEdit = (listing: any) => {
     setCurrentListing(listing);
-    setEditTitle(listing.name);
-    setEditPrice(listing.price);
-    setEditDetails(listing.details);
-    setEditPhotos([...listing.photos]);
+    setEditTitle(listing.title || listing.name);
+    setEditPrice(String(listing.price));
+    setEditDetails(listing.description || listing.details);
+    setEditPhotos([...(listing.photos || [])]);
     setModalVisible(true);
-    setEditStatus(listing.status);
+    setEditStatus(listing.status || 'Pending');
   };
 
   const handleSaveChanges = async () => {
-    const updatedItem = {
-      ...currentListing,
-      name: editTitle,
-      price: editPrice,
-      details: editDetails,
-      photos: editPhotos,
-      status: editStatus,
-    };
+    try {
+      const updatedItem = {
+        ...currentListing,
+        title: editTitle,
+        price: parseFloat(editPrice) || 0,
+        description: editDetails,
+        photos: editPhotos,
+        status: editStatus,
+      };
 
-    const updated = await updateListing(currentListing.id, updatedItem);
+      const updated = await updateListing(currentListing.id, updatedItem);
 
-    if (updated) {
-      setListings(prev => prev.map(item => item.id === updated.id ? updated : item));
+      if (updated) {
+        setListings(prev => prev.map(item => item.id === updated.id ? (updated as unknown as Listing) : item));
+      }
+      setModalVisible(false);
+      setCurrentListing(null);
+    } catch (error) {
+      console.error('Error updating listing:', error);
     }
-    setModalVisible(false);
-    setCurrentListing(null);
   };
 
 
@@ -124,8 +189,8 @@ export default function DisplayMyListing() {
             <View style={styles.card}>
               <Image source={{ uri: item.photos[0] }} style={styles.image} />
               <View style={styles.card_information}>
-                <Text style={{ fontSize: 25, color: "#000", margin: 5 }}>{item.name}</Text>
-                <Text style={{ fontSize: 15, color: "#000", margin: 5 }}>{item.details}</Text>
+                <Text style={{ fontSize: 25, color: "#000", margin: 5 }}>{item.title}</Text>
+                <Text style={{ fontSize: 15, color: "#000", margin: 5 }}>{item.description}</Text>
                 <Text style={{ fontSize: 15, color: "#000", margin: 5 }}>{item.price}</Text>
               </View>
               <Text style={{ marginLeft: 'auto', marginRight: 25, fontSize: 10, color: "#000" }}>{item.status}</Text>
