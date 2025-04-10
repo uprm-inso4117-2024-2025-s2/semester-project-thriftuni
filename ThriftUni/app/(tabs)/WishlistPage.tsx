@@ -33,7 +33,7 @@ const removeWishlistItem = async (id: string): Promise<string> => {
 };
 
 const WishlistPage = () => {
-  // ✅ Explicitly define the type of wishlist state
+  // Explicitly define the type of wishlist state
   const [wishlist, setWishlist] = useState<WishlistItemType[]>([]);
   const [filteredWishlist, setFilteredWishlist] = useState<WishlistItemType[]>([]);
   const [loading, setLoading] = useState(true);
