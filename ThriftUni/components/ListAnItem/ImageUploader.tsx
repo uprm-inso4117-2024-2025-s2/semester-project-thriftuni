@@ -8,35 +8,58 @@ import {
   StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 interface ImageProps {
   image: string;
   setImage: (image: string) => void;
 }
+const BLOB_READ_WRITE_TOKEN = "insert-token"; // Replace with token!!!
 
 export default function ImageUploader({ image, setImage }: ImageProps) {
   const [frontImage, setFrontImage] = useState("");
 
   const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      setFrontImage(result.assets[0].uri); // preview
+      uploadImage(result.assets[0]);
+    }
+  };
+
+  const uploadImage = async (asset: ImagePicker.ImagePickerAsset) => {
+    const uri = asset.uri;
+    const fileName = uri.split("/").pop();
+    const fileType = asset.type || "image/jpeg";
+
+    // Read the image file
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
     try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+      const uploadUrl = `https://blob.vercel-storage.com/${encodeURIComponent(
+        fileName as string
+      )}`;
+      const vercelResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${BLOB_READ_WRITE_TOKEN}`,
+          "Content-Type": fileType,
+        },
+        body: blob,
       });
 
-      if (!result.canceled) {
-        const uri = result.assets[0].uri;
-        setFrontImage(uri); // preview
-
-        const response = await fetch(uri);
-        const blob = await response.blob();
-        const filename = `image-${Date.now()}.jpg`;
-      }
-    } catch (err) {
-      console.error("Error uploading image:", err);
+      const data = await vercelResponse.json();
+      console.log("Uploaded image URL:", data.url);
+      setImage(data.url); // Update the state with the new URL
+    } catch (error) {
+      console.error("Upload error:", error);
     }
   };
 
