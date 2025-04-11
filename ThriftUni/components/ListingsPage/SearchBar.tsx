@@ -3,17 +3,31 @@ import { View } from '@/components/Themed'
 import React, {useState} from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 
-export default function SearchBar() {
-  const [searchText, setSearchText] = useState<string>('')
+interface SearchBarProps {
+  setListings: React.Dispatch<React.SetStateAction<any>>;
+  listings: any;
+}
 
-  const handleChanges = (text: string) => {
-    setSearchText(text);
+
+const SearchBar = ({setListings, listings} : SearchBarProps) => {
+  const [searchText, setSearchText] = useState<string>('')
+  const [originalListings, setOriginalListings] = useState<any>(listings)
+
+  const handleSubmit = () => {
+    if (searchText === '') {
+      setListings(originalListings)
+      return
+    }
+    const filteredListings = originalListings.filter((listing: any) => {
+      return listing.title.toLowerCase().includes(searchText.toLowerCase())
+    })
+    setListings(filteredListings)
   }
 
   return (
     <View style={styles.container}>
       <FontAwesome style={styles.searchBarIcon} name="search" size={24} color="black" />
-      <TextInput onEndEditing={() => {console.log(`Input Finished ${searchText}`)}} style={styles.searchBarInput} onChangeText={handleChanges} placeholder='Search...'/>
+      <TextInput onEndEditing={handleSubmit} style={styles.searchBarInput} onChangeText={setSearchText} placeholder='Search...'/>
     </View>
   )
 }
@@ -49,3 +63,5 @@ const styles = StyleSheet.create({
 
   }
 })
+
+export default SearchBar;
