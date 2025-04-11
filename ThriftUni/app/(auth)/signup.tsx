@@ -10,27 +10,11 @@ import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-import { initializeApp, getApp, getApps } from "firebase/app";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD7EBLPezmrBujRy58eLzmAV1jeKTUrPoQ",
-  authDomain: "thriftuni-b345a.firebaseapp.com",
-  projectId: "thriftuni-b345a",
-  storageBucket: "thriftuni-b345a.firebasestorage.app",
-  messagingSenderId: "501062585933",
-  appId: "1:501062585933:web:7bb28a9b3f4f2f61a3d604",
-  measurementId: "G-MCWKZZQPTP",
-};
-
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-========
 import { router } from "expo-router";
 
 import { firebaseApp } from "../../firebase/firebase.config";
 
 const app = firebaseApp;
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -80,13 +64,10 @@ export default function Signup() {
   };
   
 
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-========
   const handleLogin = () => {
     router.push("/login");
   };
 
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
@@ -96,12 +77,14 @@ export default function Signup() {
           placeholder="Name"
           value={name}
           onChangeText={setName}
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -110,6 +93,7 @@ export default function Signup() {
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none" // Prevents first-letter capitalization
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -117,18 +101,16 @@ export default function Signup() {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor="#999"
         />
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-========
 
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.loginText}>
         Already have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
+        <Text style={styles.link} onPress={handleLogin}>
           Login
         </Text>
       </Text>
@@ -153,6 +135,7 @@ const styles = StyleSheet.create({
   form: {
     width: "100%",
     maxWidth: 400,
+    backgroundColor: "#F6F9FF",
   },
   input: {
     width: "100%",
@@ -160,18 +143,16 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
+    color: "black",
   },
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-========
 
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -184,7 +165,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
   },
 });
