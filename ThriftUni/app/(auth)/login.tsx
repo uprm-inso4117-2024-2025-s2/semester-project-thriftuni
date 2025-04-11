@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+<<<<<<< HEAD:ThriftUni/app/login/login.tsx
+=======
 import { router } from "expo-router";
+>>>>>>> main:ThriftUni/app/(auth)/login.tsx
 import {
   View,
   TextInput,
@@ -10,6 +13,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { login } from "../../firebase/login";
+import { useRouter } from "expo-router";
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -17,9 +22,14 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+<<<<<<< HEAD:ThriftUni/app/login/login.tsx
+  const router = useRouter();
+
+=======
   const handleSignup = () => {
     router.push("/signup");
   };
+>>>>>>> main:ThriftUni/app/(auth)/login.tsx
 
   const handleLogin = async () => {
     setLoading(true);
@@ -39,16 +49,23 @@ const LoginScreen = () => {
       // Stryker disable next-line all
       console.log("User logged in:", response.user);
       if (router?.replace) {
+<<<<<<< HEAD:ThriftUni/app/login/login.tsx
+          router.replace("/(tabs)/main_page");
+=======
         router.replace("/(tabs)/main_page"); // ✅ Redirige solo si `router` está disponible
+>>>>>>> main:ThriftUni/app/(auth)/login.tsx
       }
     }
   };
 
+<<<<<<< HEAD:ThriftUni/app/login/login.tsx
+=======
   const handleForget = () => {
     router.push("/forgot");
   };
 
    // Stryker disable all: The JSX block inside the return statement was excluded from mutation testing using // Stryker disable all because it contains purely visual elements (e.g., layout, styles, text content). These do not affect the business logic or behavior of the component, and testing visual mutations adds no value to the application's correctness. Excluding them keeps mutation reports clean and focused on critical logic paths.
+>>>>>>> main:ThriftUni/app/(auth)/login.tsx
   return (
     <View style={styles.container}>
       <Text style={styles.title} testID="login-title">Login</Text>
@@ -61,7 +78,6 @@ const LoginScreen = () => {
           autoCapitalize="none" // Prevents first-letter capitalization
           keyboardType="email-address" // Opens email keyboard
           style={styles.input}
-          placeholderTextColor="#999"
         />
         <TextInput
           testID="password-input"
@@ -70,7 +86,6 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
-          placeholderTextColor="#999"
         />
         {error ? <Text testID="error-message" style={{ color: "red" }}>{error}</Text> : null}
         {loading ? (
@@ -85,14 +100,9 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.forgotText}>
-        <Text style={styles.link} onPress={handleForget}>
-          Forgot Password?
-        </Text>
-      </Text>
       <Text style={styles.signupText}>
         Don't have an account?{" "}
-        <Text style={styles.link} onPress={handleSignup}>
+        <Text style={styles.link} onPress={() => {}}>
           Sign Up
         </Text>
       </Text>
@@ -124,14 +134,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 5,
+    borderRadius: 15,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
   button: {
-    backgroundColor: "black",
+    backgroundColor: "#F45D5D",
     padding: 12,
-    borderRadius: 5,
+    borderRadius: 15,
     alignItems: "center",
     marginTop: 10,
   },
@@ -141,15 +151,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signupText: {
-    marginTop: 5,
+    marginTop: 20,
   },
   link: {
-    color: "black",
-    fontWeight: "bold",
+    color: "blue",
+    textDecorationLine: "underline",
   },
+<<<<<<< HEAD:ThriftUni/app/login/login.tsx
+=======
   forgotText: {
     marginTop: 15,
   },
+>>>>>>> main:ThriftUni/app/(auth)/login.tsx
 });
 // Stryker restore all
 
