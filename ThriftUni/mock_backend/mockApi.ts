@@ -12,13 +12,8 @@ const currentUserRef = doc(db, 'users', 'o7O7aJAdDsgLMeNjeP9U87Jj4ob2');
 
 // listings and users collection references
 const listingsCollectionRef = collection(db, 'listings');
-const usersCollectionRef = collection(db, 'users');
 
-let listings = [...listingsData]; // In-memory mock database
-
-// export const getListings = async () => {
-//   return [...listings]; // Simulate async fetch
-// };
+let listings = [...listingsData]; // In-memory mock database;
 
 // To get all listings
 export const getListings = async () => {
@@ -81,13 +76,6 @@ export const createListing = async (listingsData: any) => {
   }
 };
 
-// export const updateListing = async (id: string, updatedData: any) => {
-//   listings = listings.map(listing =>
-//     listing.id === id ? { ...listing, ...updatedData } : listing
-//   );
-//   return listings.find(listing => listing.id === id);
-// };
-
 // To update a listing by ID
 export const updateListing = async (id: string, updatedData: any) => {
   try {
@@ -109,10 +97,6 @@ export const updateListing = async (id: string, updatedData: any) => {
   }
 };
 
-// export const deleteListing = async (id: string) => {
-//   listings = listings.filter(listing => listing.id !== id);
-//   return true;
-// };
 
 // To delete a listing by ID
 export const deleteListing = async (id: string) => {

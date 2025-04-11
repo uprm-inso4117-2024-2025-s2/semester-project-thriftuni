@@ -7,13 +7,13 @@ import { useEffect } from 'react';
 import { serverTimestamp } from 'firebase/firestore';
 
 export default function DisplayMyListing() {
-  type Listing = { //TODO follow listings collection structure
+  type Listing = {
     id: string;
     title: string;
     description: string;
     price: number;
     status: string;
-    photos: string[];       // TODO Integrate with listing_images collection
+    photos: string[];
     category_id?: string;   // categories document id
     condition?: string[];
     created_at?: any;       // Firestore timestamp
@@ -23,7 +23,7 @@ export default function DisplayMyListing() {
     longitude?: number;
     location?: string;
     listing_id?: string;
-    user?: any;
+    user?: any;  // Reference to current user document
     listing_images?: Array<{
       id: string;
       image_url: string;
@@ -111,14 +111,6 @@ export default function DisplayMyListing() {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const data = await getCurrentUserListings();
-  //     setListings(data);
-  //   };
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     fetchListings();
   }, []);
@@ -178,7 +170,6 @@ export default function DisplayMyListing() {
       const updated = await updateListing(currentListing.id, updatedItem);
 
       if (updated) {
-        // setListings(prev => prev.map(item => item.id === updated.id ? (updated as unknown as Listing) : item));
         await fetchListings();
       }
       setModalVisible(false);
@@ -187,9 +178,6 @@ export default function DisplayMyListing() {
       console.error('Error updating listing:', error);
     }
   };
-
-
-
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
