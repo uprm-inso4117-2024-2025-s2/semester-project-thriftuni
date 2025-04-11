@@ -72,9 +72,7 @@ export default function ImageUploader({ image, setImage }: ImageProps) {
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) =>
           item === "add" ? (
-          item === "add" ? (
             <TouchableOpacity style={styles.addButton} onPress={pickImage}>
-              <Text style={{ fontSize: 32 }}>+</Text>
               <Text style={{ fontSize: 32 }}>+</Text>
             </TouchableOpacity>
           ) : (
@@ -91,19 +89,14 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   addButton: {
-    width: 150,
-    height: 150,
+    width: 80,
+    height: 80,
     borderWidth: 1,
     borderColor: "red", // Red dotted border
     borderStyle: "dashed",
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "red", // Red dotted border
-    borderStyle: "dashed",
-    justifyContent: "center",
-    alignItems: "center",
     marginRight: 10,
-    alignContent: "center",
     alignContent: "center",
   },
   plusIcon: {
@@ -112,8 +105,8 @@ const styles = StyleSheet.create({
     tintColor: "black",
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 80,
+    height: 80,
     borderRadius: 5,
     marginRight: 10,
   },
