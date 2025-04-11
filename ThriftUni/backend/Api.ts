@@ -1,5 +1,3 @@
-// mock_backend/mockApi.ts
-import listingsData from './listingsData.json';
 import { db } from '../firebaseConfig.js';
 import {
   collection, getDocs, doc, getDoc, updateDoc, deleteDoc,
@@ -7,13 +5,11 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 
-// Constant reference to mock a logged in user
+// Constant reference to mock a logged-in user
 const currentUserRef = doc(db, 'users', 'o7O7aJAdDsgLMeNjeP9U87Jj4ob2');
 
-// listings and users collection references
+// listings collection reference
 const listingsCollectionRef = collection(db, 'listings');
-
-let listings = [...listingsData]; // In-memory mock database;
 
 // To get all listings
 export const getListings = async () => {
@@ -96,7 +92,6 @@ export const updateListing = async (id: string, updatedData: any) => {
     throw error;
   }
 };
-
 
 // To delete a listing by ID
 export const deleteListing = async (id: string) => {

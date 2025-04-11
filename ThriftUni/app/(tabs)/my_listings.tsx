@@ -2,7 +2,7 @@ import { StyleSheet, Pressable, Image, FlatList, Modal, TextInput, ScrollView } 
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { getCurrentUserListings, updateListing, deleteListing, getListingImages } from '../../mock_backend/mockApi'; // <-- Updated import
+import { getCurrentUserListings, updateListing, deleteListing, getListingImages } from '../../backend/Api'; // <-- Updated import
 import { useEffect } from 'react';
 import { serverTimestamp } from 'firebase/firestore';
 
