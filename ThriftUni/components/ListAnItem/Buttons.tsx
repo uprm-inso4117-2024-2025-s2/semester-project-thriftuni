@@ -4,12 +4,18 @@ import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import addListing from "../../firebase/InsertListing";
 
-function getRandomInRange(from: number, to: number, fixed: number): number {
-  return parseFloat((Math.random() * (to - from) + from).toFixed(fixed));
-  // .toFixed() returns string, so 'parseFloat' is used to convert to number
+export interface ListingProps {
+  category_id: string;
+  condition: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  location: string;
+  price: string;
+  image: string;
 }
 
-const handlePostListing = async () => {
+const handlePostListing = async (listing: ListingProps) => {
   const auth = getAuth();
   const currentUser = auth.currentUser;
 
@@ -23,17 +29,10 @@ const handlePostListing = async () => {
   const updated_at = Timestamp.fromDate(now);
   try {
     await addListing({
-      category_id: "Electronic",
-      condition: "New",
+      ...listing,
       created_at: created_at,
       deleted_at: deleted_at,
-      description: "Up for sale is an electric guitar never used before.",
-      latitude: getRandomInRange(17.9, 18.5, 6), // Latitude range for Puerto Rico
-      longitude: getRandomInRange(-67.3, -65.2, 6), // Longitude range for Puerto Rico
       listing_id: "123456789",
-      location: "Mayaguez Pueblo",
-      price: 199.99,
-      title: "Gibson Les Paul guitar",
       updated_at: updated_at,
     });
     console.log("Listing posted!");
@@ -43,7 +42,7 @@ const handlePostListing = async () => {
   }
 };
 
-export default function Buttons() {
+export default function Buttons(listingData: ListingProps) {
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity
@@ -52,7 +51,10 @@ export default function Buttons() {
       >
         <Text style={styles.draftButtonText}>Save to drafts</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.postButton} onPress={handlePostListing}>
+      <TouchableOpacity
+        style={styles.postButton}
+        onPress={() => handlePostListing(listingData)}
+      >
         <Text style={styles.postButtonText}>Post listing</Text>
       </TouchableOpacity>
     </View>

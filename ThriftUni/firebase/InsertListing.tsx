@@ -11,9 +11,9 @@ const insertListing = async (listingData: {
   listing_id: string;
   location: string;
   longitude: number;
-  price: number;
-  title: string;
+  price: string;
   updated_at: Timestamp;
+  image: string;
 }) => {
   try {
     const docRef = await addDoc(collection(db, "listings"), {
@@ -21,6 +21,7 @@ const insertListing = async (listingData: {
       createdAt: Timestamp.now(),
     });
     console.log("Document written with ID: ", docRef.id);
+    console.log("Image is " + listingData.image);
   } catch (e) {
     console.error("Error adding document: ", e);
   }

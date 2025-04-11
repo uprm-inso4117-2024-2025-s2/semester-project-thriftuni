@@ -1,29 +1,27 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
-interface PriceInputProps {
-  price: string;
-  setPrice: (price: string) => void;
+interface BrandInputProps {
+  brand: string;
+  setBrand: (brand: string) => void;
 }
-
-export default function PriceInput({ price, setPrice }: PriceInputProps) {
+export default function BrandInput({ brand, setBrand }: BrandInputProps) {
   return (
-    <View style={styles.priceContainer}>
-      <Text style={styles.priceLabel}>Price</Text>
+    <View style={styles.brandContainer}>
+      <Text style={styles.brandLabel}>Brand</Text>
       <TextInput
-        style={styles.priceInput}
-        placeholder="$ 0.00"
+        style={styles.brandInput}
+        placeholder="N/A"
         placeholderTextColor="#888"
-        keyboardType="numeric"
-        value={price}
-        onChangeText={setPrice}
+        value={brand}
+        onChangeText={setBrand}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  priceContainer: {
+  brandContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -32,11 +30,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
     width: "100%",
   },
-  priceLabel: {
+  brandLabel: {
     fontSize: 16,
     color: "#333",
   },
-  priceInput: {
+  brandInput: {
     fontSize: 12,
     color: "#000",
     textAlign: "right",

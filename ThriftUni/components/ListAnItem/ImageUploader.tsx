@@ -1,34 +1,56 @@
-import React, { useState } from 'react';
-import { Text, View, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export default function ImageUploader() {
-  const [images, setImages] = useState<string[]>([]);
+interface ImageProps {
+  image: string;
+  setImage: (image: string) => void;
+}
+
+export default function ImageUploader({ image, setImage }: ImageProps) {
+  const [frontImage, setFrontImage] = useState("");
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
 
-    if (!result.canceled) {
-      setImages([...images, result.assets[0].uri]); // Add new image to the list
+      if (!result.canceled) {
+        const uri = result.assets[0].uri;
+        setFrontImage(uri); // preview
+
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const filename = `image-${Date.now()}.jpg`;
+      }
+    } catch (err) {
+      console.error("Error uploading image:", err);
     }
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={[...images, 'add']} // Show images + an add button
+        data={[frontImage, "add"]} // Show images + an add button
         horizontal
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) =>
-          item === 'add' ? (
+          item === "add" ? (
             <TouchableOpacity style={styles.addButton} onPress={pickImage}>
-              <Text style={{fontSize: 32}}>+</Text>
+              <Text style={{ fontSize: 32 }}>+</Text>
             </TouchableOpacity>
           ) : (
             <Image source={{ uri: item }} style={styles.image} />
@@ -47,17 +69,17 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderWidth: 1,
-    borderColor: 'red', // Red dotted border
-    borderStyle: 'dashed',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "red", // Red dotted border
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 10,
-    alignContent: 'center',
+    alignContent: "center",
   },
   plusIcon: {
     width: 40,
     height: 40,
-    tintColor: 'black',
+    tintColor: "black",
   },
   image: {
     width: 80,

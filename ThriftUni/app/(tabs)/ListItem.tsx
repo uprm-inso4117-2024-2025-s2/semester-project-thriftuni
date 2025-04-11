@@ -4,10 +4,67 @@ import { ScrollView, TextInput } from "react-native";
 import ImageUploader from "@/components/ListAnItem/ImageUploader";
 import Selector from "@/components/ListAnItem/Selector";
 import PriceInput from "@/components/ListAnItem/PriceInput";
+import BrandInput from "@/components/ListAnItem/BrandInput";
 import Buttons from "@/components/ListAnItem/Buttons";
+import { ListingProps } from "@/components/ListAnItem/Buttons";
+
+function getRandomInRange(from: number, to: number, fixed: number): number {
+  return parseFloat((Math.random() * (to - from) + from).toFixed(fixed));
+  // .toFixed() returns string, so 'parseFloat' is used to convert to number
+}
 
 export default function ListItem() {
-  const [text, setText] = useState("");
+  const categories = [
+    { label: "Clothing", value: "clothing" },
+    { label: "Electronics", value: "electronics" },
+    { label: "Books", value: "books" },
+    { label: "Furniture", value: "furniture" },
+    { label: "Other", value: "other" },
+  ];
+  const [category, setCategory] = useState("");
+
+  const colors = [
+    { label: "Red", value: "red" },
+    { label: "Blue", value: "blue" },
+    { label: "Green", value: "green" },
+    { label: "Yellow", value: "yellow" },
+    { label: "Black", value: "black" },
+    { label: "White", value: "white" },
+  ];
+  const [color, setColor] = useState("");
+
+  const conditions = [
+    { label: "New", value: "new" },
+    { label: "Like New", value: "like-new" },
+    { label: "Good", value: "good" },
+    { label: "Fair", value: "fair" },
+    { label: "Poor", value: "poor" },
+  ];
+  const [condition, setCondition] = useState("");
+
+  const [description, setDescription] = useState("");
+
+  const [price, setPrice] = useState("0");
+  const [brand, setBrand] = useState("0");
+
+  // Only storing one image.
+  const [image, setImage] = useState("");
+
+  const latitude = getRandomInRange(17.9, 18.5, 6); // Latitude range for Puerto Rico
+  const longitude = getRandomInRange(-67.3, -65.2, 6); // Longitude range for Puerto Rico
+  const location = "Mayaguez, Puerto Rico";
+
+  const listingData: ListingProps = {
+    category_id: category,
+    condition,
+    description,
+    latitude,
+    longitude,
+    location,
+    price,
+    image,
+  };
+
   return (
     <View style={styles.container}>
       {/* Top Bar */}
@@ -22,7 +79,7 @@ export default function ListItem() {
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
         {/*Add picture section*/}
-        <ImageUploader />
+        <ImageUploader image={image} setImage={setImage} />
         {/*Add description section*/}
         <View style={{ padding: 5 }}>
           <Text style={{ fontSize: 18, marginBottom: 5 }}>Description</Text>
@@ -30,8 +87,8 @@ export default function ListItem() {
             style={styles.descriptionInput}
             placeholder="Enter description ..."
             placeholderTextColor="grey"
-            value={text}
-            onChangeText={setText}
+            value={description}
+            onChangeText={setDescription}
             textAlignVertical="top"
             multiline={true}
           />
@@ -47,14 +104,29 @@ export default function ListItem() {
           }}
         />
         {/* Item details */}
-        <Selector type="Category" />
-        <Selector type="Brand" />
-        <Selector type="Condition" />
-        <Selector type="Color" />
-        <PriceInput />
+        <Selector
+          label="Category"
+          value={category}
+          options={categories}
+          onSelect={(selected) => setCategory(selected)}
+        />
+        <Selector
+          label="Condition"
+          value={condition}
+          options={conditions}
+          onSelect={(selected) => setCondition(selected)}
+        />
+        <Selector
+          label="Color"
+          value={color}
+          options={colors}
+          onSelect={(selected) => setColor(selected)}
+        />
+        <BrandInput brand={brand} setBrand={(value) => setBrand(value)} />
+        <PriceInput price={price} setPrice={(value) => setPrice(value)} />
       </ScrollView>
       {/* Save to draft and post buttons */}
-      <Buttons />
+      <Buttons {...listingData} />
     </View>
   );
 }
@@ -77,7 +149,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexGrow: 1,
-    paddingBottom: 120,
+    paddingBottom: 300,
   },
   picturesSection: {
     padding: 5,
