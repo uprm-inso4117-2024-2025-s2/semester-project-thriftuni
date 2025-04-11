@@ -1,61 +1,50 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 interface WishlistFilterProps {
-  onFilterChange: (filterType: string, value: any) => void;
+  onFilterChange: (
+    filterType: "availability" | "price" | "name",
+    value: string
+  ) => void;
 }
 
 const WishlistFilter: React.FC<WishlistFilterProps> = ({ onFilterChange }) => {
-  const [selectedFilter, setSelectedFilter] = useState("");
-
-  const handleFilterPress = (filterType: string, value: any) => {
-    setSelectedFilter(`${filterType}-${value}`); // Store the selected filter
-    onFilterChange(filterType, value);
-  };
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [selectedSort, setSelectedSort] = useState<string>("");
 
   return (
     <View style={styles.filterContainer}>
-      <Text style={styles.filterTitle}>Filter By:</Text>
+      <Picker
+        selectedValue={selectedFilter}
+        onValueChange={(value: string) => {
+          setSelectedFilter(value);
+          onFilterChange("availability", value);
+        }}
+        style={styles.picker}
+      >
+        <Picker.Item label="Filter: All" value="all" />
+        <Picker.Item label="Available" value="available" />
+        <Picker.Item label="Unavailable" value="unavailable" />
+      </Picker>
 
-      {/* Availability Filter */}
-      <TouchableOpacity onPress={() => handleFilterPress("availability", "available")} style={styles.filterButton}>
-        <Text style={[styles.filterText, selectedFilter === "availability-available" && styles.selected]}>
-          Available
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => handleFilterPress("availability", "unavailable")} style={styles.filterButton}>
-        <Text style={[styles.filterText, selectedFilter === "availability-unavailable" && styles.selected]}>
-          Unavailable
-        </Text>
-      </TouchableOpacity>
-
-      {/* Sorting Options */}
-      <Text style={styles.filterTitle}>Sort By:</Text>
-
-      <TouchableOpacity onPress={() => handleFilterPress("price", "asc")} style={styles.filterButton}>
-        <Text style={[styles.filterText, selectedFilter === "price-asc" && styles.selected]}>
-          Price: Low to High
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => handleFilterPress("price", "desc")} style={styles.filterButton}>
-        <Text style={[styles.filterText, selectedFilter === "price-desc" && styles.selected]}>
-          Price: High to Low
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => handleFilterPress("name", "asc")} style={styles.filterButton}>
-        <Text style={[styles.filterText, selectedFilter === "name-asc" && styles.selected]}>
-          Name: A-Z
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => handleFilterPress("name", "desc")} style={styles.filterButton}>
-        <Text style={[styles.filterText, selectedFilter === "name-desc" && styles.selected]}>
-          Name: Z-A
-        </Text>
-      </TouchableOpacity>
+      <Picker
+        selectedValue={selectedSort}
+        onValueChange={(value: string) => {
+          setSelectedSort(value);
+          onFilterChange(
+            value === "asc" || value === "desc" ? "price" : "name",
+            value
+          );
+        }}
+        style={styles.picker}
+      >
+        <Picker.Item label="Sort: None" value="none" />
+        <Picker.Item label="Price: Low to High" value="asc" />
+        <Picker.Item label="Price: High to Low" value="desc" />
+        <Picker.Item label="Name: A-Z" value="asc" />
+        <Picker.Item label="Name: Z-A" value="desc" />
+      </Picker>
     </View>
   );
 };
@@ -63,36 +52,13 @@ const WishlistFilter: React.FC<WishlistFilterProps> = ({ onFilterChange }) => {
 const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    paddingVertical: 10,
-    backgroundColor: "#f0f0f0",
+    justifyContent: "space-between",
+    backgroundColor: "black",
     borderRadius: 10,
     marginBottom: 10,
   },
-  filterTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
-    textAlign: "center",
-    width: "100%",
-  },
-  filterButton: {
-    backgroundColor: "#fff",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  filterText: {
-    fontSize: 14,
-    color: "#333",
-  },
-  selected: {
-    fontWeight: "bold",
-    color: "blue",
+  picker: {
+    flex: 1,
   },
 });
 
