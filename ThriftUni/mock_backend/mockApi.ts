@@ -3,7 +3,7 @@ import listingsData from './listingsData.json';
 import { db } from '../firebaseConfig.js';
 import {
   collection, getDocs, doc, getDoc, updateDoc, deleteDoc,
-  addDoc, query, where,
+  addDoc, query, where, orderBy,
   serverTimestamp
 } from 'firebase/firestore';
 
@@ -131,5 +131,33 @@ export const deleteListing = async (id: string) => {
   } catch (error) {
     console.error(`Error deleting listing with ID ${id}:`, error);
     throw error;
+  }
+};
+
+interface ListingImage {
+  id: string;
+  image_url: string;
+  listing_id: any;
+  position: number;
+  uploaded_at: any;
+}
+
+// To get images for a listing by ID
+export const getListingImages = async (listingId: string): Promise<ListingImage[]> => {
+  try {
+    const imagesCollectionRef = collection(db, 'listing_images');
+    const q = query(
+      imagesCollectionRef,
+      where('listing_id', '==', doc(db, 'listings', listingId)),
+      orderBy('position', 'asc')
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as ListingImage[];
+  } catch (error) {
+    console.error(`Error fetching images for listing with ID ${listingId}:`, error);
+    return []; // Empty array of images
   }
 };
