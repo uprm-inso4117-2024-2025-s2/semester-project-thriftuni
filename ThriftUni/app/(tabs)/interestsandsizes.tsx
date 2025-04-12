@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-function Chip({
+/** Chip Component: Renders a single chip item. */
+const Chip = ({
   label,
   selected,
   onPress,
@@ -16,7 +17,7 @@ function Chip({
   label: string;
   selected: boolean;
   onPress: () => void;
-}) {
+}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -27,55 +28,149 @@ function Chip({
       </Text>
     </TouchableOpacity>
   );
-}
+};
 
+/** TabHeader Component: Renders tab buttons driven by a configuration array. */
+const TabHeader = ({
+  tabs,
+  selectedTab,
+  onTabSelect,
+}: {
+  tabs: string[];
+  selectedTab: string;
+  onTabSelect: (tab: string) => void;
+}) => {
+  return (
+    <View style={styles.tabHeader}>
+      {tabs.map((tab) => (
+        <TouchableOpacity
+          key={tab}
+          onPress={() => onTabSelect(tab)}
+          style={[
+            styles.tabButton,
+            selectedTab === tab && styles.tabButtonActive,
+          ]}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              selectedTab === tab && styles.tabButtonTextActive,
+            ]}
+          >
+            {tab}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
+/** InterestsSection Component: Renders one section of interests with a title. */
+const InterestsSection = ({
+  title,
+  items,
+  selectedItems,
+  toggleItem,
+}: {
+  title: string;
+  items: string[];
+  selectedItems: string[];
+  toggleItem: (item: string) => void;
+}) => {
+  return (
+    <View>
+      <Text style={styles.sectionHeader}>{title}</Text>
+      <View style={styles.chipContainer}>
+        {items.map((item) => (
+          <Chip
+            key={item}
+            label={item}
+            selected={selectedItems.includes(item)}
+            onPress={() => toggleItem(item)}
+          />
+        ))}
+      </View>
+    </View>
+  );
+};
+
+/** SizesSection Component: Renders one section of sizes with a title. */
+const SizesSection = ({
+  title,
+  sizes,
+  selectedSizes,
+  toggleSize,
+}: {
+  title: string;
+  sizes: string[];
+  selectedSizes: string[];
+  toggleSize: (size: string) => void;
+}) => {
+  return (
+    <View>
+      <Text style={styles.sectionHeader}>{title}</Text>
+      <View style={styles.chipContainer}>
+        {sizes.map((size) => (
+          <Chip
+            key={size}
+            label={size}
+            selected={selectedSizes.includes(size)}
+            onPress={() => toggleSize(size)}
+          />
+        ))}
+      </View>
+    </View>
+  );
+};
+
+/** InterestsAndSizesScreen Component: The main component orchestrating sub-components. */
 export default function InterestsAndSizesScreen() {
   const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = useState<'Interests' | 'Sizes'>(
     'Interests'
   );
 
-  const outfitStyles = [
-    'Casual',
-    'Business Casual',
-    'Formal',
-    'Vintage',
-    'Streetwear',
-    'Minimalist',
-    'Old Money',
-    'Classic',
-  ];
-  const tops = ['T-shirts', 'Blouses', 'Sweaters', 'Hoodies'];
-  const bottoms = ['Jeans', 'Leggings', 'Joggers', 'Skirts'];
-  const dresses = ['Casual', 'Jumpsuit', 'Evening', 'Summer'];
+  // Configuration for Interests tab
+  const interestsConfig = {
+    outfitStyles: [
+      'Casual',
+      'Business Casual',
+      'Formal',
+      'Vintage',
+      'Streetwear',
+      'Minimalist',
+      'Old Money',
+      'Classic',
+    ],
+    tops: ['T-shirts', 'Blouses', 'Sweaters', 'Hoodies'],
+    bottoms: ['Jeans', 'Leggings', 'Joggers', 'Skirts'],
+    dresses: ['Casual', 'Jumpsuit', 'Evening', 'Summer'],
+  };
 
-  const topSizes = ['X-Small', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large'];
-  const bottomSizes = ['X-Small', 'Small', 'Medium', 'Large', 'XX-Large'];
-  const dressSizes = ['X-Small', 'Small', 'Medium', 'Large', 'XX-Large'];
-  const footwearSizes = [
-    '8',
-    '9',
-    '9.5',
-    '10',
-    '10.5',
-    '11',
-    '11.5',
-    '12',
-    '13',
-  ];
+  // Configuration for Sizes tab
+  const sizesConfig = {
+    topSizes: ['X-Small', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large'],
+    bottomSizes: ['X-Small', 'Small', 'Medium', 'Large', 'XX-Large'],
+    dressSizes: ['X-Small', 'Small', 'Medium', 'Large', 'XX-Large'],
+    footwearSizes: ['8', '9', '9.5', '10', '10.5', '11', '11.5', '12', '13'],
+  };
 
-  const [selectedOutfitStyles, setSelectedOutfitStyles] = useState<string[]>([]);
-  const [selectedTops, setSelectedTops] = useState<string[]>([]);
-  const [selectedBottoms, setSelectedBottoms] = useState<string[]>([]);
-  const [selectedDresses, setSelectedDresses] = useState<string[]>([]);
+  // Local state for selected interests and sizes
+  const [selectedInterests, setSelectedInterests] = useState({
+    outfitStyles: [] as string[],
+    tops: [] as string[],
+    bottoms: [] as string[],
+    dresses: [] as string[],
+  });
 
-  const [selectedTopSizes, setSelectedTopSizes] = useState<string[]>([]);
-  const [selectedBottomSizes, setSelectedBottomSizes] = useState<string[]>([]);
-  const [selectedDressSizes, setSelectedDressSizes] = useState<string[]>([]);
-  const [selectedFootwearSizes, setSelectedFootwearSizes] = useState<string[]>(
-    []
-  );
+  const [selectedSizes, setSelectedSizes] = useState({
+    topSizes: [] as string[],
+    bottomSizes: [] as string[],
+    dressSizes: [] as string[],
+    footwearSizes: [] as string[],
+  });
 
+  /** Toggle handler to update a selected items array. */
   const toggleSelection = (
     item: string,
     selectedArray: string[],
@@ -88,168 +183,138 @@ export default function InterestsAndSizesScreen() {
     }
   };
 
+  const tabs = ['Interests', 'Sizes'];
+
   return (
     <View style={styles.container}>
-      <View style={styles.tabHeader}>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Interests')}
-          style={[
-            styles.tabButton,
-            selectedTab === 'Interests' && styles.tabButtonActive,
-          ]}
-        >
-          <Text
-            style={[
-              styles.tabButtonText,
-              selectedTab === 'Interests' && styles.tabButtonTextActive,
-            ]}
-          >
-            Interests
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedTab('Sizes')}
-          style={[
-            styles.tabButton,
-            selectedTab === 'Sizes' && styles.tabButtonActive,
-          ]}
-        >
-          <Text
-            style={[
-              styles.tabButtonText,
-              selectedTab === 'Sizes' && styles.tabButtonTextActive,
-            ]}
-          >
-            Sizes
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TabHeader
+        tabs={tabs}
+        selectedTab={selectedTab}
+        onTabSelect={(tab) => setSelectedTab(tab as 'Interests' | 'Sizes')}
+      />
 
-      <ScrollView style={styles.scrollContainer} contentContainerStyle={{paddingBottom: 100}}>
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
         {selectedTab === 'Interests' ? (
-          <View>
-            <Text style={styles.sectionHeader}>Outfit Styles</Text>
-            <View style={styles.chipContainer}>
-              {outfitStyles.map((style) => (
-                <Chip
-                  key={style}
-                  label={style}
-                  selected={selectedOutfitStyles.includes(style)}
-                  onPress={() =>
-                    toggleSelection(style, selectedOutfitStyles, setSelectedOutfitStyles)
-                  }
-                />
-              ))}
-            </View>
-
-            <Text style={styles.sectionHeader}>Tops</Text>
-            <View style={styles.chipContainer}>
-              {tops.map((style) => (
-                <Chip
-                  key={style}
-                  label={style}
-                  selected={selectedTops.includes(style)}
-                  onPress={() => toggleSelection(style, selectedTops, setSelectedTops)}
-                />
-              ))}
-            </View>
-
-            <Text style={styles.sectionHeader}>Bottoms</Text>
-            <View style={styles.chipContainer}>
-              {bottoms.map((style) => (
-                <Chip
-                  key={style}
-                  label={style}
-                  selected={selectedBottoms.includes(style)}
-                  onPress={() =>
-                    toggleSelection(style, selectedBottoms, setSelectedBottoms)
-                  }
-                />
-              ))}
-            </View>
-
-            <Text style={styles.sectionHeader}>Dresses & One-Pieces</Text>
-            <View style={styles.chipContainer}>
-              {dresses.map((style) => (
-                <Chip
-                  key={style}
-                  label={style}
-                  selected={selectedDresses.includes(style)}
-                  onPress={() =>
-                    toggleSelection(style, selectedDresses, setSelectedDresses)
-                  }
-                />
-              ))}
-            </View>
-          </View>
+          <>
+            <InterestsSection
+              title="Outfit Styles"
+              items={interestsConfig.outfitStyles}
+              selectedItems={selectedInterests.outfitStyles}
+              toggleItem={(item) =>
+                toggleSelection(
+                  item,
+                  selectedInterests.outfitStyles,
+                  (newArr: string[]) =>
+                    setSelectedInterests({
+                      ...selectedInterests,
+                      outfitStyles: newArr,
+                    })
+                )
+              }
+            />
+            <InterestsSection
+              title="Tops"
+              items={interestsConfig.tops}
+              selectedItems={selectedInterests.tops}
+              toggleItem={(item) =>
+                toggleSelection(
+                  item,
+                  selectedInterests.tops,
+                  (newArr: string[]) =>
+                    setSelectedInterests({ ...selectedInterests, tops: newArr })
+                )
+              }
+            />
+            <InterestsSection
+              title="Bottoms"
+              items={interestsConfig.bottoms}
+              selectedItems={selectedInterests.bottoms}
+              toggleItem={(item) =>
+                toggleSelection(
+                  item,
+                  selectedInterests.bottoms,
+                  (newArr: string[]) =>
+                    setSelectedInterests({ ...selectedInterests, bottoms: newArr })
+                )
+              }
+            />
+            <InterestsSection
+              title="Dresses & One-Pieces"
+              items={interestsConfig.dresses}
+              selectedItems={selectedInterests.dresses}
+              toggleItem={(item) =>
+                toggleSelection(
+                  item,
+                  selectedInterests.dresses,
+                  (newArr: string[]) =>
+                    setSelectedInterests({ ...selectedInterests, dresses: newArr })
+                )
+              }
+            />
+          </>
         ) : (
-          <View>
-            <Text style={styles.sectionHeader}>Tops</Text>
-            <View style={styles.chipContainer}>
-              {topSizes.map((size) => (
-                <Chip
-                  key={size}
-                  label={size}
-                  selected={selectedTopSizes.includes(size)}
-                  onPress={() =>
-                    toggleSelection(size, selectedTopSizes, setSelectedTopSizes)
-                  }
-                />
-              ))}
-            </View>
-
-            <Text style={styles.sectionHeader}>Bottoms</Text>
-            <View style={styles.chipContainer}>
-              {bottomSizes.map((size) => (
-                <Chip
-                  key={size}
-                  label={size}
-                  selected={selectedBottomSizes.includes(size)}
-                  onPress={() =>
-                    toggleSelection(size, selectedBottomSizes, setSelectedBottomSizes)
-                  }
-                />
-              ))}
-            </View>
-
-            <Text style={styles.sectionHeader}>Dresses & One-Pieces</Text>
-            <View style={styles.chipContainer}>
-              {dressSizes.map((size) => (
-                <Chip
-                  key={size}
-                  label={size}
-                  selected={selectedDressSizes.includes(size)}
-                  onPress={() =>
-                    toggleSelection(size, selectedDressSizes, setSelectedDressSizes)
-                  }
-                />
-              ))}
-            </View>
-
-            <Text style={styles.sectionHeader}>Footwear</Text>
-            <View style={styles.chipContainer}>
-              {footwearSizes.map((size) => (
-                <Chip
-                  key={size}
-                  label={size}
-                  selected={selectedFootwearSizes.includes(size)}
-                  onPress={() =>
-                    toggleSelection(size, selectedFootwearSizes, setSelectedFootwearSizes)
-                  }
-                />
-              ))}
-            </View>
-          </View>
+          <>
+            <SizesSection
+              title="Tops"
+              sizes={sizesConfig.topSizes}
+              selectedSizes={selectedSizes.topSizes}
+              toggleSize={(size) =>
+                toggleSelection(
+                  size,
+                  selectedSizes.topSizes,
+                  (newArr: string[]) =>
+                    setSelectedSizes({ ...selectedSizes, topSizes: newArr })
+                )
+              }
+            />
+            <SizesSection
+              title="Bottoms"
+              sizes={sizesConfig.bottomSizes}
+              selectedSizes={selectedSizes.bottomSizes}
+              toggleSize={(size) =>
+                toggleSelection(
+                  size,
+                  selectedSizes.bottomSizes,
+                  (newArr: string[]) =>
+                    setSelectedSizes({ ...selectedSizes, bottomSizes: newArr })
+                )
+              }
+            />
+            <SizesSection
+              title="Dresses & One-Pieces"
+              sizes={sizesConfig.dressSizes}
+              selectedSizes={selectedSizes.dressSizes}
+              toggleSize={(size) =>
+                toggleSelection(
+                  size,
+                  selectedSizes.dressSizes,
+                  (newArr: string[]) =>
+                    setSelectedSizes({ ...selectedSizes, dressSizes: newArr })
+                )
+              }
+            />
+            <SizesSection
+              title="Footwear"
+              sizes={sizesConfig.footwearSizes}
+              selectedSizes={selectedSizes.footwearSizes}
+              toggleSize={(size) =>
+                toggleSelection(
+                  size,
+                  selectedSizes.footwearSizes,
+                  (newArr: string[]) =>
+                    setSelectedSizes({ ...selectedSizes, footwearSizes: newArr })
+                )
+              }
+            />
+          </>
         )}
       </ScrollView>
 
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
+        <TouchableOpacity style={styles.saveButton} onPress={() => navigation.goBack()}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -257,6 +322,7 @@ export default function InterestsAndSizesScreen() {
   );
 }
 
+/** Styles */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -313,8 +379,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   chipText: {
-    color: '#000',
     fontSize: 14,
+    color: '#000',
   },
   chipTextSelected: {
     color: '#FFF',
