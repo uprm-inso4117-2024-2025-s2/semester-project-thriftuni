@@ -57,9 +57,6 @@ const fetchWishlist = async (): Promise<WishlistItemType[]> => {
   });
 };
 
-<<<<<<< HEAD
-const WishlistPage: React.FC = () => {
-=======
 // Placeholder function for removing an item (Replace with Firebase later)
 const removeWishlistItem = async (id: string): Promise<string> => {
   return new Promise((resolve) => setTimeout(() => resolve(id), 500));
@@ -67,7 +64,6 @@ const removeWishlistItem = async (id: string): Promise<string> => {
 
 const WishlistPage = () => {
   // Explicitly define the type of wishlist state
->>>>>>> main
   const [wishlist, setWishlist] = useState<WishlistItemType[]>([]);
   const [filteredWishlist, setFilteredWishlist] = useState<WishlistItemType[]>(
     []

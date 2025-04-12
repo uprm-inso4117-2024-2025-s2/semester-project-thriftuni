@@ -8,7 +8,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { sendPasswordReset, logResetAttempt, checkRateLimit } from "../../firebase/firebase.config";
+import {
+  sendPasswordReset,
+  logResetAttempt,
+  checkRateLimit,
+} from "../../firebase/firebase.config";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "../../firebase/firebase.config";
 

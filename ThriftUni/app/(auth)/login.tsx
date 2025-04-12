@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-<<<<<<< HEAD:ThriftUni/app/login/login.tsx
-=======
 import { router } from "expo-router";
->>>>>>> main:ThriftUni/app/(auth)/login.tsx
 import {
   View,
   TextInput,
@@ -15,21 +12,17 @@ import {
 import { login } from "../../firebase/login";
 import { useRouter } from "expo-router";
 
-
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-<<<<<<< HEAD:ThriftUni/app/login/login.tsx
   const router = useRouter();
 
-=======
   const handleSignup = () => {
     router.push("/signup");
   };
->>>>>>> main:ThriftUni/app/(auth)/login.tsx
 
   const handleLogin = async () => {
     setLoading(true);
@@ -42,33 +35,27 @@ const LoginScreen = () => {
 
     if (response.error) {
       setError(response.error);
-    }
-    else if (error !== "")  // Stryker disable next-line all
-    {
+    } else if (error !== "") {
+      // Stryker disable next-line all
       setError("");
       // Stryker disable next-line all
       console.log("User logged in:", response.user);
       if (router?.replace) {
-<<<<<<< HEAD:ThriftUni/app/login/login.tsx
-          router.replace("/(tabs)/main_page");
-=======
-        router.replace("/(tabs)/main_page"); // ✅ Redirige solo si `router` está disponible
->>>>>>> main:ThriftUni/app/(auth)/login.tsx
+        router.replace("/(tabs)/main_page");
       }
     }
   };
 
-<<<<<<< HEAD:ThriftUni/app/login/login.tsx
-=======
   const handleForget = () => {
     router.push("/forgot");
   };
 
-   // Stryker disable all: The JSX block inside the return statement was excluded from mutation testing using // Stryker disable all because it contains purely visual elements (e.g., layout, styles, text content). These do not affect the business logic or behavior of the component, and testing visual mutations adds no value to the application's correctness. Excluding them keeps mutation reports clean and focused on critical logic paths.
->>>>>>> main:ThriftUni/app/(auth)/login.tsx
+  // Stryker disable all: The JSX block inside the return statement was excluded from mutation testing using // Stryker disable all because it contains purely visual elements (e.g., layout, styles, text content). These do not affect the business logic or behavior of the component, and testing visual mutations adds no value to the application's correctness. Excluding them keeps mutation reports clean and focused on critical logic paths.
   return (
     <View style={styles.container}>
-      <Text style={styles.title} testID="login-title">Login</Text>
+      <Text style={styles.title} testID="login-title">
+        Login
+      </Text>
       <View style={styles.form}>
         <TextInput
           testID="email-input"
@@ -87,7 +74,11 @@ const LoginScreen = () => {
           secureTextEntry
           style={styles.input}
         />
-        {error ? <Text testID="error-message" style={{ color: "red" }}>{error}</Text> : null}
+        {error ? (
+          <Text testID="error-message" style={{ color: "red" }}>
+            {error}
+          </Text>
+        ) : null}
         {loading ? (
           <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
@@ -157,12 +148,9 @@ const styles = StyleSheet.create({
     color: "blue",
     textDecorationLine: "underline",
   },
-<<<<<<< HEAD:ThriftUni/app/login/login.tsx
-=======
   forgotText: {
     marginTop: 15,
   },
->>>>>>> main:ThriftUni/app/(auth)/login.tsx
 });
 // Stryker restore all
 

@@ -7,33 +7,13 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-import { initializeApp, getApp, getApps } from "firebase/app";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD7EBLPezmrBujRy58eLzmAV1jeKTUrPoQ",
-  authDomain: "thriftuni-b345a.firebaseapp.com",
-  projectId: "thriftuni-b345a",
-  storageBucket: "thriftuni-b345a.firebasestorage.app",
-  messagingSenderId: "501062585933",
-  appId: "1:501062585933:web:7bb28a9b3f4f2f61a3d604",
-  measurementId: "G-MCWKZZQPTP",
-};
-
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-========
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { router } from "expo-router";
-
-import { firebaseApp } from "../../firebase/firebase.config";
-
-const app = firebaseApp;
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+import { app, auth, db } from "../../firebaseConfig.js";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -46,7 +26,6 @@ export default function Signup() {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
-  
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -54,10 +33,10 @@ export default function Signup() {
         password
       );
       const user = userCredential.user;
-  
+
       // Send verification email
       await sendEmailVerification(user);
-  
+
       // Save user to Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
@@ -66,27 +45,23 @@ export default function Signup() {
         createdAt: new Date(),
         emailVerified: false, // You can update this later based on a listener
       });
-  
+
       Alert.alert(
         "Verification Email Sent",
         "Please check your inbox to verify your email before logging in."
       );
-  
+
       // Optionally redirect to login screen
       router.push("/login");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
   };
-  
 
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-========
   const handleLogin = () => {
     router.push("/login");
   };
 
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
@@ -118,10 +93,7 @@ export default function Signup() {
           value={password}
           onChangeText={setPassword}
         />
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-========
 
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
@@ -164,10 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
-<<<<<<<< HEAD:ThriftUni/app/(tabs)/signup.tsx
-========
 
->>>>>>>> main:ThriftUni/app/(auth)/signup.tsx
   button: {
     backgroundColor: "#F45D5D",
     padding: 12,
