@@ -8,7 +8,7 @@ import Buttons from './Buttons';
     
 
 export default function ListItem() {
-    const [text, setText] = useState('');
+    const [description, setDescription] = useState('');
     return (
         <View style={styles.container}>
             {/* Top Bar */}
@@ -29,8 +29,8 @@ export default function ListItem() {
                         style={styles.descriptionInput}
                         placeholder='Enter description ...'
                         placeholderTextColor="grey"
-                        value={text}
-                        onChangeText={setText}
+                        value={description}
+                        onChangeText={setDescription}
                         textAlignVertical='top'
                         multiline={true}/>
                 </View>
