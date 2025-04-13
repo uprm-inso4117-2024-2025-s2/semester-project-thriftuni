@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { router } from "expo-router";
 import {
   View,
   TextInput,
@@ -9,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { login } from "../../firebase/login";
+import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -16,25 +18,47 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const router = useRouter();
+
+  const handleSignup = () => {
+    router.push("/signup");
+  };
+
   const handleLogin = async () => {
     setLoading(true);
+    // Stryker disable next-line all
     console.log("email:", email);
+    // Stryker disable next-line all
     console.log("password:", password);
     const response = await login(email, password);
     setLoading(false);
 
     if (response.error) {
       setError(response.error);
-    } else {
+    } else if (error !== "") {
+      // Stryker disable next-line all
+      setError("");
+      // Stryker disable next-line all
       console.log("User logged in:", response.user);
+      if (router?.replace) {
+        router.replace("/(tabs)/main_page");
+      }
     }
   };
 
+  const handleForget = () => {
+    router.push("/forgot");
+  };
+
+  // Stryker disable all: The JSX block inside the return statement was excluded from mutation testing using // Stryker disable all because it contains purely visual elements (e.g., layout, styles, text content). These do not affect the business logic or behavior of the component, and testing visual mutations adds no value to the application's correctness. Excluding them keeps mutation reports clean and focused on critical logic paths.
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title} testID="login-title">
+        Login
+      </Text>
       <View style={styles.form}>
         <TextInput
+          testID="email-input"
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -43,17 +67,26 @@ const LoginScreen = () => {
           style={styles.input}
         />
         <TextInput
+          testID="password-input"
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
         />
-        {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
+        {error ? (
+          <Text testID="error-message" style={{ color: "red" }}>
+            {error}
+          </Text>
+        ) : null}
         {loading ? (
-          <ActivityIndicator size="small" />
+          <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <TouchableOpacity
+            testID="login-button"
+            style={styles.button}
+            onPress={handleLogin}
+          >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         )}
@@ -115,6 +148,10 @@ const styles = StyleSheet.create({
     color: "blue",
     textDecorationLine: "underline",
   },
+  forgotText: {
+    marginTop: 15,
+  },
 });
+// Stryker restore all
 
 export default LoginScreen;

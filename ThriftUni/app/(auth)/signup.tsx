@@ -7,9 +7,13 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/firebaseConfig";
+import { router } from "expo-router";
+import { app, auth, db } from "../../firebaseConfig.js";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -22,7 +26,6 @@ export default function Signup() {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
-
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -31,17 +34,32 @@ export default function Signup() {
       );
       const user = userCredential.user;
 
+      // Send verification email
+      await sendEmailVerification(user);
+
+      // Save user to Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
         username,
         email,
         createdAt: new Date(),
+        emailVerified: false, // You can update this later based on a listener
       });
 
-      Alert.alert("Success", "Account created successfully!");
+      Alert.alert(
+        "Verification Email Sent",
+        "Please check your inbox to verify your email before logging in."
+      );
+
+      // Optionally redirect to login screen
+      router.push("/login");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
+  };
+
+  const handleLogin = () => {
+    router.push("/login");
   };
 
   return (
@@ -75,6 +93,7 @@ export default function Signup() {
           value={password}
           onChangeText={setPassword}
         />
+
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
@@ -117,6 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
+
   button: {
     backgroundColor: "#F45D5D",
     padding: 12,
