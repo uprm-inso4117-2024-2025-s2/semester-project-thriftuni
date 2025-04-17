@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { router } from "expo-router";
 import {
   View,
@@ -10,51 +10,48 @@ import {
 } from "react-native";
 import {
   sendPasswordReset,
-  logResetAttempt,
   checkRateLimit,
-} from "../../firebase/firebase.config";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { firebaseConfig } from "../../firebase/firebase.config";
+} from "../../firebase/forgot";
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const recaptchaVerifier = useRef(null);
 
   const handleResetPassword = async () => {
     setLoading(true);
     setMessage("");
     setError("");
-
-    const rateLimited = await checkRateLimit(email);
+  
+    if (!email.trim()) {
+      setLoading(false);
+      setError("Please enter your email.");
+      return;
+    }
+  
+    const rateLimited = checkRateLimit(email);
     if (rateLimited) {
       setLoading(false);
       setError("Too many reset attempts. Please try again later.");
       return;
     }
-
-    try {
-      await sendPasswordReset(email);
-      await logResetAttempt(email, "success");
+  
+    const result = await sendPasswordReset(email);
+  
+    if (result.success) {
       setMessage("Password reset link sent. Check your email.");
-    } catch (err) {
-      await logResetAttempt(email, "failed");
-      setError((err as Error).message);
+    } else {
+      setError(result.error || "Something went wrong.");
     }
-
+  
     setLoading(false);
   };
 
   return (
-    <View style={styles.container}>
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfig}
-      />
-      <Text style={styles.title}>Reset Password</Text>
-      <View style={styles.form}>
+    <View style={styles.container} testID="container">
+      <Text style={styles.title} testID="title">Reset Password</Text>
+      <View testID= "form-test" style={styles.form}>
         <TextInput
           placeholder="Email"
           value={email}
@@ -63,19 +60,20 @@ const ForgotPasswordScreen = () => {
           keyboardType="email-address"
           style={styles.input}
           placeholderTextColor="#999"
+          testID="email-input"
         />
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         {message ? <Text style={{ color: "green" }}>{message}</Text> : null}
         {loading ? (
-          <ActivityIndicator size="small" />
+          <ActivityIndicator size="small" testID="loading-indicator" />
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
-            <Text style={styles.buttonText}>Send Reset Link</Text>
+          <TouchableOpacity style={styles.button} onPress={handleResetPassword} testID="reset-button">
+            <Text testID="reset-button-text" style={styles.buttonText}>Send Reset Link</Text>
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.backText}>
-        <Text style={styles.link} onPress={() => router.push("/login/login")}>
+      <Text testID="back-text" style={styles.backText}>
+        <Text testID= "link-test" style={styles.link} onPress={() => router.push("./login")}>
           Back to Login
         </Text>
       </Text>
