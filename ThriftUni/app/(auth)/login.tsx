@@ -65,6 +65,7 @@ const LoginScreen = () => {
           autoCapitalize="none" // Prevents first-letter capitalization
           keyboardType="email-address" // Opens email keyboard
           style={styles.input}
+          placeholderTextColor="#999"
         />
         <TextInput
           testID="password-input"
@@ -73,6 +74,7 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
+          placeholderTextColor="#999"
         />
         {error ? (
           <Text testID="error-message" style={{ color: "red" }}>
@@ -91,9 +93,14 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
       </View>
+      <Text style={styles.forgotText}>
+        <Text style={styles.link} onPress={handleForget}>
+          Forgot Password?
+        </Text>
+      </Text>
       <Text style={styles.signupText}>
         Don't have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
+        <Text style={styles.link} onPress = {handleSignup}>
           Sign Up
         </Text>
       </Text>
@@ -125,14 +132,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -142,11 +149,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signupText: {
-    marginTop: 20,
+    marginTop: 5,
   },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
   },
   forgotText: {
     marginTop: 15,

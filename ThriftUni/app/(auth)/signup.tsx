@@ -7,13 +7,17 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
 import { router } from "expo-router";
-import { app, auth, db } from "../../firebaseConfig.js";
+
+import { firebaseApp } from "../../firebase/firebase.config";
+
+const app = firebaseApp;
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -26,6 +30,7 @@ export default function Signup() {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -34,32 +39,21 @@ export default function Signup() {
       );
       const user = userCredential.user;
 
-      // Send verification email
-      await sendEmailVerification(user);
-
-      // Save user to Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
         username,
         email,
         createdAt: new Date(),
-        emailVerified: false, // You can update this later based on a listener
       });
 
-      Alert.alert(
-        "Verification Email Sent",
-        "Please check your inbox to verify your email before logging in."
-      );
-
-      // Optionally redirect to login screen
-      router.push("/login");
+      Alert.alert("Success", "Account created successfully!");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
   };
 
   const handleLogin = () => {
-    router.push("/login");
+    router.push("/(auth)/login");
   };
 
   return (
@@ -71,12 +65,14 @@ export default function Signup() {
           placeholder="Name"
           value={name}
           onChangeText={setName}
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -85,6 +81,7 @@ export default function Signup() {
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none" // Prevents first-letter capitalization
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -92,6 +89,7 @@ export default function Signup() {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor="#999"
         />
 
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
@@ -100,7 +98,7 @@ export default function Signup() {
       </View>
       <Text style={styles.loginText}>
         Already have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
+        <Text style={styles.link} onPress={() => router.push("/(auth)/login")}>
           Login
         </Text>
       </Text>
@@ -125,6 +123,7 @@ const styles = StyleSheet.create({
   form: {
     width: "100%",
     maxWidth: 400,
+    backgroundColor: "#F6F9FF",
   },
   input: {
     width: "100%",
@@ -132,15 +131,16 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
+    color: "black",
   },
 
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
   },
 });

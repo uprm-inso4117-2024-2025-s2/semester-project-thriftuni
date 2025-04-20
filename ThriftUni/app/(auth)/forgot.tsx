@@ -75,7 +75,7 @@ const ForgotPasswordScreen = () => {
         )}
       </View>
       <Text style={styles.backText}>
-        <Text style={styles.link} onPress={() => router.push("/login/login")}>
+        <Text style={styles.link} onPress={() => router.push("/login")}>
           Back to Login
         </Text>
       </Text>
