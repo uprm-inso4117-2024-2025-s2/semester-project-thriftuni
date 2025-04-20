@@ -3,7 +3,6 @@ import { router } from "expo-router";
 import {
   View,
   TextInput,
-  Button,
   Text,
   ActivityIndicator,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import { login } from "../../firebase/login";
 import { useRouter } from "expo-router";
+import { sendEmailVerification } from "firebase/auth";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -26,31 +26,55 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     setLoading(true);
-    // Stryker disable next-line all
-    console.log("email:", email);
-    // Stryker disable next-line all
-    console.log("password:", password);
-    const response = await login(email, password);
-    setLoading(false);
+    setError("");
 
-    if (response.error) {
-      setError(response.error);
-    } else if (error !== "") {
-      // Stryker disable next-line all
-      setError("");
-      // Stryker disable next-line all
-      console.log("User logged in:", response.user);
-      if (router?.replace) {
-        router.replace("/(tabs)/main_page");
+    try {
+      const response = await login(email, password);
+      setLoading(false);
+
+      if (response.error) {
+        setError(response.error);
+      } else {
+        const user = response.user;
+
+        if (user && !user.emailVerified) {
+          setError("Please verify your email. Didn't receive it? Resend below.");
+          return;
+        }
+
+        if (router?.replace) {
+          router.replace("/(tabs)/main_page");
+        }
       }
+    } catch (err) {
+      setLoading(false);
+      setError("An unexpected error occurred.");
     }
+  };
+
+  const handleResendVerification = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await login(email, password);
+      const user = response.user;
+
+      if (user && !user.emailVerified) {
+        await sendEmailVerification(user);
+        setError("Verification email sent. Check your inbox!");
+      }
+    } catch (err) {
+      setError("Unable to resend verification. Try again.");
+    }
+
+    setLoading(false);
   };
 
   const handleForget = () => {
     router.push("/forgot");
   };
 
-  // Stryker disable all: The JSX block inside the return statement was excluded from mutation testing using // Stryker disable all because it contains purely visual elements (e.g., layout, styles, text content). These do not affect the business logic or behavior of the component, and testing visual mutations adds no value to the application's correctness. Excluding them keeps mutation reports clean and focused on critical logic paths.
   return (
     <View style={styles.container}>
       <Text style={styles.title} testID="login-title">
@@ -62,8 +86,8 @@ const LoginScreen = () => {
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
-          autoCapitalize="none" // Prevents first-letter capitalization
-          keyboardType="email-address" // Opens email keyboard
+          autoCapitalize="none"
+          keyboardType="email-address"
           style={styles.input}
           placeholderTextColor="#999"
         />
@@ -81,6 +105,13 @@ const LoginScreen = () => {
             {error}
           </Text>
         ) : null}
+        {error?.includes("verify your email") && (
+          <TouchableOpacity onPress={handleResendVerification}>
+            <Text style={[styles.link, { marginTop: 10 }]}>
+              Resend Verification Email
+            </Text>
+          </TouchableOpacity>
+        )}
         {loading ? (
           <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
@@ -100,7 +131,7 @@ const LoginScreen = () => {
       </Text>
       <Text style={styles.signupText}>
         Don't have an account?{" "}
-        <Text style={styles.link} onPress = {handleSignup}>
+        <Text style={styles.link} onPress={handleSignup}>
           Sign Up
         </Text>
       </Text>
@@ -159,6 +190,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 });
-// Stryker restore all
 
 export default LoginScreen;
