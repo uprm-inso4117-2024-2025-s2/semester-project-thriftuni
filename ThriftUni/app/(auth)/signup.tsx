@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 import { router } from "expo-router";
@@ -30,7 +30,7 @@ export default function Signup() {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -38,22 +38,34 @@ export default function Signup() {
         password
       );
       const user = userCredential.user;
-
+  
+      // Send verification email
+      await sendEmailVerification(user);
+  
+      // Save user to Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
         username,
         email,
         createdAt: new Date(),
+        emailVerified: false, // You can update this later based on a listener
       });
-
-      Alert.alert("Success", "Account created successfully!");
+  
+      Alert.alert(
+        "Verification Email Sent",
+        "Please check your inbox to verify your email before logging in."
+      );
+  
+      // Optionally redirect to login screen
+      router.push("/login");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
   };
+  
 
   const handleLogin = () => {
-    router.push("/(auth)/login");
+    router.push("/login");
   };
 
   return (
@@ -98,7 +110,7 @@ export default function Signup() {
       </View>
       <Text style={styles.loginText}>
         Already have an account?{" "}
-        <Text style={styles.link} onPress={() => router.push("/(auth)/login")}>
+        <Text style={styles.link} onPress={handleLogin}>
           Login
         </Text>
       </Text>
