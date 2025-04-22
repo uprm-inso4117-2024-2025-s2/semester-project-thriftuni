@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import ThriftUniApp from '../../app/(tabs)/main_page';
+import { it, expect } from '@jest/globals'; 
 
 describe('ThriftUniApp Main Page', () => {
   // Unit Test: Header Text
