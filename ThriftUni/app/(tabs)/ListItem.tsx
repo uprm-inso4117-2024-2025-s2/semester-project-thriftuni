@@ -4,7 +4,7 @@ import { ScrollView, TextInput } from "react-native";
 import ImageUploader from "@/components/ListAnItem/ImageUploader";
 import Selector from "@/components/ListAnItem/Selector";
 import PriceInput from "@/components/ListAnItem/PriceInput";
-import BrandInput from "@/components/ListAnItem/BrandInput";
+import TitleInput from "@/components/ListAnItem/TitleInput";
 import Buttons from "@/components/ListAnItem/Buttons";
 import { ListingProps } from "@/components/ListAnItem/Buttons";
 
@@ -44,8 +44,8 @@ export default function ListItem() {
 
   const [description, setDescription] = useState("");
 
-  const [price, setPrice] = useState("0");
-  const [brand, setBrand] = useState("0");
+  const [price, setPrice] = useState(0);
+  const [title, setTitle] = useState("0");
 
   // Only storing one image.
   const [image, setImage] = useState("");
@@ -63,6 +63,7 @@ export default function ListItem() {
     location,
     price,
     image,
+    title,
   };
 
   return (
@@ -122,8 +123,15 @@ export default function ListItem() {
           options={colors}
           onSelect={(selected) => setColor(selected)}
         />
-        <BrandInput brand={brand} setBrand={(value) => setBrand(value)} />
-        <PriceInput price={price} setPrice={(value) => setPrice(value)} />
+        <TitleInput title={title} setTitle={(value) => setTitle(value)} />
+        <PriceInput 
+          price={price} 
+          setPrice={(value) => {
+            // Ensure value is properly parsed as float
+            const parsedValue = value === '' ? 0 : parseFloat(value);
+            setPrice(isNaN(parsedValue) ? 0 : parsedValue);
+          }} 
+        />
       </ScrollView>
       {/* Save to draft and post buttons */}
       <Buttons {...listingData} />

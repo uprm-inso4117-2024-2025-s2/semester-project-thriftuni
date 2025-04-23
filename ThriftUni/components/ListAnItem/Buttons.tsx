@@ -3,6 +3,7 @@ import React from "react";
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import addListing from "../../firebase/InsertListing";
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
 export interface ListingProps {
   category_id: string;
@@ -11,8 +12,9 @@ export interface ListingProps {
   latitude: number;
   longitude: number;
   location: string;
-  price: string;
+  price: Float;
   image: string;
+  title: string;
 }
 
 const handlePostListing = async (listing: ListingProps) => {
@@ -23,6 +25,8 @@ const handlePostListing = async (listing: ListingProps) => {
     console.warn("User not authenticated");
     return;
   }
+
+
   const now = new Date();
   const created_at = Timestamp.fromDate(now);
   const deleted_at = Timestamp.fromDate(now); // Assuming deleted_at is null initially
@@ -30,10 +34,7 @@ const handlePostListing = async (listing: ListingProps) => {
   try {
     await addListing({
       ...listing,
-      created_at: created_at,
-      deleted_at: deleted_at,
-      listing_id: "123456789",
-      updated_at: updated_at,
+      user_id: currentUser.uid,
     });
     console.log("Listing posted!");
     // You can also add navigation or success feedback here
