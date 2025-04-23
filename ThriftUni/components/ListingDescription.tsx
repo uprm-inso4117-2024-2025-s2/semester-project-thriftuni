@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
+import { StyleSheet, Alert } from "react-native";
 import { View, Text } from "@/components/Themed";
 import ContactSeller from "./buttons/ContactSeller";
 import WishlistItem from "./buttons/WishlistItem";
@@ -15,10 +15,10 @@ export default function ListingDescription({
   location: Location;
 }) {
   const handleContactSellerButton = () => {
-    alert("Pressed contact seller button!");
+    Alert.alert("Pressed contact seller button!");
   };
   const handleWishlistItemButton = () => {
-    alert("Pressed wishlist item button!");
+    Alert.alert("Pressed wishlist item button!");
   };
 
   return (

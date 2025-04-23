@@ -3,6 +3,9 @@ import { render } from "@testing-library/react-native";
 import DisplayIndividualListing from "../DisplayIndividualListing";
 import { Seller } from "../SellerCard";
 import ProductImages from "../ProductImages";
+import { Alert } from "react-native";
+
+jest.spyOn(Alert, "alert").mockImplementation(jest.fn());
 
 describe("DisplayIndividualListing Component", () => {
   const mockProps = {
