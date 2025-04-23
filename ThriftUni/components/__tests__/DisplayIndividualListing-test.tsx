@@ -6,12 +6,12 @@ import ProductImages from "../ProductImages";
 
 describe("DisplayIndividualListing Component", () => {
   const mockProps = {
-    title: "Cool Vintage Jacket",
+    title: "Toyota Corolla 86",
     pictures: [
       "https://example.com/image1.jpg",
       "https://example.com/image2.jpg",
     ],
-    description: "A stylish vintage denim jacket, barely worn.",
+    description: "Toyota Corolla del 86, $5000 OMO",
     sellerDetails: {
       name: "Pepe Pepino",
       location: "Mayaguez",
@@ -24,14 +24,12 @@ describe("DisplayIndividualListing Component", () => {
 
   it("renders the listing title correctly", () => {
     const { getByText } = render(<DisplayIndividualListing {...mockProps} />);
-    expect(getByText("Cool Vintage Jacket")).toBeTruthy();
+    expect(getByText("Toyota Corolla 86")).toBeTruthy();
   });
 
   it("renders the description and seller info", () => {
     const { getByText } = render(<DisplayIndividualListing {...mockProps} />);
-    expect(
-      getByText("A stylish vintage denim jacket, barely worn.")
-    ).toBeTruthy();
+    expect(getByText("Toyota Corolla del 86, $5000 OMO")).toBeTruthy();
     expect(getByText("Pepe Pepino")).toBeTruthy();
     expect(getByText("Soy Pepe")).toBeTruthy();
   });
@@ -40,9 +38,7 @@ describe("DisplayIndividualListing Component", () => {
     const { getByText, getAllByRole } = render(
       <DisplayIndividualListing {...mockProps} />
     );
-    // If your image component includes accessibilityRole="image" or similar, you can check images.
-    // If not, test based on visible props/texts or test ProductImages separately.
-    expect(getByText("Cool Vintage Jacket")).toBeTruthy();
+    expect(getByText("Toyota Corolla 86")).toBeTruthy();
   });
 });
 
