@@ -46,6 +46,7 @@ export default function ProductImages({ images }: { images: string[] }) {
           <Image
             key={index}
             source={{ uri: image }}
+            testID={`product-image-${index}`}
             style={{
               width,
               height,
