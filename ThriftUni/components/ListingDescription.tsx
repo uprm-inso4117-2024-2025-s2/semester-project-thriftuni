@@ -39,7 +39,7 @@ export default function ListingDescription({
       </Text>
       <View style={styles.infoBox}>
         <Text style={styles.descriptionText}>
-          Description goes here: {description}
+         {description}
         </Text>
       </View>
       <Text

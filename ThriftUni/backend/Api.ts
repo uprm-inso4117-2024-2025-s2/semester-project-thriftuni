@@ -140,3 +140,19 @@ export const getListingImages = async (listingId: string): Promise<ListingImage[
     return []; // Empty array of images
   }
 };
+
+
+export const getSellerById = async (id: string) => {
+  try {
+    const docRef = doc(db, 'users', id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      return null; // seller document does not exist
+    }
+  } catch (error) {
+    console.error(`Error fetching seller ${id}:`, error);
+    throw error;
+  }
+}
