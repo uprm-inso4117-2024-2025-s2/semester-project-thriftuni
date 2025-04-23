@@ -7,25 +7,13 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-
-import { initializeApp, getApp, getApps } from "firebase/app";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD7EBLPezmrBujRy58eLzmAV1jeKTUrPoQ",
-  authDomain: "thriftuni-b345a.firebaseapp.com",
-  projectId: "thriftuni-b345a",
-  storageBucket: "thriftuni-b345a.firebasestorage.app",
-  messagingSenderId: "501062585933",
-  appId: "1:501062585933:web:7bb28a9b3f4f2f61a3d604",
-  measurementId: "G-MCWKZZQPTP",
-};
-
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { router } from "expo-router";
+import { db, auth } from "../../firebaseConfig.js";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -47,17 +35,32 @@ export default function Signup() {
       );
       const user = userCredential.user;
 
+      // Send verification email
+      await sendEmailVerification(user);
+
+      // Save user to Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
         username,
         email,
         createdAt: new Date(),
+        emailVerified: false, // You can update this later based on a listener
       });
 
-      Alert.alert("Success", "Account created successfully!");
+      Alert.alert(
+        "Verification Email Sent",
+        "Please check your inbox to verify your email before logging in."
+      );
+
+      // Optionally redirect to login screen
+      router.push("/login");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
+  };
+
+  const handleLogin = () => {
+    router.push("/login");
   };
 
   return (
@@ -91,6 +94,7 @@ export default function Signup() {
           value={password}
           onChangeText={setPassword}
         />
+
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>

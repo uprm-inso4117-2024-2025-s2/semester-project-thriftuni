@@ -3,13 +3,11 @@ import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
-import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
 
   return (
-  <ProtectedRoute>
     <View style={{ flex: 1, backgroundColor: '#F6F9FF' }}>
       {/* Settings list */}
       <View style={styles.container}>
@@ -20,10 +18,11 @@ export default function SettingsScreen() {
         {/* Settings list */}
         <View style={styles.settingsList}>
           {/* My account */}
-          <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to Profile screen */}}>
+          <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/user_system')}>
             <Text style={styles.settingText}>Profile</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
+
 
           <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to 2FA screen */}}>
             <Text style={styles.settingText}>Two-factor authentication</Text>
@@ -68,7 +67,6 @@ export default function SettingsScreen() {
         </View>
       </View>
     </View>
-  </ProtectedRoute>
   );
 }
 
