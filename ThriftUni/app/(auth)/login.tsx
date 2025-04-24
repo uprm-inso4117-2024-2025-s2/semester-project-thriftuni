@@ -31,11 +31,13 @@ const LoginScreen = () => {
     // Stryker disable next-line all
     console.log("password:", password);
     const response = await login(email, password);
+
+
     setLoading(false);
 
     if (response.error) {
       setError(response.error);
-    } else if (error !== "") {
+    } else {
       // Stryker disable next-line all
       setError("");
       // Stryker disable next-line all

@@ -38,7 +38,9 @@ export default function ListingDescription({
         Description
       </Text>
       <View style={styles.infoBox}>
-        <Text style={styles.descriptionText}>{description}</Text>
+        <Text style={styles.descriptionText}>
+         {description}
+        </Text>
       </View>
       <Text
         style={{
