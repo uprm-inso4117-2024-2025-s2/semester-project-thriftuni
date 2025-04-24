@@ -1,7 +1,7 @@
-import { StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
+import { StyleSheet, Alert } from "react-native";
 import { View, Text } from "@/components/Themed";
-import ContactSeller from "./Buttons/ContactSeller";
-import WishlistItem from "./Buttons/WishlistItem";
+import ContactSeller from "./buttons/ContactSeller";
+import WishlistItem from "./buttons/WishlistItem";
 import SellerCard, { Seller } from "./SellerCard";
 import LocationMap, { Location } from "./LocationMap";
 
@@ -15,10 +15,10 @@ export default function ListingDescription({
   location: Location;
 }) {
   const handleContactSellerButton = () => {
-    alert("Pressed contact seller button!");
+    Alert.alert("Pressed contact seller button!");
   };
   const handleWishlistItemButton = () => {
-    alert("Pressed wishlist item button!");
+    Alert.alert("Pressed wishlist item button!");
   };
 
   return (
@@ -38,9 +38,7 @@ export default function ListingDescription({
         Description
       </Text>
       <View style={styles.infoBox}>
-        <Text style={styles.descriptionText}>
-         {description}
-        </Text>
+        <Text style={styles.descriptionText}>{description}</Text>
       </View>
       <Text
         style={{
