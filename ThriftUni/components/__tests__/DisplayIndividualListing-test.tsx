@@ -7,6 +7,15 @@ import { Alert } from "react-native";
 
 jest.spyOn(Alert, "alert").mockImplementation(jest.fn());
 
+jest.mock("expo-font");
+jest.mock("@expo/vector-icons", () => ({
+  MaterialIcons: "MaterialIcons",
+}));
+
+jest.mock("@expo/vector-icons", () => ({
+  FontAwesome: () => null,
+}));
+
 describe("DisplayIndividualListing Component", () => {
   const mockProps = {
     title: "Toyota Corolla 86",
