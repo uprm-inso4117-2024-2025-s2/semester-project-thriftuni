@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import CollapsibleView from "./CollapsibleView";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { Rating } from "react-native-ratings";
@@ -29,59 +29,68 @@ export interface FilterMenuProps {
 }
 
 export default function FilterMenu({ setData, data }: FilterMenuProps) {
-  const [distance, setDistance] = React.useState<number>(1);
-  const [price, setPrice] = React.useState<number>(1);
-  const [category, setCategory] = React.useState<string>("");
-  const [sellerRep, setSellerRep] = React.useState<number>(5);
-  const [filterApplied, setFilterApplied] = React.useState<boolean>(false);
-  const [dropdownFocus, setDropdownFocus] = React.useState<boolean>(false);
-  const [originalData, setOriginalData] = React.useState<Listings[]>([]);
+  const [distance, setDistance] = useState<number>(1);
+  const [price, setPrice] = useState<number>(1);
+  const [category, setCategory] = useState<string>("");
+  const [sellerRep, setSellerRep] = useState<number>(1);
+  const [dropdownFocus, setDropdownFocus] = useState<boolean>(false);
+  const [originalData, setOriginalData] = useState<Listings[]>([]);
+  const [firstRender, setFirstRender] = useState<boolean>(true);
 
-  // Store original data when component mounts
+  // Store original data when component mounts or data changes
   useEffect(() => {
-    setOriginalData(data);
-  }, []);
-
-  useEffect(() => {
-    if (filterApplied) {
-      // Apply the filtering logic
-      let filteredData = originalData; // Use originalData instead of data
-      
-      // Filter by price
-      if (price > 1) {
-        filteredData = filteredData.filter(item => item.price <= price);
-      }
-      
-      // Filter by category
-      if (category) {
-        filteredData = filteredData.filter(item => item.category === category);
-      }
-      
-      // Filter by seller reputation
-      if (sellerRep > 1) {
-        filteredData = filteredData.filter(item => 
-          item.sellerInfo.rating >= sellerRep
-        );
-      }
-      
-      // Distance filtering would require geolocation calculations
-      // which would be more complex and depend on user's location
-      
-      // Update the filtered data
-      setData(filteredData);
-      setFilterApplied(false);
+    if (data && data.length > 0 && firstRender) {
+      setOriginalData([...data]);
+      setFirstRender(false);
     }
-  }, [filterApplied]);
+  }, [data]);
+
+  const applyFilters = () => {
+    let filteredData = [...originalData];
+    
+    // Filter by price
+    if (price > 1) {
+      filteredData = filteredData.filter(item => item.price <= price);
+    }
+    
+    // Filter by category
+    if (category) {
+      filteredData = filteredData.filter(item => 
+        item.category_id === category || 
+        item.category_id === category.toLowerCase()
+      );
+    }
+    
+    // Filter by seller reputation
+    if (sellerRep > 1) {
+      filteredData = filteredData.filter(item => 
+        item.sellerInfo?.rating || 5 >= sellerRep
+      );
+    }
+    
+    // Apply distance filter (if location services are available)
+    if (distance > 1) {
+      // For now, this is a simplified version without actual distance calculation
+      // You would normally use geolocation here
+      console.log(`Filtering by distance: ${distance}km`);
+    }
+    
+    // Update the filtered data
+    setData(filteredData);
+  };
 
   // Function to handle clearing filters
   const handleClearFilters = () => {
+    // Reset filter values
     setDistance(1);
     setPrice(1);
     setCategory("");
-    setSellerRep(5);
+    setSellerRep(1);
     
-    // Important: directly set the data back to original instead of triggering filterApplied
-    setData(originalData);
+    // Important: Reset data to original
+    if (originalData && originalData.length > 0) {
+      setData([...originalData]);
+    }
   };
 
   return (
@@ -132,7 +141,6 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
                 ratingCount={5}
                 imageSize={25}
                 onFinishRating={setSellerRep}
-                
                 tintColor="#F6F9FF"
                 ratingBackgroundColor="#999999"
                 style={{ padding: 10 }}
@@ -161,7 +169,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
           <Pressable
             testID="apply-filters-button"
             style={styles.applyFilters}
-            onPress={() => setFilterApplied(true)}
+            onPress={applyFilters}
           >
             <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
               Apply Filters
