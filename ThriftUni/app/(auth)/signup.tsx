@@ -4,16 +4,11 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  View
 } from "react-native";
-import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import { router } from "expo-router";
-import { app, auth, db } from "../../firebaseConfig.js";
+import { registerUser } from "../../firebase/signup"; // 👈 Updated path
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -27,58 +22,36 @@ export default function Signup() {
       return;
     }
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Send verification email
-      await sendEmailVerification(user);
-
-      // Save user to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name,
-        username,
-        email,
-        createdAt: new Date(),
-        emailVerified: false, // You can update this later based on a listener
-      });
-
+      await registerUser(name, username, email, password);
       Alert.alert(
         "Verification Email Sent",
         "Please check your inbox to verify your email before logging in."
       );
-
-      // Optionally redirect to login screen
       router.push("/login");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
   };
-
-  const handleLogin = () => {
-    router.push("/login");
-  };
-
   return (
-    <View style={styles.container}>
+    <View testID= "container-test" style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
-      <View style={styles.form}>
+      <View testID= "form-test" style={styles.form}>
         <TextInput
+          testID="name-input"
           style={styles.input}
           placeholder="Name"
           value={name}
           onChangeText={setName}
         />
         <TextInput
+          testID="username-input"
           style={styles.input}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
         />
         <TextInput
+          testID="email-input"
           style={styles.input}
           placeholder="Email"
           keyboardType="email-address" // Opens email keyboard
@@ -87,6 +60,7 @@ export default function Signup() {
           autoCapitalize="none" // Prevents first-letter capitalization
         />
         <TextInput
+          testID="password-input"
           style={styles.input}
           placeholder="Password"
           secureTextEntry
@@ -94,12 +68,12 @@ export default function Signup() {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleSignup}>
+        <TouchableOpacity testID="signup-button" style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.loginText}>
-        Already have an account?{" "}
+      <Text testID="have-account" style={styles.loginText}>
+      Already have an account?
         <Text style={styles.link} onPress={() => {}}>
           Login
         </Text>
