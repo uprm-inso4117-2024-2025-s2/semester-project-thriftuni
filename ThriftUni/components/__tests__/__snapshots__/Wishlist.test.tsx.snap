@@ -1,0 +1,239 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wishlist Screen matches UI snapshot (layout, icons, styles) 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "padding": 10,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "paddingVertical": 10,
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "black",
+            "fontSize": 24,
+          }
+        }
+      >
+        ←
+      </Text>
+    </View>
+    <Text
+      style={
+        {
+          "fontSize": 20,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      My Wishlist
+    </Text>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "blue",
+            "fontSize": 16,
+          }
+        }
+      >
+        Sort
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "backgroundColor": "black",
+        "borderRadius": 10,
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "marginBottom": 10,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNCPicker
+        items={
+          [
+            {
+              "label": "Filter: All",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "all",
+            },
+            {
+              "label": "Available",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "available",
+            },
+            {
+              "label": "Unavailable",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "unavailable",
+            },
+          ]
+        }
+        numberOfLines={1}
+        onChange={[Function]}
+        selectedIndex={0}
+        style={
+          [
+            {
+              "height": 216,
+            },
+            undefined,
+          ]
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNCPicker
+        items={
+          [
+            {
+              "label": "Sort: None",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "none",
+            },
+            {
+              "label": "Price: Low to High",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "asc",
+            },
+            {
+              "label": "Price: High to Low",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "desc",
+            },
+            {
+              "label": "Name: A-Z",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "asc",
+            },
+            {
+              "label": "Name: Z-A",
+              "testID": undefined,
+              "textColor": undefined,
+              "value": "desc",
+            },
+          ]
+        }
+        numberOfLines={1}
+        onChange={[Function]}
+        selectedIndex={0}
+        style={
+          [
+            {
+              "height": 216,
+            },
+            undefined,
+          ]
+        }
+      />
+    </View>
+  </View>
+  <ActivityIndicator
+    color="blue"
+    size="large"
+  />
+</View>
+`;
