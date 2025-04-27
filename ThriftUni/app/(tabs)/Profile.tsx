@@ -116,6 +116,9 @@ const Profile: React.FC = () => {
     }, [])
   );
 
+  const profile = { website: `thriftuni.com/@${username || 'user'}` };
+
+
   // All tab-related configuration is defined here. Adding a new tab would only require extending this array.
   const tabs: TabConfig[] = [
     { key: 'favorites', label: 'Favorites', count: favorites },
