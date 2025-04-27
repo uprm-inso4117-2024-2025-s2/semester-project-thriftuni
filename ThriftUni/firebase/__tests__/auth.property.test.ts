@@ -1,28 +1,37 @@
 import fc from 'fast-check';
-import { login } from '@/firebase/login';
-import { signUp } from '@/firebase/signUp';
 
-// ✅ Mock signUp and login functions
-jest.mock('@/firebase/signUp', () => ({
-  signUp: jest.fn(async (email: string, password: string) => {
-    if (!email.includes('@')) {
-      throw new Error('Invalid email format.');
-    }
-    if (password.length < 6) {
-      throw new Error('Password too weak.');
-    }
-    return { success: true };
-  }),
-}));
+let signUp: any;
+let login: any;
 
-jest.mock('@/firebase/login', () => ({
-  login: jest.fn(async (email: string, password: string) => {
-    if (!email.includes('@') || password.length < 6) {
-      throw new Error('Invalid login.');
-    }
-    return { success: true };
-  }),
-}));
+if (typeof jest !== 'undefined') {
+  jest.mock('@/firebase/signUp', () => ({
+    signUp: jest.fn(async (email: string, password: string) => {
+      if (!email.includes('@')) {
+        throw new Error('Invalid email format.');
+      }
+      if (password.length < 6) {
+        throw new Error('Password too weak.');
+      }
+      return { success: true };
+    }),
+  }));
+
+  jest.mock('@/firebase/login', () => ({
+    login: jest.fn(async (email: string, password: string) => {
+      if (!email.includes('@') || password.length < 6) {
+        throw new Error('Invalid login.');
+      }
+      return { success: true };
+    }),
+  }));
+
+  signUp = require('@/firebase/signUp').signUp;
+  login = require('@/firebase/login').login;
+} else {
+  // In case someone accidentally runs this file outside of Jest, export dummy versions
+  signUp = async () => ({ success: true });
+  login = async () => ({ success: true });
+}
 
 describe('Property-based Authentication Tests', () => {
 
