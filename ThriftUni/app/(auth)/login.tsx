@@ -75,6 +75,10 @@ const LoginScreen = () => {
     router.push("/forgot");
   };
 
+  const handleResendPage = () => {
+    router.push("/resend");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title} testID="login-title">
@@ -105,13 +109,7 @@ const LoginScreen = () => {
             {error}
           </Text>
         ) : null}
-        {error?.includes("verify your email") && (
-          <TouchableOpacity onPress={handleResendVerification}>
-            <Text style={[styles.link, { marginTop: 10 }]}>
-              Resend Verification Email
-            </Text>
-          </TouchableOpacity>
-        )}
+        
         {loading ? (
           <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
@@ -124,11 +122,19 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
       </View>
+      
+      <Text style={styles.forgotText}>
+        <Text style={styles.link} onPress={handleResendPage}>
+          Resend Verification Email
+        </Text>
+      </Text>
+      
       <Text style={styles.forgotText}>
         <Text style={styles.link} onPress={handleForget}>
           Forgot Password?
         </Text>
       </Text>
+      
       <Text style={styles.signupText}>
         Don't have an account?{" "}
         <Text style={styles.link} onPress={handleSignup}>
