@@ -3,7 +3,6 @@ import { router } from "expo-router";
 import {
   View,
   TextInput,
-  Button,
   Text,
   ActivityIndicator,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import { login } from "../../firebase/login";
 import { useRouter } from "expo-router";
+import { sendEmailVerification } from "firebase/auth";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -26,25 +26,29 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     setLoading(true);
-    // Stryker disable next-line all
-    console.log("email:", email);
-    // Stryker disable next-line all
-    console.log("password:", password);
-    const response = await login(email, password);
+    setError("");
 
+    try {
+      const response = await login(email, password);
+      setLoading(false);
 
-    setLoading(false);
+      if (response.error) {
+        setError(response.error);
+      } else {
+        const user = response.user;
 
-    if (response.error) {
-      setError(response.error);
-    } else {
-      // Stryker disable next-line all
-      setError("");
-      // Stryker disable next-line all
-      console.log("User logged in:", response.user);
-      if (router?.replace) {
-        router.replace("/(tabs)/main_page");
+        if (user && !user.emailVerified) {
+          setError("Please verify your email. Didn't receive it? Resend below.");
+          return;
+        }
+
+        if (router?.replace) {
+          router.replace("/(tabs)/main_page");
+        }
       }
+    } catch (err) {
+      setLoading(false);
+      setError("An unexpected error occurred.");
     }
   };
 
@@ -52,7 +56,10 @@ const LoginScreen = () => {
     router.push("/forgot");
   };
 
-  // Stryker disable all: The JSX block inside the return statement was excluded from mutation testing using // Stryker disable all because it contains purely visual elements (e.g., layout, styles, text content). These do not affect the business logic or behavior of the component, and testing visual mutations adds no value to the application's correctness. Excluding them keeps mutation reports clean and focused on critical logic paths.
+  const handleResendPage = () => {
+    router.push("/resend");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title} testID="login-title">
@@ -64,9 +71,10 @@ const LoginScreen = () => {
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
-          autoCapitalize="none" // Prevents first-letter capitalization
-          keyboardType="email-address" // Opens email keyboard
+          autoCapitalize="none"
+          keyboardType="email-address"
           style={styles.input}
+          placeholderTextColor="#999"
         />
         <TextInput
           testID="password-input"
@@ -75,12 +83,14 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
+          placeholderTextColor="#999"
         />
         {error ? (
           <Text testID="error-message" style={{ color: "red" }}>
             {error}
           </Text>
         ) : null}
+        
         {loading ? (
           <ActivityIndicator testID="loading-indicator" size="small" />
         ) : (
@@ -93,9 +103,15 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
       </View>
+      <Text style={styles.forgotText}>
+        <Text style={styles.link} onPress={handleForget}>
+          Forgot Password?
+        </Text>
+      </Text>
+      
       <Text style={styles.signupText}>
         Don't have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
+        <Text style={styles.link} onPress={handleSignup}>
           Sign Up
         </Text>
       </Text>
@@ -127,14 +143,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
   },
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -144,16 +160,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signupText: {
-    marginTop: 20,
+    marginTop: 5,
   },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
   },
   forgotText: {
     marginTop: 15,
   },
 });
-// Stryker restore all
 
 export default LoginScreen;
