@@ -52,25 +52,6 @@ const LoginScreen = () => {
     }
   };
 
-  const handleResendVerification = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await login(email, password);
-      const user = response.user;
-
-      if (user && !user.emailVerified) {
-        await sendEmailVerification(user);
-        setError("Verification email sent. Check your inbox!");
-      }
-    } catch (err) {
-      setError("Unable to resend verification. Try again.");
-    }
-
-    setLoading(false);
-  };
-
   const handleForget = () => {
     router.push("/forgot");
   };
@@ -122,13 +103,6 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-      
-      <Text style={styles.forgotText}>
-        <Text style={styles.link} onPress={handleResendPage}>
-          Resend Verification Email
-        </Text>
-      </Text>
-      
       <Text style={styles.forgotText}>
         <Text style={styles.link} onPress={handleForget}>
           Forgot Password?
