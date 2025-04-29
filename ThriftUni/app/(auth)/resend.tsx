@@ -10,36 +10,27 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { firebaseApp } from "../../firebase/firebase.config";
-
-const auth = getAuth(firebaseApp);
+import { firebaseApp, auth } from "../../firebase/firebase.config";
 
 const ResendVerificationScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleResendVerification = async () => {
-    if (!email || !password) {
-      setMessage("Please enter both email and password");
-      setIsSuccess(false);
-      return;
-    }
-
     setLoading(true);
     setMessage("");
     setIsSuccess(false);
 
     try {
-      // Sign in to get the user object
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      if (!user.emailVerified) {
+      const user = auth.currentUser;
+      if (!user?.emailVerified) {
         // Send verification email
-        await sendEmailVerification(user);
+        if (user) {
+          await sendEmailVerification(user);
+        } else {
+          throw new Error("No user is currently signed in.");
+        }
         setMessage("Verification email sent successfully! Please check your inbox.");
         setIsSuccess(true);
       } else {
@@ -73,28 +64,13 @@ const ResendVerificationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Resend Verification Email</Text>
+      <Text style={styles.title}>
+        Verification Email Sent
+      </Text>
+      <Text style={styles.text}>
+        Please check your inbox to verify your email before logging in.
+      </Text>
       <View style={styles.form}>
-        <TextInput
-          testID="email-input"
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          style={styles.input}
-          placeholderTextColor="#999"
-        />
-        <TextInput
-          testID="password-input"
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-          placeholderTextColor="#999"
-        />
-        
         {message ? (
           <Text testID="message" style={isSuccess ? styles.successMessage : styles.errorMessage}>
             {message}
@@ -113,10 +89,6 @@ const ResendVerificationScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-      
-      <TouchableOpacity onPress={handleGoToLogin} style={styles.backLink}>
-        <Text style={styles.link}>Back to Login</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -132,7 +104,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
+    fontFamily: "Calibri",
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 10, 
     fontFamily: "Calibri",
   },
   form: {

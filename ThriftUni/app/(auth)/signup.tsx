@@ -51,13 +51,8 @@ export default function Signup() {
         emailVerified: false, // You can update this later based on a listener
       });
   
-      Alert.alert(
-        "Verification Email Sent",
-        "Please check your inbox to verify your email before logging in."
-      );
-  
       // Optionally redirect to login screen
-      router.push("/login");
+      router.push("/resend");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
