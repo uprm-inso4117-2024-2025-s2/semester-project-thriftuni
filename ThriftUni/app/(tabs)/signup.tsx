@@ -7,19 +7,32 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { router } from "expo-router";
-import { db, auth } from "../../firebaseConfig.js";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
+import { initializeApp, getApp, getApps } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD7EBLPezmrBujRy58eLzmAV1jeKTUrPoQ",
+  authDomain: "thriftuni-b345a.firebaseapp.com",
+  projectId: "thriftuni-b345a",
+  storageBucket: "thriftuni-b345a.firebasestorage.app",
+  messagingSenderId: "501062585933",
+  appId: "1:501062585933:web:7bb28a9b3f4f2f61a3d604",
+  measurementId: "G-MCWKZZQPTP",
+};
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 export default function Signup() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleSignup = async () => {
     if (!email || !password || !name || !username) {
@@ -35,32 +48,37 @@ export default function Signup() {
       );
       const user = userCredential.user;
 
-      // Send verification email
-      await sendEmailVerification(user);
+      await auth.currentUser?.reload();
 
-      // Save user to Firestore
+      await sendEmailVerification(auth.currentUser);
+      setVerificationSent(true);
+
       await setDoc(doc(db, "users", user.uid), {
         name,
         username,
         email,
         createdAt: new Date(),
-        emailVerified: false, // You can update this later based on a listener
       });
 
-      Alert.alert(
-        "Verification Email Sent",
-        "Please check your inbox to verify your email before logging in."
-      );
-
-      // Optionally redirect to login screen
-      router.push("/login");
+      Alert.alert("Success", "Sign-up successful! Please check your email for verification.");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
     }
   };
 
   const handleLogin = () => {
-    router.push("/login");
+    router.push("/login/login");
+  };
+
+  const resendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      try {
+        await sendEmailVerification(auth.currentUser);
+        Alert.alert("Success", "Verification email sent. Please check your inbox.");
+      } catch (error: any) {
+        Alert.alert("Error", "Failed to send verification email.");
+      }
+    }
   };
 
   return (
@@ -94,11 +112,22 @@ export default function Signup() {
           value={password}
           onChangeText={setPassword}
         />
-
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
+
+      {verificationSent && (
+        <View style={styles.resendContainer}>
+          <Text style={styles.resendText}>
+            A verification email has been sent. If you didn’t receive it, you can request another one.
+          </Text>
+          <TouchableOpacity style={styles.resendButton} onPress={resendVerificationEmail}>
+            <Text style={styles.resendButtonText}>Resend Verification Email</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      
       <Text style={styles.loginText}>
         Already have an account?{" "}
         <Text style={styles.link} onPress={() => {}}>

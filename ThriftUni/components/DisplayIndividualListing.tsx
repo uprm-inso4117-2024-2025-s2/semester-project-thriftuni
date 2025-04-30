@@ -1,6 +1,8 @@
-import { StyleSheet, ScrollView, View, Text } from "react-native";
+import { StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, Text } from "@/components/Themed";
 import React from "react";
 import ListingDescription from "./ListingDescription";
+import ProductCard from "./ListingsPage/ProductCard";
 import ProductImages from "./ProductImages";
 import { Seller } from "./SellerCard";
 

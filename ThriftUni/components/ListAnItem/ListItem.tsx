@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, {useState} from 'react'
 import { ScrollView, TextInput} from 'react-native'
-import ImageUploader from '@/components/ListAnItem/ImageUploader';
-import Selector from '@/components/ListAnItem/Selector';
-import PriceInput from '@/components/ListAnItem/PriceInput';
-import Buttons from '@/components/ListAnItem/Buttons';
+import ImageUploader from './ImageUploader';
+import Selector from './Selector'
+import PriceInput from './PriceInput';
+import Buttons from './Buttons';
+    
 
 export default function ListItem() {
     const [text, setText] = useState('');

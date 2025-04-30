@@ -8,25 +8,19 @@ import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 
 interface ProductCardProps {
-  id: number | string;
+  id: number;
   title: string;
-  price: number | string | undefined;
-  image?: string;
-  pictures?: string[];
-  img?: string; // For backward compatibility
-  latitude: number | string;
-  longitude: number | string;
-  category_id?: string;
-  condition?: string;
+  price: number;
+  img: string;
+  latitude: string;
+  longitude: string;
 }
 
 export default function ProductCard({
   id,
   title,
   price,
-  image,
-  pictures,
-  img, // Keep for backward compatibility
+  img,
   latitude,
   longitude,
 }: ProductCardProps) {
@@ -36,14 +30,6 @@ export default function ProductCard({
   const scaleValue = useRef(new Animated.Value(1)).current;
   const router = useRouter();
 
-  // Determine which image to display
-  const displayImage = image || (pictures && pictures.length > 0 ? pictures[0] : img);
-
-  // Ensure price is a valid number
-  const safePrice = typeof price === 'string' ? 
-    parseFloat(price) : 
-    (typeof price === 'number' ? price : 0);
-
   useEffect(() => {
     async function getLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -51,7 +37,6 @@ export default function ProductCard({
         setErr("Permission to access location was denied");
         return;
       }
-      
       let location = await Location.getCurrentPositionAsync({});
       setDistance(
         getDistance(
@@ -59,10 +44,7 @@ export default function ProductCard({
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
           },
-          { 
-            latitude: typeof latitude === 'string' ? parseFloat(latitude) : latitude,
-            longitude: typeof longitude === 'string' ? parseFloat(longitude) : longitude
-          }
+          { latitude: parseFloat(latitude), longitude: parseFloat(longitude) }
         )
       );
     }
@@ -104,18 +86,16 @@ export default function ProductCard({
   return (
     <Pressable style={styles.card} onPress={handleProductClick}>
       <View style={styles.image_view}>
-        <Image 
-          alt="product image" 
-          source={{ uri: displayImage }} 
-          style={styles.image} 
-        />
+        <Image alt="product image" source={{ uri: img }} style={styles.image} />
       </View>
       <View style={styles.info}>
         <View>
-          <Text style={styles.title}>{title || "No Title"}</Text>
-          <Text style={{ fontSize: 12 }}>{`${(distance / 1000).toFixed(2)} km`}</Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={{ fontSize: 12 }}>{`${(distance / 1000).toFixed(
+            2
+          )} km`}</Text>
         </View>
-        <Text style={styles.price}>{formatCurrency(safePrice)}</Text>
+        <Text style={styles.price}>{formatCurrency(price)}</Text>
       </View>
       <Animated.View
         style={[styles.wishlist_button, { transform: [{ scale: scaleValue }] }]}

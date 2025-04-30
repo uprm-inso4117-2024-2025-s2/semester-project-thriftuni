@@ -7,15 +7,27 @@ import {
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/firebaseConfig";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
+
+import { router } from "expo-router";
+
+import { firebaseApp } from "../../firebase/firebase.config";
+
+
+
+const app = firebaseApp
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 export default function Signup() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleSignup = async () => {
     if (!email || !password || !name || !username) {
@@ -31,6 +43,11 @@ export default function Signup() {
       );
       const user = userCredential.user;
 
+      await auth.currentUser?.reload();
+
+      await sendEmailVerification(auth.currentUser);
+      setVerificationSent(true);
+
       await setDoc(doc(db, "users", user.uid), {
         name,
         username,
@@ -38,9 +55,24 @@ export default function Signup() {
         createdAt: new Date(),
       });
 
-      Alert.alert("Success", "Account created successfully!");
+      Alert.alert("Success", "Sign-up successful! Please check your email for verification.");
     } catch (error) {
       Alert.alert("Error", (error as any).message);
+    }
+  };
+
+  const handleLogin = () => {
+    router.push("/login/login");
+  };
+
+  const resendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      try {
+        await sendEmailVerification(auth.currentUser);
+        Alert.alert("Success", "Verification email sent. Please check your inbox.");
+      } catch (error: any) {
+        Alert.alert("Error", "Failed to send verification email.");
+      }
     }
   };
 
@@ -53,12 +85,14 @@ export default function Signup() {
           placeholder="Name"
           value={name}
           onChangeText={setName}
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -67,6 +101,7 @@ export default function Signup() {
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none" // Prevents first-letter capitalization
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -74,14 +109,28 @@ export default function Signup() {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor="#999"
         />
+        
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
+
+      {verificationSent && (
+        <View style={styles.resendContainer}>
+          <Text style={styles.resendText}>
+            A verification email has been sent. If you didn’t receive it, you can request another one.
+          </Text>
+          <TouchableOpacity style={styles.resendButton} onPress={resendVerificationEmail}>
+            <Text style={styles.resendButtonText}>Resend Verification Email</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      
       <Text style={styles.loginText}>
         Already have an account?{" "}
-        <Text style={styles.link} onPress={() => {}}>
+        <Text style={styles.link} onPress={handleLogin}>
           Login
         </Text>
       </Text>
@@ -106,6 +155,7 @@ const styles = StyleSheet.create({
   form: {
     width: "100%",
     maxWidth: 400,
+    backgroundColor: "#F6F9FF",
   },
   input: {
     width: "100%",
@@ -113,14 +163,16 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 15,
+    borderRadius: 5,
     backgroundColor: "#F6F9FF",
     fontFamily: "Calibri",
+    color: "black",
   },
+  
   button: {
-    backgroundColor: "#F45D5D",
+    backgroundColor: "black",
     padding: 12,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -133,7 +185,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   link: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "black",
+    fontWeight: "bold",
   },
 });
