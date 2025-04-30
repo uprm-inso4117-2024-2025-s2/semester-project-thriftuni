@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
@@ -24,6 +25,7 @@ export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
     if (!email || !password || !name || !username) {
@@ -31,6 +33,7 @@ export default function Signup() {
       return;
     }
   
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -38,6 +41,7 @@ export default function Signup() {
         password
       );
       const user = userCredential.user;
+      setLoading(false);
   
       // Send verification email
       await sendEmailVerification(user);
@@ -54,6 +58,7 @@ export default function Signup() {
       // Optionally redirect to login screen
       router.push("/resend");
     } catch (error) {
+      setLoading(false);
       Alert.alert("Error", (error as any).message);
     }
   };
@@ -98,10 +103,13 @@ export default function Signup() {
           onChangeText={setPassword}
           placeholderTextColor="#999"
         />
-
+        { loading ? (
+          <ActivityIndicator testID="loading-indicator" size="small" />
+        ) :
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
+        }
       </View>
       <Text style={styles.loginText}>
         Already have an account?{" "}
