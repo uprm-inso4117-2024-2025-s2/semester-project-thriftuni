@@ -1,12 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 
 export default function SettingsScreen() {
-  const navigation = useNavigation();
-
   return (
     <View style={{ flex: 1, backgroundColor: '#F6F9FF' }}>
       {/* Settings list */}
@@ -17,33 +14,47 @@ export default function SettingsScreen() {
 
         {/* Settings list */}
         <View style={styles.settingsList}>
-          {/* My account */}
-          <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/user_system')}>
+          {/* Navigate to Profile screen */}
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => router.push('/(tabs)/Profile')}
+          >
             <Text style={styles.settingText}>Profile</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
 
-
-          <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to 2FA screen */}}>
+          {/* Navigate to Two-factor authentication screen */}
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => router.push('/login')}
+          >
             <Text style={styles.settingText}>Two-factor authentication</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push('/settings')}></TouchableOpacity>
+          {/* Navigate to Interests and Sizes screen */}
           <TouchableOpacity
             style={styles.settingItem}
-            onPress={() => router.push('/(tabs)/interestsandsizes')} // cast to 'never' if TS complains
+            onPress={() => router.push('/(tabs)/interestsandsizes')}
           >
             <Text style={styles.settingText}>Interest and Sizes</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to Preferences */}}>
+          {/* Navigate to Preferences screen */}
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => router.push('/(tabs)/preferences')}
+          >
             <Text style={styles.settingText}>Preferences</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to Privacy */}}>
+          {/* Navigate to Privacy screen */}
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => router.push('/(tabs)/privacy')}
+          >
             <Text style={styles.settingText}>Privacy</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
@@ -53,14 +64,31 @@ export default function SettingsScreen() {
           <Text style={styles.subHeaderText}>Sell</Text>
         </View>
         <View style={styles.settingsList}>
-          <TouchableOpacity style={styles.settingItem} onPress={() => {/* navigate to Sell screen */}}>
+          {/* Navigate to Sell screen */}
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => router.push('/(tabs)/my_listings')}
+          >
             <Text style={styles.settingText}>Sell an item on ThriftUni</Text>
             <FontAwesome name="chevron-right" size={18} color="black" style={styles.tileIcon} />
           </TouchableOpacity>
+
           {/* Logout button */}
           <View style={styles.logoutContainer}>
-            <TouchableOpacity style={styles.logoutButton} onPress={() => {/* handle logout */}}>
-            <FontAwesome name="sign-out" size={18} color="white" style={{position: 'absolute', left: 22, bottom: 12}} />
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={() => {
+                // Handle logout logic here
+                console.log('User logged out');
+                router.push('/login'); // Redirect to login screen after logout
+              }}
+            >
+              <FontAwesome
+                name="sign-out"
+                size={18}
+                color="white"
+                style={{ position: 'absolute', left: 22, bottom: 12 }}
+              />
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
           </View>
@@ -102,11 +130,6 @@ const styles = StyleSheet.create({
   settingText: {
     fontSize: 18,
     color: '#000',
-  },
-  linkText: {
-    fontSize: 14,
-    color: 'blue',
-    marginTop: 4,
   },
   logoutContainer: {
     marginTop: 40,

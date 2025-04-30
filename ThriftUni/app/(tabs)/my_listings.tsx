@@ -2,39 +2,21 @@ import { StyleSheet, Pressable, Image, FlatList, Modal, TextInput, ScrollView } 
 import { View, Text } from '@/components/Themed';
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { getCurrentUserListings, updateListing, deleteListing, getListingImages } from '../../backend/Api'; // <-- Updated import
+import { getListings, updateListing, deleteListing } from '../../mock_backend/mockApi'; // <-- Updated import
 import { useEffect } from 'react';
-import { serverTimestamp } from 'firebase/firestore';
 
 export default function DisplayMyListing() {
   type Listing = {
     id: string;
-    title: string;
-    description: string;
-    price: number;
+    name: string;
+    details: string;
+    price: string;
     status: string;
     photos: string[];
-    category_id?: string;   // categories document id
-    condition?: string[];
-    created_at?: any;       // Firestore timestamp
-    deleted_at?: any;       // Firestore timestamp
-    updated_at?: any;       // Firestore timestamp
-    latitude?: number;
-    longitude?: number;
-    location?: string;
-    listing_id?: string;
-    user?: any;  // Reference to current user document
-    listing_images?: Array<{
-      id: string;
-      image_url: string;
-      position: number;
-      uploaded_at: any; // Firestore timestamp
-    }>;
   };
 
   const [listings, setListings] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
 
   const [filter, setFilter] = useState('All');
   const [isEditing, setIsEditing] = useState(false);
@@ -47,137 +29,61 @@ export default function DisplayMyListing() {
   const [editPhotos, setEditPhotos] = useState<string[]>([]);
   const [editStatus, setEditStatus] = useState('');
 
-  // Function to fetch listings that can be reused
-  const fetchListings = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getCurrentUserListings();
-
-      // Map Firestore data to component structure
-      const typedListings = data.map(item => ({
-        id: item.id,
-        title: (item as any).title || '',
-        description: (item as any).description || '',
-        price: (item as any).price || 0,
-        status: (item as any).status || 'Pending',
-        photos: Array.isArray((item as any).photos) ? (item as any).photos : [],
-        category_id: (item as any).category_id,
-        condition: (item as any).condition,
-        created_at: (item as any).created_at,
-        deleted_at: (item as any).deleted_at,
-        updated_at: (item as any).updated_at,
-        latitude: (item as any).latitude,
-        longitude: (item as any).longitude,
-        location: (item as any).location,
-        listing_id: (item as any).listing_id,
-        user: (item as any).user,
-        listing_images: []
-      })) as Listing[];
-
-      // Fetch images for each listing
-      const listingsWithImages = await Promise.all(
-        typedListings.map(async (listing) => {
-          try {
-            const images = await getListingImages(listing.id);
-            return {
-              ...listing,
-              listing_images: images,
-              displayImage: images.length > 0 ? images[0].image_url : (listing.photos.length > 0 ? listing.photos[0] : null)
-            };
-          } catch (error) {
-            console.error(`Error fetching images for listing with ID ${listing.id}:`, error);
-            return {
-              ...listing,
-              displayImage: listing.photos.length > 0 ? listing.photos[0] : null
-            };
-          }
-        })
-      );
-
-      // Ensure compatibility with existing UI
-      const compatibleListings = listingsWithImages.map(item => ({
-        ...item,
-        name: item.title,              // Map to what UI expects
-        details: item.description      // Map to what UI expects
-      })) as unknown as Listing[];
-
-      setListings(compatibleListings);
-    } catch (error) {
-      console.error('Error fetching listings:', error);
-      setError('Failed to load listings. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchListings();
+    const fetchData = async () => {
+      const data = await getListings();
+      setListings(data);
+    };
+    fetchData();
   }, []);
 
-  const getListingImageSource = (item: Listing) => {
-    if (item.listing_images && item.listing_images.length > 0) {
-      return { uri: item.listing_images[0].image_url };
-    } else if (item.photos && item.photos.length > 0) {
-      return { uri: item.photos[0] };
-    }
-    return { uri: "https://archive.org/download/placeholder-image/placeholder-image.jpg" };
-  };
+
+
 
   const handleFilter = (status: React.SetStateAction<string>) => {
     setFilter(status);
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      const success = await deleteListing(id);
-      if (success) {
-        setListings(prevListings => prevListings.filter(listing => listing.id !== id));
-      }
-    } catch (error) {
-      console.error('Error deleting listing:', error);
+    const success = await deleteListing(id);
+    if (success) {
+      setListings(prevListings => prevListings.filter(listing => listing.id !== id));
     }
   };
 
 
   const handleEdit = (listing: any) => {
     setCurrentListing(listing);
-    setEditTitle(listing.title || listing.name);
-    setEditPrice(String(listing.price));
-    setEditDetails(listing.description || listing.details);
-    // setEditPhotos([...(listing.photos || [])]);
-    if (listing.listing_images && listing.listing_images.length > 0) {
-      setEditPhotos(listing.listing_images.map((image: any) => image.image_url));
-    } else {
-      setEditPhotos([...(listing.photos || [])]);
-    }
+    setEditTitle(listing.name);
+    setEditPrice(listing.price);
+    setEditDetails(listing.details);
+    setEditPhotos([...listing.photos]);
     setModalVisible(true);
-    setEditStatus(listing.status || 'Pending');
+    setEditStatus(listing.status);
   };
 
   const handleSaveChanges = async () => {
-    try {
-      const updatedItem = {
-        ...currentListing,
-        title: editTitle,
-        price: parseFloat(editPrice) || 0,
-        description: editDetails,
-        photos: editPhotos,
-        status: editStatus,
-        updated_at: serverTimestamp()
-      };
+    const updatedItem = {
+      ...currentListing,
+      name: editTitle,
+      price: editPrice,
+      details: editDetails,
+      photos: editPhotos,
+      status: editStatus,
+    };
 
-      const updated = await updateListing(currentListing.id, updatedItem);
+    const updated = await updateListing(currentListing.id, updatedItem);
 
-      if (updated) {
-        await fetchListings();
-      }
-      setModalVisible(false);
-      setCurrentListing(null);
-    } catch (error) {
-      console.error('Error updating listing:', error);
+    if (updated) {
+      setListings(prev => prev.map(item => item.id === updated.id ? updated : item));
     }
+    setModalVisible(false);
+    setCurrentListing(null);
   };
+
+
+
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -216,10 +122,10 @@ export default function DisplayMyListing() {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.card}>
-              <Image source={getListingImageSource(item)} style={styles.image} />
+              <Image source={{ uri: item.photos[0] }} style={styles.image} />
               <View style={styles.card_information}>
-                <Text style={{ fontSize: 25, color: "#000", margin: 5 }}>{item.title}</Text>
-                <Text style={{ fontSize: 15, color: "#000", margin: 5 }}>{item.description}</Text>
+                <Text style={{ fontSize: 25, color: "#000", margin: 5 }}>{item.name}</Text>
+                <Text style={{ fontSize: 15, color: "#000", margin: 5 }}>{item.details}</Text>
                 <Text style={{ fontSize: 15, color: "#000", margin: 5 }}>{item.price}</Text>
               </View>
               <Text style={{ marginLeft: 'auto', marginRight: 25, fontSize: 10, color: "#000" }}>{item.status}</Text>
@@ -293,21 +199,8 @@ export default function DisplayMyListing() {
                 {/* Photo Management */}
                 <Text style={{ fontSize: 16, marginVertical: 10 }}>Photos:</Text>
                 <ScrollView horizontal>
-                  {currentListing?.listing_images && currentListing.listing_images.map((image: { id: string; image_url: string; position: number; uploaded_at: any }, index: number) => (
-                    <View key={`db-${index}`} style={{ position: 'relative', marginRight: 10 }}>
-                      <Image source={{ uri: image.image_url }} style={styles.editImage} />
-                      <Pressable
-                        onPress={() => handleRemovePhoto(image.image_url)}
-                        style={styles.removePhotoButton}
-                      >
-                        <Text style={{ color: 'white', fontWeight: 'bold' }}>✕</Text>
-                      </Pressable>
-                    </View>
-                  ))}
-                  {editPhotos.filter(uri =>
-                    !currentListing?.listing_images?.some((image: { id: string; image_url: string; position: number; uploaded_at: any }) => image.image_url === uri)
-                  ).map((uri, index) => (
-                    <View key={`new-${index}`} style={{ position: 'relative', marginRight: 10 }}>
+                  {editPhotos.map((uri, index) => (
+                    <View key={index} style={{ position: 'relative', marginRight: 10 }}>
                       <Image source={{ uri }} style={styles.editImage} />
                       <Pressable
                         onPress={() => handleRemovePhoto(uri)}
