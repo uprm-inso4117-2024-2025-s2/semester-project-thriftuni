@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -11,6 +11,7 @@ import {
 import { router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { firebaseApp, auth } from "../../firebase/firebase.config";
+import { onAuthStateChanged } from "firebase/auth";
 
 const ResendVerificationScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,21 @@ const ResendVerificationScreen = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user) {
+        await user.reload(); // 🔄 Refresh user state from Firebase
+        if (user.emailVerified) {
+          clearInterval(intervalId); // 🛑 Stop checking
+          router.replace("/(tabs)"); // ✅ Navigate to your main/home screen
+        }
+      }
+    }, 3000); // ⏱️ Check every 3 seconds
+  
+    return () => clearInterval(intervalId); // ✅ Cleanup when component unmounts
+  }, []);
 
   const handleGoToLogin = () => {
     router.push("/login");

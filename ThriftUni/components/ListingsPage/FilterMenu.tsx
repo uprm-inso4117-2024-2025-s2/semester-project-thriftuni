@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import CollapsibleView from "./CollapsibleView";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { Rating } from "react-native-ratings";
@@ -29,22 +29,69 @@ export interface FilterMenuProps {
 }
 
 export default function FilterMenu({ setData, data }: FilterMenuProps) {
-  const [distance, setDistance] = React.useState<number>(1);
-  const [price, setPrice] = React.useState<number>(1);
-  const [category, setCategory] = React.useState<string>("");
-  const [sellerRep, setSellerRep] = React.useState<number>(5);
-  const [filterApplied, setFilterApplied] = React.useState<boolean>(false);
-  const [dropdownFocus, setDropdownFocus] = React.useState<boolean>(false);
+  const [distance, setDistance] = useState<number>(1);
+  const [price, setPrice] = useState<number>(1);
+  const [category, setCategory] = useState<string>("");
+  const [sellerRep, setSellerRep] = useState<number>(1);
+  const [dropdownFocus, setDropdownFocus] = useState<boolean>(false);
+  const [originalData, setOriginalData] = useState<Listings[]>([]);
+  const [firstRender, setFirstRender] = useState<boolean>(true);
 
+  // Store original data when component mounts or data changes
   useEffect(() => {
-    if (filterApplied) {
-      // Refetch Filter Data from API
-      // Setting data to the same for development purposes
-      setData(data);
-      console.log("Filters Applied:", distance, price, category, sellerRep);
-      setFilterApplied(false);
+    if (data && data.length > 0 && firstRender) {
+      setOriginalData([...data]);
+      setFirstRender(false);
     }
-  }, [filterApplied]);
+  }, [data]);
+
+  const applyFilters = () => {
+    let filteredData = [...originalData];
+    
+    // Filter by price
+    if (price > 1) {
+      filteredData = filteredData.filter(item => item.price <= price);
+    }
+    
+    // Filter by category
+    if (category) {
+      filteredData = filteredData.filter(item => 
+        item.category_id === category || 
+        item.category_id === category.toLowerCase()
+      );
+    }
+    
+    // Filter by seller reputation
+    if (sellerRep > 1) {
+      filteredData = filteredData.filter(item => 
+        item.sellerInfo?.rating || 5 >= sellerRep
+      );
+    }
+    
+    // Apply distance filter (if location services are available)
+    if (distance > 1) {
+      // For now, this is a simplified version without actual distance calculation
+      // You would normally use geolocation here
+      console.log(`Filtering by distance: ${distance}km`);
+    }
+    
+    // Update the filtered data
+    setData(filteredData);
+  };
+
+  // Function to handle clearing filters
+  const handleClearFilters = () => {
+    // Reset filter values
+    setDistance(1);
+    setPrice(1);
+    setCategory("");
+    setSellerRep(1);
+    
+    // Important: Reset data to original
+    if (originalData && originalData.length > 0) {
+      setData([...originalData]);
+    }
+  };
 
   return (
     <View>
@@ -56,13 +103,13 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
         <View style={styles.filtersContainer}>
           <View style={styles.filterRows}>
             <View>
-              <Text>Price: ${price.toFixed(2)}</Text>
+              <Text>Max Price: ${price.toFixed(2)}</Text>
               <Slider
                 testID="price-slider"
                 style={styles.distanceSlider}
                 value={price}
                 minimumValue={1}
-                maximumValue={10e2}
+                maximumValue={250}
                 thumbTintColor="green"
                 maximumTrackTintColor="gray"
                 minimumTrackTintColor="green"
@@ -70,7 +117,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
               />
             </View>
             <View>
-              <Text>Distance: {distance.toFixed(2)} km</Text>
+              <Text>Max Distance: {distance.toFixed(2)} km</Text>
               <Slider
                 testID="distance-slider"
                 style={styles.distanceSlider}
@@ -122,7 +169,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
           <Pressable
             testID="apply-filters-button"
             style={styles.applyFilters}
-            onPress={() => setFilterApplied(true)}
+            onPress={applyFilters}
           >
             <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
               Apply Filters
@@ -131,12 +178,7 @@ export default function FilterMenu({ setData, data }: FilterMenuProps) {
           <Pressable
             testID="clear-filters-button"
             style={styles.clearFilters}
-            onPress={() => {
-              setDistance(1);
-              setPrice(1);
-              setCategory("");
-              setFilterApplied(true);
-            }}
+            onPress={handleClearFilters}
           >
             <Text style={{ color: "red", fontSize: 18, fontWeight: "bold" }}>
               Clear Filters
@@ -178,5 +220,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "red",
   },
-
 });

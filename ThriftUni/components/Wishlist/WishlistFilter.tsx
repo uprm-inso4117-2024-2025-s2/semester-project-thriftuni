@@ -23,8 +23,7 @@ const WishlistFilter: React.FC<WishlistFilterProps> = ({ onFilterChange }) => {
             if (value !== "all") {
               onFilterChange("availability", value);
             } else {
-              // Reset to full list
-              onFilterChange("availability", "available");
+              onFilterChange("availability", "available"); // default reset
             }
           }}
           style={styles.picker}
