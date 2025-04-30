@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { signOut } from "firebase/auth";
+import { auth } from '@/firebaseConfig';
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -59,7 +61,10 @@ export default function SettingsScreen() {
           </TouchableOpacity>
           {/* Logout button */}
           <View style={styles.logoutContainer}>
-            <TouchableOpacity style={styles.logoutButton} onPress={() => {/* handle logout */}}>
+            <TouchableOpacity style={styles.logoutButton} onPress={async () => {
+              await signOut(auth);
+              router.replace('/(auth)');
+            }}>
             <FontAwesome name="sign-out" size={18} color="white" style={{position: 'absolute', left: 22, bottom: 12}} />
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
