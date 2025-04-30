@@ -10,41 +10,49 @@ interface WishlistFilterProps {
 }
 
 const WishlistFilter: React.FC<WishlistFilterProps> = ({ onFilterChange }) => {
-  const [selectedFilter, setSelectedFilter] = useState<string>("");
-  const [selectedSort, setSelectedSort] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [selectedSort, setSelectedSort] = useState("");
 
   return (
     <View style={styles.filterContainer}>
-      <Picker
-        selectedValue={selectedFilter}
-        onValueChange={(value: string) => {
-          setSelectedFilter(value);
-          onFilterChange("availability", value);
-        }}
-        style={styles.picker}
-      >
-        <Picker.Item label="Filter: All" value="all" />
-        <Picker.Item label="Available" value="available" />
-        <Picker.Item label="Unavailable" value="unavailable" />
-      </Picker>
+      <View style={styles.pickerWrapper}>
+        <Picker
+          selectedValue={selectedFilter}
+          onValueChange={(value) => {
+            setSelectedFilter(value);
+            if (value !== "all") {
+              onFilterChange("availability", value);
+            } else {
+              onFilterChange("availability", "available"); // default reset
+            }
+          }}
+          style={styles.picker}
+        >
+          <Picker.Item label="Filter: All" value="all" />
+          <Picker.Item label="Available" value="available" />
+          <Picker.Item label="Unavailable" value="unavailable" />
+        </Picker>
+      </View>
 
-      <Picker
-        selectedValue={selectedSort}
-        onValueChange={(value: string) => {
-          setSelectedSort(value);
-          onFilterChange(
-            value === "asc" || value === "desc" ? "price" : "name",
-            value
-          );
-        }}
-        style={styles.picker}
-      >
-        <Picker.Item label="Sort: None" value="none" />
-        <Picker.Item label="Price: Low to High" value="asc" />
-        <Picker.Item label="Price: High to Low" value="desc" />
-        <Picker.Item label="Name: A-Z" value="asc" />
-        <Picker.Item label="Name: Z-A" value="desc" />
-      </Picker>
+      <View style={styles.pickerWrapper}>
+        <Picker
+          selectedValue={selectedSort}
+          onValueChange={(value) => {
+            setSelectedSort(value);
+            const [type, direction] = value.split("-");
+            if (type && direction) {
+              onFilterChange(type as "price" | "name", direction);
+            }
+          }}
+          style={styles.picker}
+        >
+          <Picker.Item label="Sort: None" value="" />
+          <Picker.Item label="Price: Low to High" value="price-asc" />
+          <Picker.Item label="Price: High to Low" value="price-desc" />
+          <Picker.Item label="Name: A–Z" value="name-asc" />
+          <Picker.Item label="Name: Z–A" value="name-desc" />
+        </Picker>
+      </View>
     </View>
   );
 };
@@ -53,12 +61,21 @@ const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "black",
+    backgroundColor: "#f2f2f2",
     borderRadius: 10,
     marginBottom: 10,
+    padding: 5,
+  },
+  pickerWrapper: {
+    flex: 1,
+    marginHorizontal: 5,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    overflow: "hidden",
   },
   picker: {
-    flex: 1,
+    height: 44,
+    width: "100%",
   },
 });
 
