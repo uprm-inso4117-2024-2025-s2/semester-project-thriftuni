@@ -4,9 +4,17 @@ import {
   addDoc, query, where, orderBy,
   serverTimestamp
 } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 
-// Constant reference to mock a logged-in user
-const currentUserRef = doc(db, 'users', 'o7O7aJAdDsgLMeNjeP9U87Jj4ob2');
+// To get the reference to a logged-in user
+const getCurrentUserRef = () => {
+  const auth = getAuth();
+  const uid = auth.currentUser?.uid;
+  if (!uid) {
+    throw new Error('User not authenticated');
+  }
+  return doc(db, 'users', uid);
+};
 
 // listings collection reference
 const listingsCollectionRef = collection(db, 'listings');
@@ -28,7 +36,7 @@ export const getListings = async () => {
 // To get listings associated to the current user
 export const getCurrentUserListings = async () => {
   try {
-    const q = query(listingsCollectionRef, where('user', '==', currentUserRef));
+    const q = query(listingsCollectionRef, where('user_id', '==', getCurrentUserRef().id));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
@@ -61,7 +69,7 @@ export const createListing = async (listingsData: any) => {
   try {
     const listingFromUser = {
       ...listingsData,
-      user: currentUserRef,
+      user_id: getCurrentUserRef().id,
       created_at: serverTimestamp(), // Firestore handles timestamp creation
     };
     const docRef = await addDoc(listingsCollectionRef, listingFromUser);
@@ -81,7 +89,7 @@ export const updateListing = async (id: string, updatedData: any) => {
       throw new Error(`Listing with ID ${id} not found`);
     }
     const listingData = docSnap.data();
-    if (listingData.user.path !== currentUserRef.path) {
+    if (listingData.user_id !== getCurrentUserRef().id) {
       throw new Error('Current user does not have permission to update this listing');
     }
     await updateDoc(docRef, updatedData);
@@ -102,7 +110,7 @@ export const deleteListing = async (id: string) => {
       throw new Error(`Listing with ID ${id} not found`);
     }
     const listingData = docSnap.data();
-    if (listingData.user.path !== currentUserRef.path) {
+    if (listingData.user_id !== getCurrentUserRef().id) {
       throw new Error('Current user does not have permission to delete this listing');
     }
     await deleteDoc(docRef);
