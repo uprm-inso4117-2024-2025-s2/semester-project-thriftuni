@@ -56,6 +56,17 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+        {/* 👇 ADD THIS FOR AUTH ROUTES */}
+        <Stack.Screen
+          name="(auth)"
+          options={{
+            headerShown: false,        // ✅ Hide header
+            title: "",                 // ✅ Prevent folder name from appearing
+            headerBackVisible: false, // ✅ Hide back arrow if it would appear
+          }}
+        />
+
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen
           name="listings/[id]"
@@ -65,3 +76,4 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
+
