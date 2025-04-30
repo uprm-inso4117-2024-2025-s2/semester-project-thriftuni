@@ -6,13 +6,11 @@ import {
   Platform,
 } from "react-native";
 import { View } from "@/components/Themed";
-import React, { useState, Suspense, useEffect } from "react";
+import React, { useState, Suspense } from "react";
 import ProductCard from "@/components/ListingsPage/ProductCard";
 import SearchBar from "@/components/ListingsPage/SearchBar";
 import FilterMenu from "@/components/ListingsPage/FilterMenu";
 import { Seller } from "@/components/SellerCard";
-import { db } from "@/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
 
 // FOR DEVELOPMENT PURPOSES ONLY------------------
 
@@ -31,7 +29,6 @@ const sellerDetails: Seller = {
   name: "Pepe",
   about: "I'm Pepe",
   location: "Mayaguez, Puerto Rico",
-  rating: 4.5,
   onProfilePress: () => alert("Profile Clicked"),
 };
 
@@ -57,63 +54,20 @@ for (let i = 0; i < 21; i++) {
 //---------------------------------
 
 export interface Listings {
-  id: number | string;
+  id: number;
   title: string;
   price: number;
+  img: string;
   description: string;
-  image?: string; // For single image from ListItem
-  pictures?: string[]; // For multiple images
-  category_id: string;
-  condition: string;
-  color?: string;
+  pictures: string[];
+  sellerInfo: Seller;
   latitude: number;
   longitude: number;
-  location: string;
-  sellerInfo?: Seller; // Keep for backward compatibility
-  user?: any; // Reference to user
-  created_at?: any; // Timestamp
+  category: string;
 }
 
 export default function ListingScreen() {
-  const [data, setData] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Clear previous data before fetching
-        setData([]);
-        
-        const listingsSnapshot = await getDocs(collection(db, "listings"));
-        const listingsData = listingsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            title: data.title || "No Title",
-            price: data.price || 0,
-            description: data.description || "",
-            image: data.image || "",
-            pictures: data.image ? [data.image] : [], // Use single image as first in pictures array
-            category_id: data.category_id || "other",
-            condition: data.condition || "unknown",
-            color: data.color || "",
-            latitude: data.latitude || 18.2,
-            longitude: data.longitude || -67.1,
-            location: data.location || "Unknown location",
-            created_at: data.created_at
-          };
-        });
-
-        // After all data is collected, update state once
-        setData(listingsData);
-        console.log("Fetched data from Firestore:", listingsData.length, "listings");
-      } catch (e) {
-        console.error("Error fetching listings:", e);
-      }
-    };
-    
-    fetchData();
-  }, []);
-
+  const [data, setData] = useState<Listings[]>([]);
   return (
     <View>
       <View
@@ -123,12 +77,12 @@ export default function ListingScreen() {
           borderBottomWidth: 1,
         }}
       >
-        <SearchBar setListings={setData} listings={data} />
+        <SearchBar />
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <FilterMenu setData={setData} data={data} />
+        <FilterMenu setData={setData} />
         <View style={styles.listingGrid}>
-          {data.map((product) => (
+          {dummyData.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </View>

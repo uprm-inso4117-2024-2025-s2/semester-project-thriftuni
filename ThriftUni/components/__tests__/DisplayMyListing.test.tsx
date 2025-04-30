@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import DisplayMyListing from '../../app/(tabs)/my_listings';
-import * as mockApi from '../../backend/Api'; // Path to API
+import * as mockApi from '../../mock_backend/mockApi'; // Path to your mockApi
 
 // Mocked Listings Data
 const mockListings = [
