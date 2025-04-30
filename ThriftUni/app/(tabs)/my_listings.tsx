@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getCurrentUserListings, updateListing, deleteListing, getListingImages } from '../../backend/Api'; // <-- Updated import
 import { useEffect } from 'react';
 import { serverTimestamp } from 'firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function DisplayMyListing() {
   type Listing = {
@@ -61,7 +62,7 @@ export default function DisplayMyListing() {
         description: (item as any).description || '',
         price: (item as any).price || 0,
         status: (item as any).status || 'Pending',
-        photos: Array.isArray((item as any).photos) ? (item as any).photos : [],
+        photos: Array.isArray((item as any).photos) ? (item as any).photos : ((item as any).image ? [(item as any).image] : []),
         category_id: (item as any).category_id,
         condition: (item as any).condition,
         created_at: (item as any).created_at,
@@ -111,6 +112,13 @@ export default function DisplayMyListing() {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchListings();
+      return () => { }
+    }, [])
+  );
+
   useEffect(() => {
     fetchListings();
   }, []);
@@ -120,6 +128,8 @@ export default function DisplayMyListing() {
       return { uri: item.listing_images[0].image_url };
     } else if (item.photos && item.photos.length > 0) {
       return { uri: item.photos[0] };
+    } else if ((item as any).image) {
+      return { uri: (item as any).image };
     }
     return { uri: "https://archive.org/download/placeholder-image/placeholder-image.jpg" };
   };
