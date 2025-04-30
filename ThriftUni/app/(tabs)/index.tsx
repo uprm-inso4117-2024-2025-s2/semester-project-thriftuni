@@ -13,6 +13,9 @@ import FilterMenu from "@/components/ListingsPage/FilterMenu";
 import { Seller } from "@/components/SellerCard";
 import { db } from "@/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebaseConfig";
+import { router } from "expo-router";
 
 // FOR DEVELOPMENT PURPOSES ONLY------------------
 
@@ -76,6 +79,16 @@ export interface Listings {
 
 export default function ListingScreen() {
   const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.replace("/(auth)"); // Redirect if not authenticated
+      }
+    });
+  
+    return () => unsubscribe(); // Clean up the listener
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
