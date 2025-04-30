@@ -1,6 +1,6 @@
 // app/auth/auth.fuzz.test.ts
 
-import { signUp } from '@/firebase/signUp';
+import { signUp } from '@/firebase/signUp_test';
 import { login } from '@/firebase/login';
 import { fuzzStrings } from './fuzzHelpers';
 
