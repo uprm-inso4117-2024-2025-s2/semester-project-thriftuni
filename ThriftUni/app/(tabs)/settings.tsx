@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 import { signOut } from "firebase/auth";
 import { auth } from '@/firebaseConfig';
+import { deleteUser } from "firebase/auth";
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -68,6 +69,30 @@ export default function SettingsScreen() {
             <FontAwesome name="sign-out" size={18} color="white" style={{position: 'absolute', left: 22, bottom: 12}} />
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
+            {/* Delete Account button */}
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={async () => {
+                try {
+                  const user = auth.currentUser;
+                  if (user) {
+                    await deleteUser(user);
+                    router.replace("/(auth)");
+                  } else {
+                    alert("No user is currently signed in.");
+                  }
+                } catch (error: any) {
+                  if (error.code === "auth/requires-recent-login") {
+                    alert("Please log in again before deleting your account.");
+                  } else {
+                    alert("Error deleting account: " + error.message);
+                  }
+                }
+              }}
+            >
+              <FontAwesome name="trash" size={18} color="white" style={{ position: "absolute", left: 22, bottom: 12 }} />
+              <Text style={styles.logoutText}>Delete Account</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -122,11 +147,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 4,
+    marginBottom: 20
   },
   logoutText: {
     color: '#fff',
     fontSize: 16,
     marginLeft: 16,
+  },
+  deleteButton: {
+    backgroundColor: '#000',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 4,
+    marginBottom: 20
   },
 });
 
