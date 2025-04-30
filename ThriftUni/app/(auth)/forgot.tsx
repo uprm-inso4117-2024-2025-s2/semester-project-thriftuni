@@ -46,6 +46,7 @@ const ForgotPasswordScreen = () => {
     }
   
     setLoading(false);
+    setEmail("");
   };
 
   return (
