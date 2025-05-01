@@ -4,117 +4,160 @@ import { ScrollView, TextInput } from "react-native";
 import ImageUploader from "@/components/ListAnItem/ImageUploader";
 import Selector from "@/components/ListAnItem/Selector";
 import PriceInput from "@/components/ListAnItem/PriceInput";
+import BrandInput from "@/components/ListAnItem/BrandInput";
 import Buttons from "@/components/ListAnItem/Buttons";
+import { ListingProps } from "@/components/ListAnItem/Buttons";
+
+function getRandomInRange(from: number, to: number, fixed: number): number {
+  return parseFloat((Math.random() * (to - from) + from).toFixed(fixed));
+  // .toFixed() returns string, so 'parseFloat' is used to convert to number
+}
 
 export default function ListItem() {
-  const [text, setText] = useState("");
+  const categories = [
+    { label: "Clothing", value: "clothing" },
+    { label: "Electronics", value: "electronics" },
+    { label: "Books", value: "books" },
+    { label: "Furniture", value: "furniture" },
+    { label: "Other", value: "other" },
+  ];
+  const [category, setCategory] = useState("");
+
+  const colors = [
+    { label: "Red", value: "red" },
+    { label: "Blue", value: "blue" },
+    { label: "Green", value: "green" },
+    { label: "Yellow", value: "yellow" },
+    { label: "Black", value: "black" },
+    { label: "White", value: "white" },
+  ];
+  const [color, setColor] = useState("");
+
+  const conditions = [
+    { label: "New", value: "new" },
+    { label: "Like New", value: "like-new" },
+    { label: "Good", value: "good" },
+    { label: "Fair", value: "fair" },
+    { label: "Poor", value: "poor" },
+  ];
+  const [condition, setCondition] = useState("");
+
+  const [description, setDescription] = useState("");
+
+  const [price, setPrice] = useState("0");
+  const [brand, setBrand] = useState("0");
+
+  // Only storing one image.
+  const [image, setImage] = useState("");
+
+  const latitude = getRandomInRange(17.9, 18.5, 6); // Latitude range for Puerto Rico
+  const longitude = getRandomInRange(-67.3, -65.2, 6); // Longitude range for Puerto Rico
+  const location = "Mayaguez, Puerto Rico";
+
+  const listingData: ListingProps = {
+    category_id: category,
+    condition,
+    description,
+    latitude,
+    longitude,
+    location,
+    price,
+    image,
+  };
 
   return (
     <View style={styles.container}>
       {/* Top Bar */}
       <View style={styles.topBar}>
         <TouchableOpacity
-          style={styles.backButton}
+          style={{ padding: 10 }}
           onPress={() => alert("Pressed on Back button.")}
         >
-          <Text style={styles.backText}>←</Text>
+          <Text>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Sell an Item</Text>
+        <Text style={{ fontSize: 22 }}>Sell an item</Text>
       </View>
-
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {/* Image Upload Section */}
-        <ImageUploader />
-
-        {/* Description Input */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Description</Text>
+        {/*Add picture section*/}
+        <ImageUploader image={image} setImage={setImage} />
+        {/*Add description section*/}
+        <View style={{ padding: 5 }}>
+          <Text style={{ fontSize: 18, marginBottom: 5 }}>Description</Text>
           <TextInput
             style={styles.descriptionInput}
             placeholder="Enter description ..."
-            placeholderTextColor="#888"
-            value={text}
-            onChangeText={setText}
+            placeholderTextColor="grey"
+            value={description}
+            onChangeText={setDescription}
             textAlignVertical="top"
             multiline={true}
           />
         </View>
-
-        {/* Divider */}
-        <View style={styles.divider} />
-
-        {/* Item Details */}
-        <Selector type="Category" />
-        <Selector type="Brand" />
-        <Selector type="Condition" />
-        <Selector type="Color" />
-        <PriceInput />
+        {/*Divider*/}
+        <View
+          style={{
+            marginTop: 20,
+            marginBottom: 20,
+            height: 5,
+            borderWidth: 5,
+            borderColor: "grey",
+          }}
+        />
+        {/* Item details */}
+        <Selector
+          label="Category"
+          value={category}
+          options={categories}
+          onSelect={(selected) => setCategory(selected)}
+        />
+        <Selector
+          label="Condition"
+          value={condition}
+          options={conditions}
+          onSelect={(selected) => setCondition(selected)}
+        />
+        <Selector
+          label="Color"
+          value={color}
+          options={colors}
+          onSelect={(selected) => setColor(selected)}
+        />
+        <BrandInput brand={brand} setBrand={(value) => setBrand(value)} />
+        <PriceInput price={price} setPrice={(value) => setPrice(value)} />
       </ScrollView>
-
-      {/* Action Buttons */}
-      <Buttons />
+      {/* Save to draft and post buttons */}
+      <Buttons {...listingData} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     flex: 1,
-    backgroundColor: "#F8F8F8",
   },
   topBar: {
-    flexDirection: "row",
+    alignContent: "center",
     alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    backgroundColor: "#fff",
+    height: 50,
+    flexDirection: "row",
+    marginBottom: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2,
-  },
-  backButton: {
-    padding: 10,
-    marginRight: 15,
-  },
-  backText: {
-    fontSize: 20,
-    color: "#333",
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: "#222",
   },
   scrollView: {
     flexGrow: 1,
-    paddingBottom: 120,
+    paddingBottom: 300,
   },
-  section: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "500",
-    marginBottom: 8,
-    color: "#333",
+  picturesSection: {
+    padding: 5,
   },
   descriptionInput: {
     height: 130,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: "#D1D1D1",
-    backgroundColor: "#fff",
-    padding: 10,
-    fontSize: 16,
-    textAlignVertical: "top",
-  },
-  divider: {
-    marginVertical: 20,
-    height: 1,
-    backgroundColor: "#DDD",
-    alignSelf: "stretch",
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#E4AAAA",
   },
 });

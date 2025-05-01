@@ -29,6 +29,7 @@ const sellerDetails: Seller = {
   name: "Pepe",
   about: "I'm Pepe",
   location: "Mayaguez, Puerto Rico",
+  rating: 4.5,
   onProfilePress: () => alert("Profile Clicked"),
 };
 
@@ -67,7 +68,7 @@ export interface Listings {
 }
 
 export default function ListingScreen() {
-  const [data, setData] = useState<Listings[]>([]);
+  const [data, setData] = useState<any[]>(dummyData);
   return (
     <View>
       <View
@@ -77,12 +78,12 @@ export default function ListingScreen() {
           borderBottomWidth: 1,
         }}
       >
-        <SearchBar />
+        <SearchBar setListings={setData} listings={data}/>
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <FilterMenu setData={setData} />
+        <FilterMenu setData={setData} data={data}/>
         <View style={styles.listingGrid}>
-          {dummyData.map((product) => (
+          {data.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </View>
